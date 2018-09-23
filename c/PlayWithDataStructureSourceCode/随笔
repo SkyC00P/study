@@ -1,0 +1,7 @@
+1. 如果数组里的某个元素没有初始化，那么怎么判断
+2. 为某个typedef重新再定义再传参数
+typedef struct {
+    ElemType data;
+    int cur;
+} Component, StaticLinkList[MAXSIZE];
+3. 缩短了linux命令
