@@ -72,8 +72,6 @@ static void test_list_length() {
     list[1].data = 1;
     list[MAXSIZE - 1].cur = 1;
     EXPECT_EQ_INT(1, ListLength(list));
-    PRLIST(list);
-
 
 }
 
