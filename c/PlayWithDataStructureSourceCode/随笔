@@ -5,3 +5,4 @@ typedef struct {
     int cur;
 } Component, StaticLinkList[MAXSIZE];
 3. 缩短了linux命令
+4. 显示所有未追踪的文件列表
