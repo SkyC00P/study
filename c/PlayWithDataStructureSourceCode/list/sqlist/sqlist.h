@@ -2,7 +2,7 @@
 #define SQLIST_H 1
 
 #include "common.h"
-#define MAXSIZE 20
+#define MAXSIZE 10
 
 typedef int ElemType;
 typedef struct {
