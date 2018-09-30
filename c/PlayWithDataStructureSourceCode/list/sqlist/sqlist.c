@@ -1,5 +1,4 @@
 #include "sqlist.h"
-#include <stdio.h>
 
 Status InitList(SqList *L) {
 	L->length = 0;

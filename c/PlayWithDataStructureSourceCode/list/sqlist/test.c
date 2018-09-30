@@ -33,7 +33,7 @@ int main(void) {
 
   1. 测试返回值，测试初始化的值是否OK。
 */
-void test_initlist() {
+static void test_initlist() {
 	SqList list;
 	Status status = InitList(&list);
 	EXPECT_EQ_INT(OK, status);
@@ -50,7 +50,7 @@ void test_initlist() {
   4. 重复位置插入
   5. 初始化后任意位置插入
 */
-void test_list_insert() {
+static void test_list_insert() {
 	SqList list;
 	InitList(&list);
 
@@ -94,7 +94,7 @@ void test_list_insert() {
   1. 返回值正确
   2. 无效位置取值: 零，负数， 超出length
 */
-void test_get_elem() {
+static void test_get_elem() {
 	SqList list;
 	InitList(&list);
 	ElemType e;
@@ -120,7 +120,7 @@ void test_get_elem() {
   2. 无效位置检测: 负数，零，超过Length的值
   3. 头位删除，末位删除，中间值删除
 */
-void test_del_elem() {
+static void test_del_elem() {
 	SqList list;
 	InitList(&list);
 	ElemType e;
@@ -164,7 +164,7 @@ void test_del_elem() {
   2. 值存在
   3. 值不存在
 */
-void test_locate_elem() {
+static void test_locate_elem() {
 	SqList list;
 	InitList(&list);
 	EXPECT_EQ_INT(0, LocateElem(list, 0));
@@ -179,7 +179,7 @@ void test_locate_elem() {
 	EXPECT_EQ_INT(0, LocateElem(list, 4));
 }
 
-void test_list_empty(){
+static void test_list_empty(){
 	SqList list;
 	InitList(&list);
 	EXPECT_EQ_INT(TRUE, ListEmpty(list));
@@ -191,7 +191,7 @@ void test_list_empty(){
 	EXPECT_EQ_INT(TRUE, ListEmpty(list));
 }
 
-void test_clear_list(){
+static void test_clear_list(){
 	SqList list;
 	InitList(&list);
 	EXPECT_EQ_INT(OK, ClearList(&list));
@@ -201,7 +201,7 @@ void test_clear_list(){
 	EXPECT_EQ_INT(0, list.data[0]);
 }
 
-void test_list_length(){
+static void test_list_length(){
 	SqList list;
 	InitList(&list);
 	EXPECT_EQ_INT(0, ListLength(list));
