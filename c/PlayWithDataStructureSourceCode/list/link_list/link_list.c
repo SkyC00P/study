@@ -11,6 +11,22 @@ Status InitList(LinkList * L) {
 	return OK;
 }
 
+Status ClearList(LinkList *L) {
+	Node * freeNode = (*L)->next;
+
+	while (freeNode){
+		Node * next = freeNode->next;
+		free(freeNode);
+		freeNode = next;
+	}
+	(*L)->next = NULL;
+	return OK;
+}
+
+int LocateElem(LinkList L, ElemType e) {
+	
+}
+
 Bool ListEmpty(LinkList L) {
 	return L->next == NULL ? TRUE : FALSE;
 }
