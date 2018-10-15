@@ -1,12 +1,17 @@
 #include "test.h"
 #include "link_list.h"
 #include <stdlib.h>
+
 static void test_init_list();
 static void test_list_empty();
 static void test_list_insert();
 static void test_list_del();
 static void test_list_get();
 static void test_clear_list();
+static void test_locate_elem();
+static void test_list_traverse();
+static void test_create_list_head();
+static void test_create_list_tail();
 
 static void test() {
 	test_init_list();
@@ -15,6 +20,10 @@ static void test() {
 	test_list_del();
 	test_list_get();
 	test_clear_list();
+	test_locate_elem();
+	test_list_traverse();
+	test_create_list_head();
+	test_create_list_tail();
 }
 
 
@@ -51,6 +60,50 @@ static void test_clear_list() {
 	EXPECT_EQ_INT(OK, ClearList(&list));
 	EXPECT_EQ_INT(0, ListLength(list));
 	EXPECT_TRUE(list->next == NULL);
+}
+
+/*
+  list:1,2,3
+  1. 1,2,3正常返回1,2,3
+  2. 0,4 返回 0
+*/
+static void test_locate_elem(){
+	LinkList list;
+	InitList(&list);
+	ListInsert(&list, 1, 1);
+	ListInsert(&list, 2, 2);
+	ListInsert(&list, 3, 3);
+
+	EXPECT_EQ_INT(1, LocateElem(list, 1));
+	EXPECT_EQ_INT(2, LocateElem(list, 2));
+	EXPECT_EQ_INT(3, LocateElem(list, 3));
+
+	EXPECT_EQ_INT(0, LocateElem(list, 0));
+	EXPECT_EQ_INT(0, LocateElem(list, 4));
+}
+
+void test_list_traverse(){
+	LinkList list;
+	InitList(&list);
+	ListInsert(&list, 1, 1);
+	ListInsert(&list, 2, 2);
+	ListInsert(&list, 3, 3);
+
+	printf("The list has 1,2,3, below will print all num.\n");
+	EXPECT_EQ_INT(OK, ListTraverse(list));
+	printf("\n");
+}
+
+void test_create_list_head(){
+	LinkList list;
+	CreateListHead(&list,5);
+	ListTraverse(list);
+}
+
+void test_create_list_tail(){
+	LinkList list;
+	CreateListTail(&list, 5);
+	ListTraverse(list);
 }
 
 /*

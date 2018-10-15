@@ -1,7 +1,8 @@
 #include "link_list.h"
 
 #ifndef DEBUG
-#include "stdlib.h"
+#include <stdlib.h>
+#include <stdio.h>
 Status InitList(LinkList * L) {
 	*L = (LinkList)malloc(sizeof(Node));
 	if (!(*L)) {
@@ -24,7 +25,27 @@ Status ClearList(LinkList *L) {
 }
 
 int LocateElem(LinkList L, ElemType e) {
-	
+	int index = 0;
+	Node * node = L->next;
+
+	while (node){
+		index++;
+		if (node->data == e){
+			return index;
+		}
+		node = node->next;
+	}
+	return 0;
+}
+
+Status ListTraverse(LinkList L) {
+	Node * node = L->next;
+	while (node){
+		printf("%d ", node->data);
+		node = node->next;
+	}
+	printf("\n");
+	return OK;
 }
 
 Bool ListEmpty(LinkList L) {
