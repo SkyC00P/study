@@ -96,14 +96,26 @@ void test_list_traverse(){
 
 void test_create_list_head(){
 	LinkList list;
-	CreateListHead(&list,5);
+#ifndef DEBUG
+	printf("This impl is from myself,create list has 5 number by head and all data is 0.\n");
+#else
+	printf("This impl is from book,create list has 5 number by head and all data is ramdom.\n");
+#endif // !DEBUG
+	CreateListHead(&list, 5);
 	ListTraverse(list);
+	printf("\n");
 }
 
 void test_create_list_tail(){
 	LinkList list;
+#ifndef DEBUG
+	printf("This impl is from myself,create list has 5 number by tail and all data is 0.\n");
+#else
+	printf("This impl is from book,create list has 5 number by tail and all data is ramdom.\n");
+#endif // !DEBUG
 	CreateListTail(&list, 5);
 	ListTraverse(list);
+	printf("\n");
 }
 
 /*

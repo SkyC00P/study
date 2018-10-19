@@ -113,6 +113,33 @@ Status ListDelete(LinkList * L, int i, ElemType * e) {
 
 	return OK;
 }
+
+void CreateListHead(LinkList *L, int n) {
+	*L = (LinkList)malloc(sizeof(LinkList));
+	(*L)->next = NULL;
+
+	Node * newNode;
+	for (int i = 0; i < n; i++){
+		newNode = (Node *)malloc(sizeof(Node));
+		newNode->data = 0;
+		newNode->next = (*L)->next;
+		(*L)->next = newNode;
+	}
+}
+
+void CreateListTail(LinkList *L, int n) {
+	*L = (LinkList)malloc(sizeof(LinkList));
+	// 最末尾的节点
+	Node * tailNode = (*L);
+	Node * newNode;
+	for (int i = 0; i < n; i++){
+		newNode = (Node *)malloc(sizeof(Node));
+		newNode->data = 0;
+		tailNode->next = newNode;
+		tailNode = newNode;
+	}
+	tailNode->next = NULL;
+}
 #endif // !DEBUG
 
 #ifdef DEBUG
