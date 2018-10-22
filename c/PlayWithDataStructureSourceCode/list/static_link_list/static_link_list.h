@@ -4,7 +4,7 @@
 #include "common.h"
 
 typedef char ElemType;        /* ElemType类型根据实际情况而定，这里假设为char */
-#define MAXSIZE 10 /* 存储空间初始分配量 */
+#define MAXSIZE 10 /* 存储空间初始分配量,设置为5是为了测试 */
 
 /* 线性表的静态链表存储结构 */
 typedef struct
