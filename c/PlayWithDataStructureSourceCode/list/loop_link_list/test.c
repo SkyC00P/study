@@ -35,16 +35,20 @@ static void test_list_empty() {
 	InitList(&list);
 	EXPECT_EQ_INT(TRUE, ListEmpty(list));
 
-	/*ListInsert(&list, 1, 1);
+	ListInsert(&list, 1, 1);
 	EXPECT_EQ_INT(FALSE, ListEmpty(list));
-
-	ElemType e;
-	ListDelete(&list, 1, &e);
-	EXPECT_EQ_INT(TRUE, ListEmpty(list));*/
+	
+	//ElemType e;
+	//ListDelete(&list, 1, &e);
+	//EXPECT_EQ_INT(TRUE, ListEmpty(list));
 }
 
 static void test_list_insert() {
-
+	LoopLinkList list;
+	InitList(&list);
+	ListInsert(&list, 1, 1);
+	EXPECT_EQ_INT(1, list->data);
+	EXPECT_TRUE(list->next->next == list);
 }
 
 static void test_list_del() {
