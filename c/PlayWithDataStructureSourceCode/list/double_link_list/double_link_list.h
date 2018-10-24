@@ -12,8 +12,11 @@ typedef struct Node {
 
 typedef struct Node * DuLinkList;
 
-/* 初始化单链表 */
+/* 初始化 */
 Status InitList(DuLinkList *L);
+
+/* 创建默认值为0，长度为n的链表 */
+Status CreateList(DuLinkList *L, int n);
 
 /* 初始条件：线性表L已存在。操作结果：若L为空表，则返回TRUE，否则返回FALSE */
 Bool ListEmpty(DuLinkList L);

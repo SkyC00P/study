@@ -25,40 +25,45 @@ int main() {
 }
 
 static void test_init_list() {
-	LoopLinkList list;
+	DuLinkList list;
 	EXPECT_EQ_INT(OK, InitList(&list));
 	EXPECT_TRUE(list->next == list);
+	EXPECT_TRUE(list->prior == list);
 }
 
 static void test_list_empty() {
-	LoopLinkList list;
+	DuLinkList list;
 	InitList(&list);
 	EXPECT_EQ_INT(TRUE, ListEmpty(list));
 
 	ListInsert(&list, 1, 1);
 	EXPECT_EQ_INT(FALSE, ListEmpty(list));
-
+	
 	ElemType e;
 	ListDelete(&list, 1, &e);
 	EXPECT_EQ_INT(TRUE, ListEmpty(list));
 }
 
 static void test_list_insert() {
-	LoopLinkList list;
+	DuLinkList list;
 	InitList(&list);
 	ListInsert(&list, 1, 1);
 	EXPECT_EQ_INT(1, list->data);
+	EXPECT_EQ_INT(1, list->prior->prior->data);
+	EXPECT_EQ_INT(1, list->next->next->data);
 	EXPECT_TRUE(list->next->next == list);
 	EXPECT_EQ_INT(1, ListLength(list));
 
 	EXPECT_EQ_INT(OK, ListInsert(&list, 2, 2));
-	Node * n1 = list->next->next;
-	Node * n2 = n1->next;
+	Node * n1 = list->next->next; // 1
+	Node * n2 = n1->next;         // 2
 	EXPECT_EQ_INT(2, ListLength(list));
 	EXPECT_EQ_INT(1, n1->data);
 	EXPECT_EQ_INT(2, n2->data);
 	EXPECT_TRUE(n2 == list);
-
+	EXPECT_EQ_INT(2, list->data);
+	EXPECT_EQ_INT(1, list->prior->data);
+	
 	EXPECT_EQ_INT(OK, ListInsert(&list, 2, 3));
 	n1 = list->next->next;
 	n2 = n1->next;
@@ -68,39 +73,59 @@ static void test_list_insert() {
 	EXPECT_EQ_INT(3, n2->data);
 	EXPECT_EQ_INT(2, n3->data);
 	EXPECT_TRUE(n3 == list);
-
+	EXPECT_EQ_INT(3, list->prior->data);
+	
 	EXPECT_EQ_INT(ERROR, ListInsert(&list, 0, 1));
 	EXPECT_EQ_INT(ERROR, ListInsert(&list, -1, 1));
 	EXPECT_EQ_INT(ERROR, ListInsert(&list, ListLength(list) + 2, 1));
 }
 
 static void test_list_del() {
-	LoopLinkList list;
+	DuLinkList list;
 	InitList(&list);
+	// list is 1,2,3,4,5
 	for (int i = 1; i <= 5; i++) {
 		ListInsert(&list, i, i);
 	}
 
 	ElemType delElem;
+	// 1,2,3,4
 	EXPECT_EQ_INT(OK, ListDelete(&list, 5, &delElem));
 	EXPECT_EQ_INT(5, delElem);
 	EXPECT_EQ_INT(4, ListLength(list));
+	EXPECT_EQ_INT(4, list->data);
+	EXPECT_EQ_INT(3, list->prior->data);
+	EXPECT_EQ_INT(1, list->next->next->data);
 
+	// 2,3,4
 	EXPECT_EQ_INT(OK, ListDelete(&list, 1, &delElem));
 	EXPECT_EQ_INT(1, delElem);
 	EXPECT_EQ_INT(3, ListLength(list));
+	EXPECT_EQ_INT(4, list->data);
+	EXPECT_EQ_INT(3, list->prior->data);
+	EXPECT_EQ_INT(2, list->next->next->data);
 
+	// 2,4
 	EXPECT_EQ_INT(OK, ListDelete(&list, 2, &delElem));
 	EXPECT_EQ_INT(3, delElem);
 	EXPECT_EQ_INT(2, ListLength(list));
+	EXPECT_EQ_INT(4, list->data);
+	EXPECT_EQ_INT(2, list->prior->data);
+	EXPECT_EQ_INT(2, list->next->next->data);
 
+	// 4
 	EXPECT_EQ_INT(OK, ListDelete(&list, 1, &delElem));
 	EXPECT_EQ_INT(2, delElem);
 	EXPECT_EQ_INT(1, ListLength(list));
+	EXPECT_EQ_INT(4, list->data);
+	EXPECT_EQ_INT(4, list->prior->prior->data);
+	EXPECT_EQ_INT(4, list->next->next->data);
 
 	EXPECT_EQ_INT(OK, ListDelete(&list, 1, &delElem));
 	EXPECT_EQ_INT(4, delElem);
 	EXPECT_EQ_INT(0, ListLength(list));
+	EXPECT_EQ_INT(TRUE, ListEmpty(list));
+	EXPECT_TRUE(list->next == list->prior);
 
 	EXPECT_EQ_INT(ERROR, ListDelete(&list, 0, &delElem));
 	EXPECT_EQ_INT(ERROR, ListDelete(&list, -1, &delElem));
@@ -111,12 +136,13 @@ static void test_list_del() {
 }
 
 static void test_list_get() {
-	LoopLinkList list;
+	DuLinkList list;
 	InitList(&list);
 	for (int i = 1; i < 4; i++) {
 		ListInsert(&list, i, i);
 	}
 
+	// 1,2,3
 	ElemType get;
 	for (int i = 1; i < 4; i++) {
 		EXPECT_EQ_INT(OK, GetElem(list, i, &get));
@@ -168,13 +194,13 @@ static void test_list_get() {
 	EXPECT_EQ_INT(ERROR, GetElem(list, -1, &get));
 	EXPECT_EQ_INT(ERROR, GetElem(list, 4, &get));
 
-	LoopLinkList empty;
+	DuLinkList empty;
 	InitList(&empty);
 	EXPECT_EQ_INT(ERROR, GetElem(empty, 1, &get));
 }
 
 static void test_clear_list() {
-	LoopLinkList list;
+	DuLinkList list;
 	InitList(&list);
 	printf("expect clear node num is 0,and actual ");
 	EXPECT_EQ_INT(OK, ClearList(&list));
@@ -184,12 +210,12 @@ static void test_clear_list() {
 	printf("expect clear node num is 2,and actual ");
 	EXPECT_EQ_INT(OK, ClearList(&list));
 	EXPECT_EQ_INT(0, ListLength(list));
-	EXPECT_TRUE(list->next == list);
+	EXPECT_TRUE(list->next == list->prior && list == list->prior);
 	printf("\n");
 }
 
 static void test_locate_elem() {
-	LoopLinkList list;
+	DuLinkList list;
 	InitList(&list);
 	ListInsert(&list, 1, 1);
 	ListInsert(&list, 2, 2);
