@@ -18,7 +18,6 @@ endADT
 #include "common.h"
 
 #define T Stack_T
-#define D SElemType
 
 typedef struct T *T;
 
@@ -38,14 +37,13 @@ extern Status DestroyStack(T *S);
 extern int StackLength(T S);
 
 /* 若栈不空，则用e返回S的栈顶元素，并返回OK；否则返回ERROR */
-extern Status GetTop(T S, D *e);
+extern Status GetTop(T S, void * e);
 
 /* 插入元素e为新的栈顶元素 */
-extern Status Push(T *S, D e);
+extern Status Push(T *S, void * e);
 
 /* 若栈不空，则删除S的栈顶元素，用e返回其值，并返回OK；否则返回ERROR */
-extern Status Pop(T *S, D *e);
+extern Status Pop(T *S, void * e);
 
 #undef T
-#undef D
 #endif // !STACK_H

@@ -1,15 +1,17 @@
 #include "stack.h"
+#include <stdlib.h>
 
-#define T SqStack
-#define D SElemType
-
-typedef int SElemType;
+#define T Stack_T
+#define MAXSIZE 5
+typedef void * SElemType;
 
 /* 顺序栈结构 */
-struct T{
+struct T {
 	SElemType data[MAXSIZE];
 	int top; /* 用于栈顶指针 */
 };
+
+typedef struct T *Sqstack;
 
 Status InitStack(T * S)
 {
@@ -33,14 +35,15 @@ int StackLength(T S){
 	return 0;
 }
 
-Status GetTop(T S, D * e){
+Status GetTop(T S, void * e){
 	return OK;
 }
 
-Status Push(T * S, D e){
+Status Push(T * S, void * e){
 	return OK;
 }
 
-Status Pop(T * S, D * e){
+Status Pop(T * S, void * e){
 	return OK;
 }
+#undef T
