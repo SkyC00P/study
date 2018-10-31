@@ -1,5 +1,5 @@
 inc := -I../
-src := test.c
+src := test.c impl/sqstack.c
 
 all: Build Run
 
