@@ -1,65 +1,91 @@
 /* 顺序栈暴露给外部调用的函数声明与具体结构声明 */
-#include "../sqstack.h"
+#include "../stack.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-typedef int SElemType; /* SElemType类型根据实际情况而定，这里假设为int */
+#define T Stack_T
+#define MAXSIZE 10
+typedef void * SElemType; /* SElemType类型根据实际情况而定，这里假设为int */
 
 /* 顺序栈结构 */
-struct SqStack
+struct T
 {
 	SElemType data[MAXSIZE];
 	int top; /* 用于栈顶指针 */
-};
+}SqStack, * ptrSqStack;
 
-Status SqStack_InitStack(SqStack * S)
+Status InitStack(T * S)
 {
+	(*S) = (T)malloc(sizeof(*S));
+	if (!(*S)) {
+		return ERROR;
+	}
+	(*S)->top = -1;
 	return OK;
 }
 
-Status SqStack_ClearStack(SqStack * S)
+Status ClearStack(T S)
 {
+	S->top = -1;
 	return OK;
 }
 
-Status SqStack_StackEmpty(SqStack S)
+Bool StackEmpty(T S)
 {
-	return OK;
+	return S->top == -1 ? TRUE : FALSE;
 }
 
-Status SqStack_DestroyStack(SqStack * S)
+Status DestroyStack(T S)
 {
-	return OK;
+	return ClearStack(S);
 }
 
-int SqStack_StackLength(SqStack S)
+int StackLength(T S)
 {
-	return 0;
+	return S->top+1;
 }
 
-Status SqStack_GetTop(SqStack S, void * e)
+Status GetTop(T S, void * e)
 {
-	return OK;
+	if (!StackEmpty(S))
+	{
+		e = S->data[S->top];
+		return OK;
+	}
+	return ERROR;
 }
 
-Status SqStack_Push(SqStack * S, void * e)
+Status Push(T S, void * e)
 {
-	return OK;
+	if (S && StackLength(S) != MAXSIZE)
+	{
+		S->top++;
+		S->data[S->top] = e;
+		return OK;
+	}
+	return ERROR;
 }
 
-Status SqStack_Pop(SqStack * S, void * e)
+Status T_Pop(T S, void * e)
 {
-	return OK;
+	if (S && !StackEmpty(S))
+	{
+		e = S->data[S->top];
+		S->top--;
+		return OK;
+	}
+	return ERROR;
 }
 
-struct Stack_I Get_SqStack() {
-	struct Stack_I stack = {
-		SqStack_InitStack,
-		SqStack_ClearStack,
-		SqStack_StackEmpty,
-		SqStack_DestroyStack,
-		SqStack_StackLength,
-		SqStack_GetTop,
-		SqStack_Push,
-		SqStack_Pop
-	};
-	return stack;
+extern void StackTraverse(T S) {
+	if (S)
+	{
+		int len = StackLength(S);
+		for (int index = 0; index < len; index++)
+		{
+			printf("%d ", S->data[index]);
+		}
+		printf("\n");
+	}
 }
+#undef T

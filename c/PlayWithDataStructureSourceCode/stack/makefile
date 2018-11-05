@@ -1,13 +1,11 @@
 inc := -I../
-src := test.c impl/sqstack.c
+src_sqstack := test.c impl/sqstack.c
 
-all: Build Run
+all: sqstack 
 
-Build: $(src)
-	gcc -Wall $^ -o test $(inc)
-
-Run: test
-	@echo "\n------------------ Test Stack --------------------\n"
-	@./$^
-	@rm -rf test
+sqstack: $(src_sqstack)
+	gcc -Wall -DSQ_STACK $^ -o sqstack $(inc)
+	@echo "\n------------------ Test sqstack ------------------\n"
+	@./sqstack
+	@rm sqstack
 	@echo "\n--------------------------------------------------\n"
