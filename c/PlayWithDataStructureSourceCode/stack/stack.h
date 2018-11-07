@@ -28,7 +28,7 @@ extern Status InitStack(T *S);
 extern Status ClearStack(T S);
 
 /* 若栈S为空栈，则返回TRUE，否则返回FALSE */
-extern Status StackEmpty(T S);
+extern Bool StackEmpty(T S);
 
 /* 若栈存在，则销毁它 */
 extern Status DestroyStack(T S);
