@@ -7,41 +7,43 @@ static void test() {
 	int e = 0;
 	Stack_T s = NULL;
 	EXPECT_EQ_INT(OK, InitStack(&s));
-	EXPECT_EQ_INT(ERROR, Push(NULL, &e));
+	EXPECT_EQ_INT(ERROR, Push(NULL, e));
 
 	for (int j = 1; j <= 10; j++) {
-		EXPECT_EQ_INT(OK, Push(s, &j));
+		EXPECT_EQ_INT(OK, Push(s, j));
 	}
 #ifdef SQ_STACK
-	EXPECT_EQ_INT(ERROR, Push(s, &e));
+	EXPECT_EQ_INT(ERROR, Push(s, 11));
 #endif // SQ_STACK
 
-//	printf("Õ»ÖÐÔªËØÒÀ´ÎÎª£º");
-//	StackTraverse(s);
-//
-//	EXPECT_EQ_INT(OK, Pop(s, &e));
-//	EXPECT_EQ_INT(10, e);
-//	printf("µ¯³öµÄÕ»¶¥ÔªËØ e=%d\n", e);
-//
-//	EXPECT_EQ_INT(OK, Pop(s, &e));
-//	EXPECT_EQ_INT(9, e);
-//
-//	printf("Õ»¿Õ·ñ£º%d(1:¿Õ 0:·ñ)\n", StackEmpty(s));
-//	EXPECT_FALSE(StackEmpty(s));
-//
-//	EXPECT_EQ_INT(OK, GetTop(s, &e));
-//	EXPECT_EQ_INT(8, e);
-//	EXPECT_EQ_INT(8, StackLength(s));
-//	printf("Õ»¶¥ÔªËØ e=%d Õ»µÄ³¤¶ÈÎª%d\n", e, StackLength(s));
-//
-//	EXPECT_EQ_INT(OK, ClearStack(s));
-//	EXPECT_TRUE(StackEmpty(s));
-//	EXPECT_EQ_INT(ERROR, GetTop(s, &e));
-//	EXPECT_EQ_INT(ERROR, Pop(s));
-//	printf("Çå¿ÕÕ»ºó£¬Õ»¿Õ·ñ£º%d(1:¿Õ 0:·ñ)\n", StackEmpty(s));
-//
-//	EXPECT_TRUE(OK, DestroyStack(s));
-//	EXPECT_FALSE(ERROR, DestroyStack(NULL));
+	printf("æ ˆä¸­å…ƒç´ ä¾æ¬¡ä¸ºï¼š");
+	StackTraverse(s);
+
+	EXPECT_EQ_INT(OK, Pop(s, &e));
+	EXPECT_EQ_INT(10, e);
+	printf("å¼¹å‡ºçš„æ ˆé¡¶å…ƒç´  e=%d", e);
+
+	EXPECT_EQ_INT(OK, Pop(s, &e));
+	EXPECT_EQ_INT(9, e);
+	printf(",%d\n", e);
+
+	EXPECT_FALSE(StackEmpty(s));
+	printf("æ ˆç©ºå¦ï¼š%d(1:ç©º 0:å¦)\n", StackEmpty(s));
+
+	EXPECT_EQ_INT(OK, GetTop(s, &e));
+	EXPECT_EQ_INT(8, e);
+	EXPECT_EQ_INT(8, StackLength(s));
+	printf("æ ˆé¡¶å…ƒç´  e=%d æ ˆçš„é•¿åº¦ä¸º%d\n", e, StackLength(s));
+
+	printf("æ¸…é™¤æ ˆ...");
+	EXPECT_EQ_INT(OK, ClearStack(s));
+	EXPECT_TRUE(StackEmpty(s));
+	EXPECT_EQ_INT(ERROR, GetTop(s, &e));
+	EXPECT_EQ_INT(ERROR, Pop(s, &e));
+	printf("æ¸…ç©ºæ ˆåŽï¼Œæ ˆç©ºå¦ï¼š%d(1:ç©º 0:å¦)\n", StackEmpty(s));
+
+	EXPECT_EQ_INT(OK, DestroyStack(s));
+	EXPECT_EQ_INT(ERROR, DestroyStack(NULL));
 }
 
 int main() {

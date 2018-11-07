@@ -1,26 +1,27 @@
-/* Ë³ĞòÕ»±©Â¶¸øÍâ²¿µ÷ÓÃµÄº¯ÊıÉùÃ÷Óë¾ßÌå½á¹¹ÉùÃ÷ */
+/* é¡ºåºæ ˆæš´éœ²ç»™å¤–éƒ¨è°ƒç”¨çš„å‡½æ•°å£°æ˜ä¸å…·ä½“ç»“æ„å£°æ˜ */
 #include "../stack.h"
 #include <stdlib.h>
 #include <stdio.h>
 
 #define T Stack_T
 #define MAXSIZE 10
-typedef void * SElemType; /* SElemTypeÀàĞÍ¸ù¾İÊµ¼ÊÇé¿ö¶ø¶¨£¬ÕâÀï¼ÙÉèÎªint */
+typedef int SElemType; /* SElemTypeç±»å‹æ ¹æ®å®é™…æƒ…å†µè€Œå®šï¼Œè¿™é‡Œå‡è®¾ä¸ºint */
 
-/* Ë³ĞòÕ»½á¹¹ */
+/* é¡ºåºæ ˆç»“æ„ */
 struct T
 {
 	SElemType data[MAXSIZE];
-	int top; /* ÓÃÓÚÕ»¶¥Ö¸Õë */
+	int top; /* ç”¨äºæ ˆé¡¶æŒ‡é’ˆ */
 }SqStack, * ptrSqStack;
 
 Status InitStack(T * S)
 {
-	(*S) = (T)malloc(sizeof(*S));
+	(*S) = malloc(sizeof(SqStack));
 	if (!(*S)) {
 		return ERROR;
 	}
 	(*S)->top = -1;
+	printf("å·²åˆ†é…åœ¨å †çš„æŒ‡é’ˆ:%p\n", *S);
 	return OK;
 }
 
@@ -37,7 +38,13 @@ Bool StackEmpty(T S)
 
 Status DestroyStack(T S)
 {
-	return ClearStack(S);
+	if (S)
+	{
+		free(S);
+		printf("é‡Šæ”¾çš„æŒ‡é’ˆ:%p\n", S);
+		return OK;
+	}
+	return ERROR;
 }
 
 int StackLength(T S)
@@ -45,17 +52,17 @@ int StackLength(T S)
 	return S->top+1;
 }
 
-Status GetTop(T S, void * e)
+Status GetTop(T S, int * e)
 {
 	if (!StackEmpty(S))
 	{
-		e = S->data[S->top];
+		*e = S->data[S->top];
 		return OK;
 	}
 	return ERROR;
 }
 
-Status Push(T S, void * e)
+Status Push(T S, int e)
 {
 	if (S && StackLength(S) != MAXSIZE)
 	{
@@ -66,11 +73,11 @@ Status Push(T S, void * e)
 	return ERROR;
 }
 
-Status T_Pop(T S, void * e)
+Status Pop(T S, int * e)
 {
 	if (S && !StackEmpty(S))
 	{
-		e = S->data[S->top];
+		*e = S->data[S->top];
 		S->top--;
 		return OK;
 	}
@@ -80,8 +87,7 @@ Status T_Pop(T S, void * e)
 extern void StackTraverse(T S) {
 	if (S)
 	{
-		int len = StackLength(S);
-		for (int index = 0; index < len; index++)
+		for (int index = 0; index < MAXSIZE; index++)
 		{
 			printf("%d ", S->data[index]);
 		}

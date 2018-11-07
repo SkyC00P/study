@@ -1,16 +1,16 @@
 /*
-ADT Õ»(stack)
+ADT æ ˆ(stack)
 Data
-  Í¬ÏßĞÔ±í¡£ÔªËØ¾ßÓĞÏàÍ¬µÄÀàĞÍ£¬ÏàÁÚÔªËØ¾ßÓĞÇ°ÇıºÍºó¼Ì¹ØÏµ¡£
+  åŒçº¿æ€§è¡¨ã€‚å…ƒç´ å…·æœ‰ç›¸åŒçš„ç±»å‹ï¼Œç›¸é‚»å…ƒç´ å…·æœ‰å‰é©±å’Œåç»§å…³ç³»ã€‚
 Operation
-  InitStack(*S):³õÊ¼»¯²Ù×÷£¬½¨Á¢Ò»¸ö¿ÕÕ»S
-  DestroyStack(*S):ÈôÕ»´æÔÚ£¬ÔòÏú»ÙËü
-  ClearStack(*S):½«Õ»Çå¿Õ
-  StackEmpty(*S):ÈôÕ»Îª¿Õ£¬·µ»Øtrue£¬·ñÔò·µ»Øfalse
-  GetTop(*S,*e):ÈôÕ»S´æÔÚÇÒ·Ç¿Õ£¬ÓÃe·µ»ØSµÄÕ»¶¥ÔªËØ
-  Push(*S, e):ÈôÕ»S´æÔÚ£¬²åÈëĞÂÔªËØeµ½Õ»SÖĞ²¢³ÉÎªÕ»¶¥ÔªËØ
-  Pop(*S, e): É¾³ıÕ»SÖĞÕ»¶¥ÔªËØ£¬²¢ÓÃe·µ»ØÆäÖµ
-  StackLength(S):·µ»ØÕ»SµÄÔªËØ¸öÊı
+  InitStack(*S):åˆå§‹åŒ–æ“ä½œï¼Œå»ºç«‹ä¸€ä¸ªç©ºæ ˆS
+  DestroyStack(*S):è‹¥æ ˆå­˜åœ¨ï¼Œåˆ™é”€æ¯å®ƒ
+  ClearStack(*S):å°†æ ˆæ¸…ç©º
+  StackEmpty(*S):è‹¥æ ˆä¸ºç©ºï¼Œè¿”å›trueï¼Œå¦åˆ™è¿”å›false
+  GetTop(*S,*e):è‹¥æ ˆSå­˜åœ¨ä¸”éç©ºï¼Œç”¨eè¿”å›Sçš„æ ˆé¡¶å…ƒç´ 
+  Push(*S, e):è‹¥æ ˆSå­˜åœ¨ï¼Œæ’å…¥æ–°å…ƒç´ eåˆ°æ ˆSä¸­å¹¶æˆä¸ºæ ˆé¡¶å…ƒç´ 
+  Pop(*S, e): åˆ é™¤æ ˆSä¸­æ ˆé¡¶å…ƒç´ ï¼Œå¹¶ç”¨eè¿”å›å…¶å€¼
+  StackLength(S):è¿”å›æ ˆSçš„å…ƒç´ ä¸ªæ•°
 endADT
 */
 #ifndef STACK_H
@@ -21,29 +21,29 @@ endADT
 
 typedef struct T *T;
 
-/*  ¹¹ÔìÒ»¸ö¿ÕÕ»S */
+/*  æ„é€ ä¸€ä¸ªç©ºæ ˆS */
 extern Status InitStack(T *S);
 
-/* °ÑSÖÃÎª¿ÕÕ» */
+/* æŠŠSç½®ä¸ºç©ºæ ˆ */
 extern Status ClearStack(T S);
 
-/* ÈôÕ»SÎª¿ÕÕ»£¬Ôò·µ»ØTRUE£¬·ñÔò·µ»ØFALSE */
+/* è‹¥æ ˆSä¸ºç©ºæ ˆï¼Œåˆ™è¿”å›TRUEï¼Œå¦åˆ™è¿”å›FALSE */
 extern Status StackEmpty(T S);
 
-/* ÈôÕ»´æÔÚ£¬ÔòÏú»ÙËü */
+/* è‹¥æ ˆå­˜åœ¨ï¼Œåˆ™é”€æ¯å®ƒ */
 extern Status DestroyStack(T S);
 
-/* ·µ»ØSµÄÔªËØ¸öÊı£¬¼´Õ»µÄ³¤¶È */
+/* è¿”å›Sçš„å…ƒç´ ä¸ªæ•°ï¼Œå³æ ˆçš„é•¿åº¦ */
 extern int StackLength(T S);
 
-/* ÈôÕ»²»¿Õ£¬ÔòÓÃe·µ»ØSµÄÕ»¶¥ÔªËØ£¬²¢·µ»ØOK£»·ñÔò·µ»ØERROR */
-extern Status GetTop(T S, void * e);
+/* è‹¥æ ˆä¸ç©ºï¼Œåˆ™ç”¨eè¿”å›Sçš„æ ˆé¡¶å…ƒç´ ï¼Œå¹¶è¿”å›OKï¼›å¦åˆ™è¿”å›ERROR */
+extern Status GetTop(T S, int * e);
 
-/* ²åÈëÔªËØeÎªĞÂµÄÕ»¶¥ÔªËØ */
-extern Status Push(T S, void * e);
+/* æ’å…¥å…ƒç´ eä¸ºæ–°çš„æ ˆé¡¶å…ƒç´  */
+extern Status Push(T S, int e);
 
-/* ÈôÕ»²»¿Õ£¬ÔòÉ¾³ıSµÄÕ»¶¥ÔªËØ£¬ÓÃe·µ»ØÆäÖµ£¬²¢·µ»ØOK£»·ñÔò·µ»ØERROR */
-extern Status Pop(T S, void * e);
+/* è‹¥æ ˆä¸ç©ºï¼Œåˆ™åˆ é™¤Sçš„æ ˆé¡¶å…ƒç´ ï¼Œç”¨eè¿”å›å…¶å€¼ï¼Œå¹¶è¿”å›OKï¼›å¦åˆ™è¿”å›ERROR */
+extern Status Pop(T S, int * e);
 
 extern void StackTraverse(T S);
 #undef T
