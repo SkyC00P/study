@@ -17,3 +17,6 @@ link_stack: $(link_stack)
 	@./$@
 	@rm $@
 	@echo "\n--------------------------------------------------\n"
+
+fibonacci : fibonacci.c
+	gcc -Wall $^ -o $@ 
