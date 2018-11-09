@@ -20,3 +20,10 @@ link_stack: $(link_stack)
 
 fibonacci : fibonacci.c
 	gcc -Wall $^ -o $@ 
+
+share_stack : share_stack.c 
+	gcc -Wall $^ -o $@ $(inc)
+	@echo "\n------------------ Test $@ ------------------\n"
+	@./$@
+	@rm $@
+	@echo "\n--------------------------------------------------\n"
