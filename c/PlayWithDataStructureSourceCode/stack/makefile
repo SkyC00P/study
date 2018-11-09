@@ -18,10 +18,10 @@ link_stack: $(link_stack)
 	@rm $@
 	@echo "\n--------------------------------------------------\n"
 
-fib : fibonacci.c
+fib : apply/fibonacci.c
 	gcc -Wall $^ -o $@  $(inc)
 
-share_stack : share_stack.c 
+share_stack : impl/share_stack.c 
 	gcc -Wall $^ -o $@ $(inc)
 	@echo "\n------------------ Test $@ ------------------\n"
 	@./$@
