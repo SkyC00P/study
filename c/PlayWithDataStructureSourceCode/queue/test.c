@@ -4,47 +4,67 @@
 
 static void test() {
 	Queue q = NULL;
-	puts("(1)ЁУй╪╩╞©у╤сап");
+	puts("(1)Е┬²Е╖▀Е▄√Г╘╨И≤÷Е┬≈");
 	EXPECT_EQ_INT(OK, InitQueue(&q));
+	EXPECT_EQ_INT(ERROR, InitQueue(&q));
 	EXPECT_EQ_INT(TRUE, QueueEmpty(q));
 	EXPECT_EQ_INT(0, QueueLength(q));
-	printf("йг╥Я©у╤сапё©%d(1:©у 0:╥Я)  ", QueueEmpty(q));
-	printf("╤сап╣дЁ╓╤хн╙%d\n", QueueLength(q));
+	printf("Ф≤╞Е░╕Г╘╨И≤÷Е┬≈О╪÷%d(1:Г╘╨ 0:Е░╕)  ", QueueEmpty(q));
+	printf("И≤÷Е┬≈Г └И∙©Е╨╕Д╦╨%d\n", QueueLength(q));
 
-	puts("(2)рю╢н╡ЕхК╤сап:-5,5,10");
-	EnQueue(q, -5);
-	EnQueue(q, 5);
-	EnQueue(q, 10);
-	printf("╤сап╣дт╙кьрю╢нн╙ё╨");
+	puts("(2)Е┘╔И≤÷Ф╣▀Х╞∙");
+	EXPECT_EQ_INT(OK,EnQueue(q, -5));
+	EXPECT_EQ_INT(OK,EnQueue(q, 5));
+	EXPECT_EQ_INT(OK,EnQueue(q, 10));
+	printf("И≤÷Е┬≈Г └Е┘┐Г╢═Д╬²Ф╛║Д╦╨О╪ ");
 	QueueTraverse(q);
 	EXPECT_EQ_INT(3, QueueLength(q));
 	EXPECT_EQ_INT(FALSE, QueueEmpty(q));
-	printf("╡ЕхК3╦Жт╙кь(-5,5,10)╨С,╤сап╣дЁ╓╤хн╙%d\n", QueueLength(q));
-	printf("йг╥Я©у╤сапё©%d(1:©у 0:╥Я)  ", QueueEmpty(q));
+	printf("Ф▐▓Е┘╔3Д╦╙Е┘┐Г╢═(-5,5,10)Е░▌,И≤÷Е┬≈Г └И∙©Е╨╕Д╦╨%d\n", QueueLength(q));
+	printf("Ф≤╞Е░╕Г╘╨И≤÷Е┬≈О╪÷%d(1:Г╘╨ 0:Е░╕)  ", QueueEmpty(q));
+
+#ifdef SQ_QUEUE
+	printf("Г╩╖Г╩╜Е┘╔И≤÷Е┬≈Д╩▌1Е┬╟6\n");
+	for (int i = 1; i <= 6; i++) {
+		EXPECT_EQ_INT(OK, EnQueue(q, i));
+	}
+	EXPECT_EQ_INT(ERROR, EnQueue(q, 7));
+
+	EXPECT_EQ_INT(9, QueueLength(q));
+	EXPECT_EQ_INT(FALSE, QueueEmpty(q));
+	QueueTraverse(q);
+#endif // SQ_QUEUE
 
 	int d = 0;
 	EXPECT_EQ_INT(OK, GetHead(q, &d));
 	EXPECT_EQ_INT(-5, d);
-	printf("╤см╥т╙кьйгё╨%d\n", d);
+	printf("И≤÷Е╓╢Е┘┐Г╢═Ф≤╞О╪ %d\n", d);
 
-	puts("(3)ЁЖ╤с-5");
+	puts("(3)Е┤╨И≤÷Ф╣▀Х╞∙");
+	EXPECT_EQ_INT(ERROR, DeQueue(NULL, &d));
 	EXPECT_EQ_INT(OK, DeQueue(q, &d));
-	printf("и╬ЁЩак╤см╥т╙кь%d\n", d);
+	EXPECT_EQ_INT(-5, d);
+	printf("Е┬═И≥╓Д╨├И≤÷Е╓╢Е┘┐Г╢═%d\n", d);
 	EXPECT_EQ_INT(OK, GetHead(q, &d));
 	EXPECT_EQ_INT(5, d);
-	printf("пб╣д╤см╥т╙кьйгё╨%d\n", d);
+	printf("Ф√╟Г └И≤÷Е╓╢Е┘┐Г╢═Ф≤╞О╪ %d\n", d);
 
-	puts("(4)гЕ©у╤сап");
+	EXPECT_EQ_INT(OK, DeQueue(q, &d));
+	EXPECT_EQ_INT(5, d);
+	EXPECT_EQ_INT(OK, DeQueue(q, &d));
+	EXPECT_EQ_INT(10, d);
+
+	puts("(4)Ф╦┘Г╘╨И≤÷Е┬≈");
 	ClearQueue(q);
 	EXPECT_EQ_INT(TRUE, QueueEmpty(q));
 	EXPECT_EQ_INT(0, QueueLength(q));
 	EXPECT_EQ_INT(ERROR, DeQueue(q, &d));
 	EXPECT_EQ_INT(ERROR, GetHead(q, &d));
 
-	puts("(5)оЗ╩ы╤сап");
-	DestroyQueue(q);
-	DestroyQueue(NULL);
-	printf("оЗ╩ы╤сап╨С,q.front=%u q.rear=%u\n", q.front, q.rear);
+	puts("(5)И■─Ф╞│И≤÷Е┬≈");
+	EXPECT_EQ_INT(OK, DestroyQueue(q));
+	EXPECT_EQ_INT(ERROR, DestroyQueue(NULL));
+	printf("\n");
 }
 
 int main() {

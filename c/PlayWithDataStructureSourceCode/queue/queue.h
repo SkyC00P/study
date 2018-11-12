@@ -25,6 +25,8 @@ Status ClearQueue(Queue Q);
 
 Bool QueueEmpty(Queue Q);
 
+int QueueLength(Queue Q);
+
 Status GetHead(Queue Q, int *e);
 
 Status EnQueue(Queue Q, int e);
