@@ -1,7 +1,7 @@
 inc := -I../
 sqqueue := test.c impl/sqqueue.c
-
-all: sqqueue
+LinkQueue := test.c impl/link_queue.c
+all: sqqueue LinkQueue
 
 sqqueue: $(sqqueue)
 	gcc -Wall -DSQ_QUEUE $^ -o $@ $(inc)
@@ -10,3 +10,9 @@ sqqueue: $(sqqueue)
 	@rm $@
 	@echo "\n--------------------------------------------------\n"
 
+LinkQueue:$(LinkQueue)
+	gcc -Wall $^ -o $@ $(inc)
+	@echo "\n------------------ Test $@ ------------------\n"
+	@./$@
+	@rm $@
+	@echo "\n--------------------------------------------------\n"

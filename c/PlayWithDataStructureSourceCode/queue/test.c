@@ -48,18 +48,22 @@ static void test() {
 	EXPECT_EQ_INT(OK, GetHead(q, &d));
 	EXPECT_EQ_INT(5, d);
 	printf("新的队头元素是：%d\n", d);
-
+	printf("连续出队列2次\n");
 	EXPECT_EQ_INT(OK, DeQueue(q, &d));
 	EXPECT_EQ_INT(5, d);
 	EXPECT_EQ_INT(OK, DeQueue(q, &d));
 	EXPECT_EQ_INT(10, d);
 
 	puts("(4)清空队列");
-	ClearQueue(q);
+	printf("从队列里在追加1,2后清除\n");
+	EXPECT_EQ_INT(OK, EnQueue(q, 1));
+	EXPECT_EQ_INT(OK, EnQueue(q, 2));
+	EXPECT_EQ_INT(OK,ClearQueue(q));
 	EXPECT_EQ_INT(TRUE, QueueEmpty(q));
 	EXPECT_EQ_INT(0, QueueLength(q));
 	EXPECT_EQ_INT(ERROR, DeQueue(q, &d));
 	EXPECT_EQ_INT(ERROR, GetHead(q, &d));
+	EXPECT_EQ_INT(OK, ClearQueue(q));
 
 	puts("(5)销毁队列");
 	EXPECT_EQ_INT(OK, DestroyQueue(q));
