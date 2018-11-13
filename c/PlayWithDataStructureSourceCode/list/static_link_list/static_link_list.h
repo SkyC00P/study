@@ -1,4 +1,4 @@
-﻿#ifndef STATIC_LINK_LIST_H
+#ifndef STATIC_LINK_LIST_H
 #define STATIC_LINK_LIST_H 1
 
 #include "common.h"

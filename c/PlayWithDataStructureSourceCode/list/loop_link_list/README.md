@@ -1,22 +1,22 @@
-# 循环链表 - C代码实现
+# 寰幆閾捐〃 - C浠ｇ爜瀹炵幇
 ```
-make           // 测试使用尾指针表示的循环列表
-make head     //  测试使用头指针表示的循环列表(todo)
+make           // 娴嬭瘯浣跨敤灏炬寚閽堣〃绀虹殑寰幆鍒楄〃
+make head     //  娴嬭瘯浣跨敤澶存寚閽堣〃绀虹殑寰幆鍒楄〃(todo)
 ```
 
 **loop_link_list.c**
-> 循环链表 - C代码实现
+> 寰幆閾捐〃 - C浠ｇ爜瀹炵幇
 
 **loop_link_list.h**
-> 循环链表抽象数据结构声明
+> 寰幆閾捐〃鎶借薄鏁版嵁缁撴瀯澹版槑
 
 **test.c**
-> 单元测试的定义与声明
+> 鍗曞厓娴嬭瘯鐨勫畾涔変笌澹版槑
 
 **makefile**
-> 项目构建文件
+> 椤圭洰鏋勫缓鏂囦欢
 
-**执行结果**
+**鎵ц缁撴灉**
 ```
 gcc -Wall loop_link_list.c test.c -o test -I../../
 

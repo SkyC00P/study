@@ -11,33 +11,33 @@ typedef struct Node {
 
 typedef struct Node *LoopLinkList;
 
-/* ³õÊ¼»¯µ¥Á´±í */
+/* åˆå§‹åŒ–å•é“¾è¡¨ */
 Status InitList(LoopLinkList *L);
 
-/* ³õÊ¼Ìõ¼þ£ºÏßÐÔ±íLÒÑ´æÔÚ¡£²Ù×÷½á¹û£ºÈôLÎª¿Õ±í£¬Ôò·µ»ØTRUE£¬·ñÔò·µ»ØFALSE */
+/* åˆå§‹æ¡ä»¶ï¼šçº¿æ€§è¡¨Lå·²å­˜åœ¨ã€‚æ“ä½œç»“æžœï¼šè‹¥Lä¸ºç©ºè¡¨ï¼Œåˆ™è¿”å›žTRUEï¼Œå¦åˆ™è¿”å›žFALSE */
 Bool ListEmpty(LoopLinkList L);
 
-/* ³õÊ¼Ìõ¼þ£ºÏßÐÔ±íLÒÑ´æÔÚ¡£²Ù×÷½á¹û£º½«LÖØÖÃÎª¿Õ±í */
+/* åˆå§‹æ¡ä»¶ï¼šçº¿æ€§è¡¨Lå·²å­˜åœ¨ã€‚æ“ä½œç»“æžœï¼šå°†Lé‡ç½®ä¸ºç©ºè¡¨ */
 Status ClearList(LoopLinkList *L);
 
-/* ³õÊ¼Ìõ¼þ£ºÏßÐÔ±íLÒÑ´æÔÚ¡£²Ù×÷½á¹û£º·µ»ØLÖÐÊý¾ÝÔªËØ¸öÊý */
+/* åˆå§‹æ¡ä»¶ï¼šçº¿æ€§è¡¨Lå·²å­˜åœ¨ã€‚æ“ä½œç»“æžœï¼šè¿”å›žLä¸­æ•°æ®å…ƒç´ ä¸ªæ•° */
 int ListLength(LoopLinkList L);
 
-/* ³õÊ¼Ìõ¼þ£ºÏßÐÔ±íLÒÑ´æÔÚ£¬1¡Üi¡ÜListLength(L) */
-/* ²Ù×÷½á¹û£ºÓÃe·µ»ØLÖÐµÚi¸öÊý¾ÝÔªËØµÄÖµ */
+/* åˆå§‹æ¡ä»¶ï¼šçº¿æ€§è¡¨Lå·²å­˜åœ¨ï¼Œ1â‰¤iâ‰¤ListLength(L) */
+/* æ“ä½œç»“æžœï¼šç”¨eè¿”å›žLä¸­ç¬¬iä¸ªæ•°æ®å…ƒç´ çš„å€¼ */
 Status GetElem(LoopLinkList L, int i, ElemType *e);
 
-/* ³õÊ¼Ìõ¼þ£ºÏßÐÔ±íLÒÑ´æÔÚ */
-/* ²Ù×÷½á¹û£º·µ»ØLÖÐµÚ1¸öÓëeÂú×ã¹ØÏµµÄÊý¾ÝÔªËØµÄÎ»Ðò¡£ */
-/* ÈôÕâÑùµÄÊý¾ÝÔªËØ²»´æÔÚ£¬Ôò·µ»ØÖµÎª0 */
+/* åˆå§‹æ¡ä»¶ï¼šçº¿æ€§è¡¨Lå·²å­˜åœ¨ */
+/* æ“ä½œç»“æžœï¼šè¿”å›žLä¸­ç¬¬1ä¸ªä¸Žeæ»¡è¶³å…³ç³»çš„æ•°æ®å…ƒç´ çš„ä½åºã€‚ */
+/* è‹¥è¿™æ ·çš„æ•°æ®å…ƒç´ ä¸å­˜åœ¨ï¼Œåˆ™è¿”å›žå€¼ä¸º0 */
 int LocateElem(LoopLinkList L, ElemType e);
 
-/* ³õÊ¼Ìõ¼þ£ºÏßÐÔ±íLÒÑ´æÔÚ,1¡Üi¡ÜListLength(L)£¬ */
-/* ²Ù×÷½á¹û£ºÔÚLÖÐµÚi¸öÎ»ÖÃÖ®Ç°²åÈëÐÂµÄÊý¾ÝÔªËØe£¬LµÄ³¤¶È¼Ó1 */
+/* åˆå§‹æ¡ä»¶ï¼šçº¿æ€§è¡¨Lå·²å­˜åœ¨,1â‰¤iâ‰¤ListLength(L)ï¼Œ */
+/* æ“ä½œç»“æžœï¼šåœ¨Lä¸­ç¬¬iä¸ªä½ç½®ä¹‹å‰æ’å…¥æ–°çš„æ•°æ®å…ƒç´ eï¼ŒLçš„é•¿åº¦åŠ 1 */
 Status ListInsert(LoopLinkList *L, int i, ElemType e);
 
-/* ³õÊ¼Ìõ¼þ£ºÏßÐÔ±íLÒÑ´æÔÚ£¬1¡Üi¡ÜListLength(L) */
-/* ²Ù×÷½á¹û£ºÉ¾³ýLµÄµÚi¸öÊý¾ÝÔªËØ£¬²¢ÓÃe·µ»ØÆäÖµ£¬LµÄ³¤¶È¼õ1 */
+/* åˆå§‹æ¡ä»¶ï¼šçº¿æ€§è¡¨Lå·²å­˜åœ¨ï¼Œ1â‰¤iâ‰¤ListLength(L) */
+/* æ“ä½œç»“æžœï¼šåˆ é™¤Lçš„ç¬¬iä¸ªæ•°æ®å…ƒç´ ï¼Œå¹¶ç”¨eè¿”å›žå…¶å€¼ï¼ŒLçš„é•¿åº¦å‡1 */
 Status ListDelete(LoopLinkList *L, int i, ElemType *e);
 
 #endif // !LOOP_LINK_LIST_H

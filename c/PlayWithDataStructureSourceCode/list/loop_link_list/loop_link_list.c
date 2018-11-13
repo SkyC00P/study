@@ -16,8 +16,8 @@ Bool ListEmpty(LoopLinkList L) {
 }
 
 Status ClearList(LoopLinkList * L) {
-	Node * headNode = (*L)->next; // Í·½áµã
-	Node * freeNode = headNode->next; // µÚÒ»¸öÓÐÐ§Êý¾Ý½Úµã
+	Node * headNode = (*L)->next; // å¤´ç»“ç‚¹
+	Node * freeNode = headNode->next; // ç¬¬ä¸€ä¸ªæœ‰æ•ˆæ•°æ®èŠ‚ç‚¹
 	int freeTimes = 0;
 	while (freeNode != headNode) {
 		Node * next = freeNode->next;
