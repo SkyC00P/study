@@ -17,3 +17,37 @@ Operation
 	StrDelete(S,pos,len): 串S存在，1<=pos<=StrLength(S)-len+1.从串S中删除第pos个字符起长度为len的子串。
 endADT
 */
+#ifndef STRING_H
+#define STRING_H
+#include "common.h"
+
+typedef struct String * String;
+
+Status StrAssign(String T, char *chars);
+
+Status StrCopy(String T, String S);
+
+Status ClearString(String S);
+
+Bool StringEmpty(String S);
+
+int StrLength(String S);
+
+int StrCompare(String S, String T);
+
+Status Concat(String T, String S1, String S2);
+
+Status SubString(String Sub, String S, int pos, int len);
+
+int Index(String S, String T, int pos);
+
+Status Replace(String S, String T, String V);
+
+Status StrInsert(String S, int pos, String T);
+
+Status StrDelete(String S, int pos, int len);
+
+void StrPrint(String T);
+#endif // !STRING_H
+
+
