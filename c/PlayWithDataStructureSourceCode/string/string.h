@@ -21,7 +21,8 @@ endADT
 #define STRING_H
 #include "common.h"
 
-typedef struct String * String;
+#define MAXSIZE 40 /* 存储空间初始分配量 */
+typedef char String[MAXSIZE + 1];
 
 Status StrAssign(String T, char *chars);
 

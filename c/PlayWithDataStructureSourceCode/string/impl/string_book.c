@@ -1,8 +1,7 @@
 #include "../string.h"
 #include <string.h>
+#include <stdio.h>
 
-#define MAXSIZE 40 /* 存储空间初始分配量 */
-typedef char String[MAXSIZE + 1];
 
 /* 生成一个其值等于chars的串T */
 Status StrAssign(String T, char *chars)
@@ -29,7 +28,7 @@ Status StrCopy(String T, String S)
 }
 
 /* 若S为空串,则返回TRUE,否则返回FALSE */
-Status StrEmpty(String S)
+Bool StringEmpty(String S)
 {
 	if (S[0] == 0)
 		return TRUE;
@@ -192,7 +191,7 @@ Status StrDelete(String S, int pos, int len)
 Status Replace(String S, String T, String V)
 {
 	int i = 1; /*  从串S的第一个字符起查找串T */
-	if (StrEmpty(T)) /*  T是空串 */
+	if (StringEmpty(T)) /*  T是空串 */
 		return ERROR;
 	do
 	{
