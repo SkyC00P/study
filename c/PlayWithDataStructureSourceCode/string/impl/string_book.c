@@ -41,9 +41,11 @@ Bool StringEmpty(String S)
 int StrCompare(String S, String T)
 {
 	int i;
-	for (i = 1; i <= S[0] && i <= T[0]; ++i)
-		if (S[i] != T[i])
+	for (i = 1; i <= S[0] && i <= T[0]; ++i) {
+		if (S[i] != T[i]) {
 			return S[i] - T[i];
+		}
+	}
 	return S[0] - T[0];
 }
 
