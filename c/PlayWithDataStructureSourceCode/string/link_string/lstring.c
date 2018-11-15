@@ -34,7 +34,22 @@ String String_new(char * chars)
 
 String String_copy(String s)
 {
-	return String();
+	CheckPtr(s);
+	String str = malloc(sizeof(struct String));
+	int len = str->len = s->len;
+
+	StrNodePtr * arr = malloc(sizeof(StrNodePtr) * s->len);
+	
+	StrNodePtr tmp = s->head;
+	int index = 0;
+	while (len--){
+		arr[index]->ch = tmp->ch;
+		arr[index]->next = tmp->next;
+		tmp = tmp->next;
+	}
+	str->head = arr;
+
+	return str;
 }
 
 void String_clear(String s)
