@@ -191,7 +191,7 @@ int String_indexof(String s, String t, int pos)
 	StrNodePtr sPtr = posPtr;
 	StrNodePtr tPtr = t->head;
 
-	while (slen - cur >= tlen){
+	while (slen - cur + 1>= tlen){
 		Bool findit = TRUE;
 
 		while (tPtr->next){
@@ -206,6 +206,7 @@ int String_indexof(String s, String t, int pos)
 
 		if (!findit) {
 			sPtr = posPtr = posPtr->next;
+			tPtr = t->head;
 			cur++;
 		}
 		else {
@@ -223,7 +224,39 @@ String String_replace(String s, String replaceStr)
 
 String String_insert(String s, int pos, String t)
 {
-	return String();
+	CheckPtr(s);
+	CheckPtr(t);
+
+	if (pos < 1 || pos > String_length(s) + 1) {
+		fprintf(stderr, "%s:%d: 非法参数:pos = %d\n", __FILE__, __LINE__, pos);
+		exit(-1);
+	}
+
+	int index = pos;
+	StrNodePtr posPtr = s->head;
+	while (--index > 1) {
+		posPtr = posPtr->next;
+	}
+
+	String cp = String_copy(t);
+	StrNodePtr rear = cp->head;
+	while (rear->next.ch != '\0') {
+		rear = rear->next;
+	}
+
+	if (posPtr == s->head) {
+		s->head = cp->head;
+		free(rear->next);
+		rear->next = posPtr;
+	}
+	else
+	{
+		free(rear->next);
+		rear->next = posPtr->next;
+		posPtr->next = cp->head;
+	}
+	s->len = s->len + t->len;
+	return s;
 }
 
 String String_delete(String s, int pos, int len)
