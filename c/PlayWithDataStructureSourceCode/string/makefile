@@ -1,7 +1,7 @@
 inc := -I../
 array_string := array_string/test.c array_string/string_book.c
 jstring := jstring/test.c jstring/jstring.c
-lstring := lstring/test.c lstring/jstring.c
+lstring := link_string/test.c link_string/lstring.c
 
 all: book jstring lstring
 

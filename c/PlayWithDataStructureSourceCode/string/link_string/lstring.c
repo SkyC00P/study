@@ -2,18 +2,26 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static inline CheckPtr(void * ptr) {
+static inline void CheckPtr(void * ptr) {
 	if (!ptr) {
 		fprintf(stderr, "%s:%d: 空指针异常\n", __FILE__, __LINE__);
 		exit(-1);
 	}
 }
+static inline void printMalloc(char *, int);
+static inline void printFree(char *, int);
+void printPtrNum();
+static int gptrNum = 0;
 
 String String_new(char * chars)
 {
+	static int ptrNum = 0;
 	CheckPtr(chars);
 	String str = malloc(sizeof(struct String));
+	ptrNum += sizeof(struct String);
 	str->head = malloc(sizeof(StrNode));
+	ptrNum += sizeof(StrNode);
+
 	StrNodePtr cur = str->head;
 
 	int len = 0;
@@ -22,6 +30,7 @@ String String_new(char * chars)
 	while (ch != '\0') {
 		cur->ch = ch;
 		StrNodePtr next = malloc(sizeof(StrNode));
+		ptrNum+=sizeof(StrNode);
 		cur->next = next;
 		len++;
 		ch = chars[len];
@@ -31,6 +40,9 @@ String String_new(char * chars)
 	str->len = len;
 	cur->ch = '\0';
 	cur->next = NULL;
+	
+	printMalloc("[String_new]", ptrNum);
+	ptrNum = 0;
 	return str;
 }
 
@@ -38,12 +50,12 @@ String String_copy(String s)
 {
 	CheckPtr(s);
 	String str = malloc(sizeof(struct String));
-	int len = str->len = s->len;
+	str->len = s->len;
 
 	StrNodePtr strCopy = s->head;
 	StrNodePtr strCur = str->head = malloc(sizeof(StrNode));
 
-	while (strCopy.ch != '\0') {
+	while (strCopy->ch != '\0') {
 		strCur->ch = strCopy->ch;
 		strCur->next = malloc(sizeof(StrNode));
 
@@ -175,7 +187,7 @@ int String_indexof(String s, String t, int pos)
 	}
 
 	// 判断s在pos位置后是否有足够长位置可匹配t
-	if (t > slen - pos + 1) {
+	if (t->len > slen - pos + 1) {
 		return 0;
 	}
 
@@ -219,7 +231,7 @@ int String_indexof(String s, String t, int pos)
 
 String String_replace(String s, String replaceStr)
 {
-	return String();
+	return NULL;
 }
 
 String String_insert(String s, int pos, String t)
@@ -240,7 +252,7 @@ String String_insert(String s, int pos, String t)
 
 	String cp = String_copy(t);
 	StrNodePtr rear = cp->head;
-	while (rear->next.ch != '\0') {
+	while (rear->next->ch != '\0') {
 		rear = rear->next;
 	}
 
@@ -261,10 +273,93 @@ String String_insert(String s, int pos, String t)
 
 String String_delete(String s, int pos, int len)
 {
-	return String();
+	CheckPtr(s);
+	if (pos < 1 || pos > s->len) {
+		fprintf(stderr, "%s:%d: 非法参数:pos = %d\n", __FILE__, __LINE__, pos);
+		exit(-1);
+	}
+
+	if (len < 0) {
+		fprintf(stderr, "%s:%d: 非法参数:len = %d\n", __FILE__, __LINE__, len);
+		exit(-1);
+	}
+	int index = pos;
+	StrNodePtr posPtr = s->head;
+	while (--index > 1) {
+		posPtr = posPtr->next;
+	}
+
+	if (posPtr == s->head) {
+		free(s->head);
+		s->len = 0;
+		s->head = NULL;
+	}
+	else
+	{
+		int delNum = 0;
+		StrNodePtr tmp = NULL;
+		StrNodePtr delNode = posPtr->next;
+		while (delNum != len && delNode){
+			tmp = delNode;
+			free(delNode);
+			delNum++;
+			delNode = tmp->next;
+		}
+		s->len = -delNum;
+	}
+	return s;
 }
 
 char * String_toString(String s)
 {
-	return NULL;
+	static int ptrNum = 0;
+
+	CheckPtr(s);
+	int size = s->len + 1;
+	char * str = malloc(sizeof(char) * size);
+
+	ptrNum += sizeof(char) * size;
+	StrNodePtr cur = s->head;
+	for (int i = 0; i < size; i++) {
+		str[i] = cur->ch;
+		cur = cur->next;
+	}
+
+	printMalloc("[String_toString]", ptrNum);
+	ptrNum = 0;
+	return str;
+}
+
+inline void printMalloc(char * msg, int ptrNum)
+{
+	gptrNum += ptrNum;
+	printf("%s malloc point num : %d\n", msg, ptrNum);
+}
+
+inline void printFree(char * msg, int ptrNum)
+{
+	gptrNum -= ptrNum;
+	printf("%s free point num : %d\n", msg, ptrNum);
+}
+
+void printPtrNum()
+{
+	printf("Point num : %d\n", gptrNum);
+}
+
+void printAllChar(String s) {
+	CheckPtr(s);
+	printf("len:%d, str:",s->len);
+	StrNodePtr head = s->head;
+	while (head->ch != '\0'){
+		printf("%c", head->ch);
+		head = head->next;
+	}
+	printf("\n");
+}
+
+int resetPtrNum() {
+	int num = gptrNum;
+	gptrNum = 0;
+	return num;
 }

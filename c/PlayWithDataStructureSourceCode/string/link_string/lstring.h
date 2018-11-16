@@ -1,7 +1,12 @@
+/*
+  用单链表的结构来实现字符串
+  一个StrNode节点保存一个字符和保存下一个字符节点StrNode的指针。
+  这么设计由于内存对齐的缘故，导致一个StrNode占16个字节，实际上用到的只有 8+1 个字节。
+  空间就是这么浪费的，如果想改进可以改成保存一个8字节的char数组，降低空间的浪费。
+*/
 #ifndef HAVE_LSTRING_H
 #define HAVE_LSTRING_H
 #include "common.h"
-
 typedef struct StrNode {
 	char ch;
 	struct StrNode * next;
