@@ -165,6 +165,54 @@ String String_subString(String s, int pos, int len)
 
 int String_indexof(String s, String t, int pos)
 {
+	CheckPtr(s);
+	CheckPtr(t);
+	int slen = String_length(s);
+	int tlen = String_length(t);
+	if (pos < 1 || pos > slen) {
+		fprintf(stderr, "%s:%d: 非法参数:pos = %d\n", __FILE__, __LINE__, pos);
+		exit(-1);
+	}
+
+	// 判断s在pos位置后是否有足够长位置可匹配t
+	if (t > slen - pos + 1) {
+		return 0;
+	}
+
+	// 定位串s的pos位置节点
+	int index = pos;
+	StrNodePtr posPtr = s->head;
+	while (--index) {
+		posPtr = posPtr->next;
+	}
+
+	// 跟t进行对比
+	int cur = pos;
+	StrNodePtr sPtr = posPtr;
+	StrNodePtr tPtr = t->head;
+
+	while (slen - cur >= tlen){
+		Bool findit = TRUE;
+
+		while (tPtr->next){
+			if (sPtr->ch != tPtr->ch) {
+				findit = FALSE;
+				break;
+			}
+
+			sPtr = sPtr->next;
+			tPtr = tPtr->next;
+		}
+
+		if (!findit) {
+			sPtr = posPtr = posPtr->next;
+			cur++;
+		}
+		else {
+			return cur;
+		}
+	}
+
 	return 0;
 }
 
