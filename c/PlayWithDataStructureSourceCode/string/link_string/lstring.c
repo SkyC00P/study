@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static inline void CheckPtr(void * ptr) {
+static inline void CheckPtr(const void * ptr) {
 	if (!ptr) {
 		fprintf(stderr, "%s:%d: 空指针异常\n", __FILE__, __LINE__);
 		exit(-1);
@@ -13,9 +13,9 @@ static inline void printFree(char *, int);
 void printPtrNum();
 static int gptrNum = 0;
 
-String String_new(char * chars)
+String String_new(const char * chars)
 {
-	static int ptrNum = 0;
+	int ptrNum = 0;
 	CheckPtr(chars);
 	String str = malloc(sizeof(struct String));
 	ptrNum += sizeof(struct String);
@@ -42,29 +42,33 @@ String String_new(char * chars)
 	cur->next = NULL;
 	
 	printMalloc("[String_new]", ptrNum);
-	ptrNum = 0;
 	return str;
 }
 
 String String_copy(String s)
 {
+	int ptrNum = 0;
 	CheckPtr(s);
 	String str = malloc(sizeof(struct String));
+	ptrNum += sizeof(struct String);
+
 	str->len = s->len;
 
 	StrNodePtr strCopy = s->head;
 	StrNodePtr strCur = str->head = malloc(sizeof(StrNode));
+	ptrNum += sizeof(StrNode);
 
 	while (strCopy->ch != '\0') {
 		strCur->ch = strCopy->ch;
 		strCur->next = malloc(sizeof(StrNode));
+		ptrNum += sizeof(StrNode);
 
 		strCur = strCur->next;
 		strCopy = strCopy->next;
 	}
-
 	strCur->ch = '\0';
 	strCur->next = NULL;
+	printMalloc("[String_copy]", ptrNum);
 	return str;
 }
 
@@ -312,7 +316,7 @@ String String_delete(String s, int pos, int len)
 
 char * String_toString(String s)
 {
-	static int ptrNum = 0;
+	int ptrNum = 0;
 
 	CheckPtr(s);
 	int size = s->len + 1;
@@ -326,7 +330,6 @@ char * String_toString(String s)
 	}
 
 	printMalloc("[String_toString]", ptrNum);
-	ptrNum = 0;
 	return str;
 }
 
@@ -351,8 +354,14 @@ void printAllChar(String s) {
 	CheckPtr(s);
 	printf("len:%d, str:",s->len);
 	StrNodePtr head = s->head;
-	while (head->ch != '\0'){
-		printf("%c", head->ch);
+	while (head){
+		if (head->ch == '\0') {
+			printf("\\0");
+		}
+		else
+		{
+			printf("%c", head->ch);
+		}
 		head = head->next;
 	}
 	printf("\n");

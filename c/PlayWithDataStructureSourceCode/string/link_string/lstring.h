@@ -18,7 +18,7 @@ typedef struct String {
 }* String;
 
 /* 生成一个其值等于字符串常量chars的串T */
-String String_new(char * chars);
+String String_new(const char * chars);
 
 /* 串S存在，由串S复制得串T */
 String String_copy(String s);
