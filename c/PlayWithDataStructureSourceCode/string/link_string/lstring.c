@@ -12,7 +12,7 @@ static inline void printMalloc(char *, int);
 static inline void printFree(char *, int);
 void printPtrNum();
 static int gptrNum = 0;
-
+/* 分配的空间等于字符数加结束符和一个String结构 */
 String String_new(const char * chars)
 {
 	int ptrNum = 0;
@@ -45,6 +45,7 @@ String String_new(const char * chars)
 	return str;
 }
 
+/* 分配同s相同字符数的空间，一个结束字符和一个String的结构 */
 String String_copy(String s)
 {
 	int ptrNum = 0;
@@ -238,11 +239,11 @@ String String_replace(String s, String replaceStr)
 	return NULL;
 }
 
+// 复制t得到副本cp,cp插入s
 String String_insert(String s, int pos, String t)
 {
 	CheckPtr(s);
 	CheckPtr(t);
-
 	if (pos < 1 || pos > String_length(s) + 1) {
 		fprintf(stderr, "%s:%d: 非法参数:pos = %d\n", __FILE__, __LINE__, pos);
 		exit(-1);
@@ -262,16 +263,20 @@ String String_insert(String s, int pos, String t)
 
 	if (posPtr == s->head) {
 		s->head = cp->head;
+		printFree("[String_insert]0", sizeof(*(rear->next)));
 		free(rear->next);
 		rear->next = posPtr;
 	}
 	else
 	{
+		printFree("[String_insert]1", sizeof(*(rear->next)));
 		free(rear->next);
 		rear->next = posPtr->next;
 		posPtr->next = cp->head;
 	}
 	s->len = s->len + t->len;
+	printFree("[String_insert]2", sizeof(*cp));
+	free(cp);
 	return s;
 }
 
@@ -314,6 +319,7 @@ String String_delete(String s, int pos, int len)
 	return s;
 }
 
+/* 分配等同于s字符长度和结束符的char */
 char * String_toString(String s)
 {
 	int ptrNum = 0;
@@ -367,8 +373,10 @@ void printAllChar(String s) {
 	printf("\n");
 }
 
-int resetPtrNum() {
-	int num = gptrNum;
+void resetPtrNum() {
 	gptrNum = 0;
-	return num;
+}
+
+int getPtrNum() {
+	return gptrNum;
 }
