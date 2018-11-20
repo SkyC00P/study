@@ -117,6 +117,8 @@ int String_compare(String s, String anotherString)
 		if (s1Ptr->ch != s2Ptr->ch) {
 			return s1Ptr->ch - s2Ptr->ch;
 		}
+		s1Ptr = s1Ptr->next;
+		s2Ptr = s2Ptr->next;
 	}
 	return s->len - anotherString->len;
 }

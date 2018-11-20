@@ -10,6 +10,7 @@
 static void test_init();
 static int getSpace(int node, int string);
 static void test();
+void test_compare();
 void test_copy();
 extern void printPtrNum();
 extern void resetPtrNum();
@@ -23,8 +24,51 @@ int main(void) {
 }
 
 void test() {
-	test_init();
-	test_copy();
+	// test_init();
+	// test_copy();
+
+	test_compare();
+}
+
+void test_compare()
+{
+	puts("(3) 字符串对比测试");
+	char * t1 = "";
+	char * t2 = "abc";
+	char * t3 = "abc";
+	char * t4 = "abcd";
+	char * t5 = "aba";
+	char * t6 = "abe";
+	char * t7 = "def";
+	char * t8 = "feg";
+
+	String s1 = String_new(t1);
+	String s2 = String_new(t2);
+	String s3 = String_new(t3);
+	String s4 = String_new(t4);
+	String s5 = String_new(t5);
+	String s6 = String_new(t6);
+	String s7 = String_new(t7);
+	String s8 = String_new(t8);
+
+	// 相等测试
+	EXPECT_EQ_INT(0, String_compare(s1, s1));
+	EXPECT_EQ_INT(0, String_compare(s2, s2));
+	EXPECT_EQ_INT(0, String_compare(s2, s3));
+	EXPECT_EQ_INT(0, String_compare(s3, s2));
+
+	// 相同序列不等长度测试
+	EXPECT_TRUE(String_compare(s3, s4) < 0);
+	EXPECT_TRUE(String_compare(s4, s3) > 0);
+
+	// 同等长度字符序列对比
+	EXPECT_TRUE(String_compare(s2, s5) > 0);
+	EXPECT_TRUE(String_compare(s2, s6) < 0);
+	EXPECT_TRUE(String_compare(s7, s2) > 0);
+	EXPECT_TRUE(String_compare(s7, s8) < 0);
+
+	// 不等长度不等字符序列优先级测试
+	EXPECT_TRUE(String_compare(s4, s8) < 0);
 }
 
 void test_copy()
