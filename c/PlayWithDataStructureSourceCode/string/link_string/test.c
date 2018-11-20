@@ -10,6 +10,7 @@
 static void test_init();
 static int getSpace(int node, int string);
 static void test();
+void test_concat();
 void test_compare();
 void test_copy();
 extern void printPtrNum();
@@ -26,8 +27,23 @@ int main(void) {
 void test() {
 	// test_init();
 	// test_copy();
+	//test_compare();
 
-	test_compare();
+	test_concat();
+}
+
+/*
+ 1. 空字符串自连接
+ 2. 非空字符串自连接
+ 3. 连接返回的是新的字符串
+ 4. 空字符串和非空字符串相连
+ 5. 两个非空字符串的相连
+*/
+void test_concat()
+{
+	puts("(4)字符串连接测试");
+
+	printf("\n");
 }
 
 void test_compare()
@@ -69,6 +85,7 @@ void test_compare()
 
 	// 不等长度不等字符序列优先级测试
 	EXPECT_TRUE(String_compare(s4, s8) < 0);
+	printf("\n");
 }
 
 void test_copy()
