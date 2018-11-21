@@ -8,6 +8,7 @@ static inline void CheckPtr(const void * ptr) {
 		exit(-1);
 	}
 }
+static int needPrint =0 ;
 static inline void printMalloc(char *, int);
 static inline void printFree(char *, int);
 void printPtrNum();
@@ -82,6 +83,7 @@ void String_clear(String s)
 	StrNodePtr tmpNode = NULL;
 	while (freeNode) {
 		tmpNode = freeNode->next;
+		printFree("[String_clear]", sizeof(*tmpNode));
 		free(freeNode);
 		freeNode = tmpNode;
 	}
@@ -123,13 +125,14 @@ int String_compare(String s, String anotherString)
 	return s->len - anotherString->len;
 }
 
+/* 分配的空间 (s.len + t.len + 1) * StrNode + String */
 String String_concat(String s, String t)
 {
 	String c1 = String_copy(s);
 	String c2 = String_copy(t);
 
 	c1->len = c1->len + c2->len;
-	StrNodePtr rear = s->head;
+	StrNodePtr rear = c1->head;
 
 	// 寻找c1最末尾的节点
 	while (rear->next) {
@@ -140,10 +143,14 @@ String String_concat(String s, String t)
 	// 将c2的节点拼接到c1的末尾节点上
 	rear->ch = c2Head->ch;
 	rear->next = c2Head->next;
+	printFree("[String_concat]", sizeof(*c2Head));
 	free(c2Head);
+	printFree("[String_concat]", sizeof(*c2));
+	free(c2);
 	return c1;
 }
 
+/*  */
 String String_subString(String s, int pos, int len)
 {
 	CheckPtr(s);
@@ -344,18 +351,21 @@ char * String_toString(String s)
 inline void printMalloc(char * msg, int ptrNum)
 {
 	gptrNum += ptrNum;
+	if (needPrint)
 	printf("%s malloc point num : %d\n", msg, ptrNum);
 }
 
 inline void printFree(char * msg, int ptrNum)
 {
 	gptrNum -= ptrNum;
+	if (needPrint)
 	printf("%s free point num : %d\n", msg, ptrNum);
 }
 
 void printPtrNum()
 {
-	printf("Point num : %d\n", gptrNum);
+	if(needPrint)
+		printf("Point num : %d\n", gptrNum);
 }
 
 void printAllChar(String s) {

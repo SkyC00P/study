@@ -10,6 +10,12 @@
 static void test_init();
 static int getSpace(int node, int string);
 static void test();
+void test_replace();
+void test_indexof();
+void test_insert();
+void test_delete();
+void test_substring();
+void test_clear();
 void test_concat();
 void test_compare();
 void test_copy();
@@ -29,20 +35,142 @@ void test() {
 	// test_copy();
 	//test_compare();
 
-	test_concat();
+	//test_concat();
+	//test_clear();
+
+	test_substring();
+
+	test_delete();
+	test_insert();
+	test_indexof();
+	test_replace();
+}
+
+void test_replace()
+{
+	puts("(10)字符替换测试"); printf("\n");
+}
+
+void test_indexof()
+{
+	puts("(9)字符匹配搜索测试"); printf("\n");
+}
+
+void test_insert()
+{
+	puts("(8)字符插入测试");
+	printf("\n");
+}
+
+void test_delete()
+{
+	puts("(7)字符串删除子串测试");
+	printf("\n");
+}
+
+void test_substring()
+{
+	puts("(6)字符串截取测试");
+
+	printf("\n");
+}
+
+/* 
+ 1. 空字符串清理
+ 2. 非空字符串清理
+
+ 测试要点: 输出空字符串，内存释放
+*/
+void test_clear()
+{
+	puts("(5)字符串清空操作");
+	char * tostring;
+
+	resetPtrNum();
+	String s1 = String_new("");
+	String_clear(s1);
+	EXPECT_EQ_INT(getSpace(1, 1), getPtrNum());
+	EXPECT_EQ_INT(0, String_length(s1));
+	EXPECT_TRUE(String_isEmpty(s1));
+	tostring = String_toString(s1);
+	EXPECT_EQ_INT(0, strcmp("", tostring));
+
+	resetPtrNum();
+	String s2 = String_new("abc");
+	String_clear(s2);
+	EXPECT_EQ_INT(getSpace(1, 1), getPtrNum());
+	EXPECT_EQ_INT(0, String_length(s1));
+	EXPECT_TRUE(String_isEmpty(s1));
+	tostring = String_toString(s1);
+	EXPECT_EQ_INT(0, strcmp("", tostring));
+
+	printf("\n");
 }
 
 /*
  1. 空字符串自连接
  2. 非空字符串自连接
- 3. 连接返回的是新的字符串
+ 3. 连接返回的是新字符串
  4. 空字符串和非空字符串相连
  5. 两个非空字符串的相连
+
+ 测试要点：1. 连接长度 2. 连接内容 3.新字符串内存空间归属于大小
 */
 void test_concat()
 {
 	puts("(4)字符串连接测试");
+	String str;
+	char *tostring;
+	unsigned int malloc_space = 0 ;
+	String s1 = String_new("");
+	
+	resetPtrNum();
+	str = String_concat(s1, s1);
+	malloc_space = getSpace(1, 1);
+	EXPECT_EQ_INT(malloc_space, getPtrNum());
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, ""));
+	EXPECT_EQ_INT(0, String_length(str));
 
+	String s2 = String_new("abc");
+	resetPtrNum();
+	str = String_concat(s2, s2);
+	malloc_space = getSpace(7, 1);
+	EXPECT_EQ_INT(malloc_space, getPtrNum());
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "abcabc"));
+	EXPECT_EQ_INT(6, String_length(str));
+
+	String s3 = String_new("ab");
+	String s4 = String_new("");
+	resetPtrNum();
+	str = String_concat(s3, s4);
+	malloc_space = getSpace(3, 1);
+	EXPECT_EQ_INT(malloc_space, getPtrNum());
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "ab"));
+	EXPECT_EQ_INT(2, String_length(str));
+
+	String s5 = String_new("edfh");
+	String s6 = String_new("ijkl");
+	resetPtrNum();
+	str = String_concat(s5, s6);
+	malloc_space = getSpace(9, 1);
+	EXPECT_EQ_INT(malloc_space, getPtrNum());
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "edfhijkl"));
+	EXPECT_EQ_INT(8, String_length(str));
+
+	s5->head->ch = 'a';
+	s6->head->ch = 'b';
+	printAllChar(s5);
+	printAllChar(s6);
+	EXPECT_TRUE(s5 != str);
+	EXPECT_TRUE(s6 != str);
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "edfhijkl"));
+	EXPECT_EQ_INT(8, String_length(str));
+	resetPtrNum();
 	printf("\n");
 }
 
