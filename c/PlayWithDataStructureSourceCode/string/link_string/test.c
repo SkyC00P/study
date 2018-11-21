@@ -40,10 +40,10 @@ void test() {
 
 	test_substring();
 
-	test_delete();
-	test_insert();
-	test_indexof();
-	test_replace();
+	// test_delete();
+	// test_insert();
+	// test_indexof();
+	// test_replace();
 }
 
 void test_replace()
@@ -68,14 +68,94 @@ void test_delete()
 	printf("\n");
 }
 
+/*
+ 1. 入参检测
+ 2. 空字符截断
+ 3. 非空字符串截断
+	3.1 完整截断
+	3.2 不完整截断
+	3.3 截取首字符
+	3.4 截取末尾字符
+ 测试要点：
+  1 截取字符长度和内容符合预期，
+  2 内存分配符合预期，
+  3 截取的新字符串与被截取的字符串相互独立
+*/
 void test_substring()
 {
 	puts("(6)字符串截取测试");
+	String s1 = String_new("abcdefg");
+	String s2 = String_new("");
+
+	String str;
+	resetPtrNum();
+	str = String_subString(s1, 0, 1);
+	EXPECT_TRUE(str == NULL);
+	str = String_subString(s1, 8, 1);
+	EXPECT_TRUE(str == NULL);
+	str = String_subString(s1, 1, 0);
+	EXPECT_TRUE(str == NULL);
+	str = String_subString(s2, 1, 1);
+	EXPECT_TRUE(str == NULL);
+	EXPECT_EQ_INT(0, getPtrNum());
+
+	char * tostring;
+
+	resetPtrNum();
+	str = String_subString(s1, 1, 1);
+	EXPECT_EQ_INT(getSpace(2, 1), getPtrNum());
+	printAllChar(str);
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp("a", tostring));
+	EXPECT_EQ_INT(1, String_length(str));
+	str->head->ch = 'b';
+	tostring = String_toString(s1);
+	EXPECT_EQ_INT(0, strcmp(tostring, "abcdefg"));
+
+	resetPtrNum();
+	str = String_subString(s1, 1, 2);
+	EXPECT_EQ_INT(getSpace(3, 1), getPtrNum());
+	printAllChar(str);
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp("ab", tostring));
+	EXPECT_EQ_INT(2, String_length(str));
+
+	resetPtrNum();
+	str = String_subString(s1, 6, 2);
+	EXPECT_EQ_INT(getSpace(3, 1), getPtrNum());
+	printAllChar(str);
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp("fg", tostring));
+	EXPECT_EQ_INT(2, String_length(str));
+
+	resetPtrNum();
+	str = String_subString(s1, 1, 100);
+	EXPECT_EQ_INT(getSpace(8, 1), getPtrNum());
+	printAllChar(str);
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp("abcdefg", tostring));
+	EXPECT_EQ_INT(7, String_length(str));
+
+	resetPtrNum();
+	str = String_subString(s1, 2, 100);
+	EXPECT_EQ_INT(getSpace(7, 1), getPtrNum());
+	printAllChar(str);
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp("bcdefg", tostring));
+	EXPECT_EQ_INT(6, String_length(str));
+
+	resetPtrNum();
+	str = String_subString(s1, 2, String_length(s1));
+	EXPECT_EQ_INT(getSpace(7, 1), getPtrNum());
+	printAllChar(str);
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp("bcdefg", tostring));
+	EXPECT_EQ_INT(6, String_length(str));
 
 	printf("\n");
 }
 
-/* 
+/*
  1. 空字符串清理
  2. 非空字符串清理
 
@@ -121,9 +201,9 @@ void test_concat()
 	puts("(4)字符串连接测试");
 	String str;
 	char *tostring;
-	unsigned int malloc_space = 0 ;
+	unsigned int malloc_space = 0;
 	String s1 = String_new("");
-	
+
 	resetPtrNum();
 	str = String_concat(s1, s1);
 	malloc_space = getSpace(1, 1);

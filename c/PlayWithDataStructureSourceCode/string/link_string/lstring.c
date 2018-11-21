@@ -150,7 +150,10 @@ String String_concat(String s, String t)
 	return c1;
 }
 
-/*  */
+/*
+  完整截断:分配len+1个StrNode和1个String
+  非完整截断:分配s.len-pos+1个StrNode和1个节点
+*/
 String String_subString(String s, int pos, int len)
 {
 	CheckPtr(s);
@@ -164,6 +167,7 @@ String String_subString(String s, int pos, int len)
 		return NULL;
 	}
 	String str = malloc(sizeof(struct String));
+	printMalloc("[String_subString]", sizeof(struct String));
 
 	// 寻找pos位置的节点
 	StrNodePtr posPtr = s->head;
@@ -174,10 +178,11 @@ String String_subString(String s, int pos, int len)
 	// 从当前节点截取复制剩下的节点
 	str->len = 0;
 	StrNodePtr cpPtr = str->head = malloc(sizeof(StrNode));
-
-	while (posPtr && len) {
+	printMalloc("[String_subString]", sizeof(StrNode));
+	while (posPtr->next && len) {
 		cpPtr->ch = posPtr->ch;
 		cpPtr->next = malloc(sizeof(StrNode));
+		printMalloc("[String_subString]", sizeof(StrNode));
 		str->len++;
 		len--;
 		cpPtr = cpPtr->next;
