@@ -8,7 +8,7 @@ static inline void CheckPtr(const void * ptr) {
 		exit(-1);
 	}
 }
-static int needPrint =0 ;
+static int needPrint = 0;
 static inline void printMalloc(char *, int);
 static inline void printFree(char *, int);
 void printPtrNum();
@@ -31,7 +31,7 @@ String String_new(const char * chars)
 	while (ch != '\0') {
 		cur->ch = ch;
 		StrNodePtr next = malloc(sizeof(StrNode));
-		ptrNum+=sizeof(StrNode);
+		ptrNum += sizeof(StrNode);
 		cur->next = next;
 		len++;
 		ch = chars[len];
@@ -41,7 +41,7 @@ String String_new(const char * chars)
 	str->len = len;
 	cur->ch = '\0';
 	cur->next = NULL;
-	
+
 	printMalloc("[String_new]", ptrNum);
 	return str;
 }
@@ -171,7 +171,7 @@ String String_subString(String s, int pos, int len)
 
 	// 寻找pos位置的节点
 	StrNodePtr posPtr = s->head;
-	while (--pos){
+	while (--pos) {
 		posPtr = posPtr->next;
 	}
 
@@ -222,10 +222,10 @@ int String_indexof(String s, String t, int pos)
 	StrNodePtr sPtr = posPtr;
 	StrNodePtr tPtr = t->head;
 
-	while (slen - cur + 1>= tlen){
+	while (slen - cur + 1 >= tlen) {
 		Bool findit = TRUE;
 
-		while (tPtr->next){
+		while (tPtr->next) {
 			if (sPtr->ch != tPtr->ch) {
 				findit = FALSE;
 				break;
@@ -312,24 +312,22 @@ String String_delete(String s, int pos, int len)
 		posPtr = posPtr->next;
 	}
 
+	int delNum = 0;
+	StrNodePtr tmp = NULL;
+	StrNodePtr delNode = posPtr ;
+
+	while (delNum != len && delNode) {
+		tmp = delNode->next;
+		printFree("[String_delete]1", sizeof(*delNode));
+		free(delNode);
+		delNum++;
+		delNode = tmp;
+	}
+
 	if (posPtr == s->head) {
-		free(s->head);
-		s->len = 0;
-		s->head = NULL;
+		s->head = delNode;
 	}
-	else
-	{
-		int delNum = 0;
-		StrNodePtr tmp = NULL;
-		StrNodePtr delNode = posPtr->next;
-		while (delNum != len && delNode){
-			tmp = delNode;
-			free(delNode);
-			delNum++;
-			delNode = tmp->next;
-		}
-		s->len = -delNum;
-	}
+	s->len -=delNum;
 	return s;
 }
 
@@ -357,27 +355,27 @@ inline void printMalloc(char * msg, int ptrNum)
 {
 	gptrNum += ptrNum;
 	if (needPrint)
-	printf("%s malloc point num : %d\n", msg, ptrNum);
+		printf("%s malloc point num : %d\n", msg, ptrNum);
 }
 
 inline void printFree(char * msg, int ptrNum)
 {
 	gptrNum -= ptrNum;
 	if (needPrint)
-	printf("%s free point num : %d\n", msg, ptrNum);
+		printf("%s free point num : %d\n", msg, ptrNum);
 }
 
 void printPtrNum()
 {
-	if(needPrint)
+	if (needPrint)
 		printf("Point num : %d\n", gptrNum);
 }
 
 void printAllChar(String s) {
 	CheckPtr(s);
-	printf("len:%d, str:",s->len);
+	printf("len:%d, str:", s->len);
 	StrNodePtr head = s->head;
-	while (head){
+	while (head) {
 		if (head->ch == '\0') {
 			printf("\\0");
 		}
