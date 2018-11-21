@@ -299,12 +299,12 @@ String String_delete(String s, int pos, int len)
 	CheckPtr(s);
 	if (pos < 1 || pos > s->len) {
 		fprintf(stderr, "%s:%d: 非法参数:pos = %d\n", __FILE__, __LINE__, pos);
-		exit(-1);
+		return NULL;
 	}
 
 	if (len < 0) {
 		fprintf(stderr, "%s:%d: 非法参数:len = %d\n", __FILE__, __LINE__, len);
-		exit(-1);
+		return NULL;
 	}
 	int index = pos;
 	StrNodePtr posPtr = s->head;

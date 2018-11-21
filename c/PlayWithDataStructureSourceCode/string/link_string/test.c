@@ -38,9 +38,9 @@ void test() {
 	//test_concat();
 	//test_clear();
 
-	test_substring();
+	//test_substring();
 
-	// test_delete();
+	 test_delete();
 	// test_insert();
 	// test_indexof();
 	// test_replace();
@@ -62,9 +62,38 @@ void test_insert()
 	printf("\n");
 }
 
+/*
+ 1. 入参检测
+ 2. 空字符串测试
+ 3. 删掉首字符
+ 4. 删掉末尾字符
+ 5. 删除指定位置后的所有字符
+ 6. 删除指定位置后的部分字符
+
+ 测试要点
+  1. 返回字符串长度和内容符合预期
+  2. 内存释放符合预期
+  3. 返回的字符串指针与源字符串相同
+*/
 void test_delete()
 {
 	puts("(7)字符串删除子串测试");
+	String s1 = String_new("abcdefg");
+	String s2 = String_new("");
+
+	String str;
+	resetPtrNum();
+	str = String_subString(s1, 0, 1);
+	EXPECT_TRUE(str == NULL);
+	str = String_subString(s1, 8, 1);
+	EXPECT_TRUE(str == NULL);
+	str = String_subString(s1, 1, 0);
+	EXPECT_TRUE(str == NULL);
+	str = String_subString(s2, 1, 1);
+	EXPECT_TRUE(str == NULL);
+	EXPECT_EQ_INT(0, getPtrNum());
+
+	char * tostring;
 	printf("\n");
 }
 
