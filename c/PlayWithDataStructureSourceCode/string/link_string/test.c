@@ -8,17 +8,17 @@
 #define PSIZEOF(x) 
 #endif // DEBUG
 
- void test();
- void test_init();
- void test_replace();
- void test_indexof();
- void test_insert();
- void test_delete();
- void test_substring();
- void test_clear();
- void test_concat();
- void test_compare();
- void test_copy();
+void test();
+void test_init();
+void test_replace();
+void test_indexof();
+void test_insert();
+void test_delete();
+void test_substring();
+void test_clear();
+void test_concat();
+void test_compare();
+void test_copy();
 
 static int getSpace(int node, int string);
 
@@ -34,29 +34,86 @@ int main(void) {
 }
 
 void test() {
-	// test_init();
-	// test_copy();
-	//test_compare();
-
-	//test_concat();
-	//test_clear();
-
-	//test_substring();
-
-	// test_delete();
+	test_init();
+	test_copy();
+	test_compare();
+	test_concat();
+	test_clear();
+	test_substring();
+	test_delete();
 	test_insert();
-	// test_indexof();
-	// test_replace();
+	test_indexof();
+	test_replace();
 }
 
 void test_replace()
 {
-	puts("(10)字符替换测试"); printf("\n");
+	puts("(10)字符替换测试");
+
+	printf("\n");
 }
 
+/*
+  1. 入参检测
+  2. 定位首字符
+  3. 定位末尾
+  4. 定位多个字符
+  5. 忽略前n个字符
+
+  测试要点：返回位置符合预期
+*/
 void test_indexof()
 {
-	puts("(9)字符匹配搜索测试"); 
+	puts("(9)字符匹配搜索测试");
+	int index;
+	String search;
+
+	// 入参检测
+	String s1 = String_new("123");
+
+	search = String_new("");
+	index = String_indexof(s1, search, 1);
+	EXPECT_EQ_INT(0, index);
+
+	search = String_new("1");
+	index = String_indexof(s1, search, 0);
+	EXPECT_EQ_INT(0, index);
+
+	index = String_indexof(s1, search, 4);
+	EXPECT_EQ_INT(0, index);
+
+	search = String_new("23");
+	index = String_indexof(s1, search, 3);
+	EXPECT_EQ_INT(0, index);
+
+	index = String_indexof(String_new(""), search, 1);
+	EXPECT_EQ_INT(0, index);
+
+	// 定位首字符
+	String s2 = String_new("456");
+	search = String_new("4");
+	index = String_indexof(s2, search, 1);
+	EXPECT_EQ_INT(1, index);
+
+	search = String_new("5");
+	index = String_indexof(s2, search, 1);
+	EXPECT_EQ_INT(2, index);
+	// 定位末尾
+	search = String_new("6");
+	index = String_indexof(s2, search, 1);
+	EXPECT_EQ_INT(3, index);
+
+	// 定位多个字符
+	String s3 = String_new("123234");
+	search = String_new("234");
+	index = String_indexof(s3, search, 1);
+	EXPECT_EQ_INT(4, index);
+
+	// 忽略前n个字符
+	search = String_new("23");
+	index = String_indexof(s3, search, 3);
+	EXPECT_EQ_INT(4, index);
+
 	printf("\n");
 }
 
@@ -91,7 +148,7 @@ void test_insert()
 	malloc_space = getPtrNum();
 	str = String_insert(s1, 0, insertStr);
 	EXPECT_TRUE(NULL == str);
-	str = String_insert(s1, String_length(s1)+2, insertStr);
+	str = String_insert(s1, String_length(s1) + 2, insertStr);
 	EXPECT_TRUE(NULL == str);
 	EXPECT_EQ_INT(0, malloc_space - getPtrNum());
 
@@ -101,7 +158,7 @@ void test_insert()
 	malloc_space = getPtrNum();
 	str = String_insert(s2, 1, insertStr);
 	EXPECT_EQ_INT(5, String_length(str));
-	EXPECT_EQ_INT(getSpace(3, 0), getPtrNum() - malloc_space );
+	EXPECT_EQ_INT(getSpace(3, 0), getPtrNum() - malloc_space);
 	tostring = String_toString(str);
 	EXPECT_EQ_INT(0, strcmp(tostring, "-1012"));
 	EXPECT_TRUE(str == s2);
@@ -166,7 +223,7 @@ void test_insert()
 	tostring = String_toString(str);
 	EXPECT_EQ_INT(0, strcmp(tostring, "1"));
 	EXPECT_TRUE(str == s5);
-	
+
 	// 空字符串插入非空字符串
 	String s6 = String_new("");
 	insertStr = String_new("123");

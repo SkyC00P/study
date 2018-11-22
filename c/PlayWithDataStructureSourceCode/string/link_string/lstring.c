@@ -8,6 +8,7 @@ static inline void CheckPtr(const void * ptr) {
 		exit(-1);
 	}
 }
+void printAllChar(String str);
 static int needPrint = 0;
 static inline void printMalloc(char *, int);
 static inline void printFree(char *, int);
@@ -200,9 +201,14 @@ int String_indexof(String s, String t, int pos)
 	CheckPtr(t);
 	int slen = String_length(s);
 	int tlen = String_length(t);
+
+	if (slen == 0 || tlen == 0) {
+		return 0;
+	}
+
 	if (pos < 1 || pos > slen) {
 		fprintf(stderr, "%s:%d: 非法参数:pos = %d\n", __FILE__, __LINE__, pos);
-		exit(-1);
+		return 0;
 	}
 
 	// 判断s在pos位置后是否有足够长位置可匹配t
@@ -210,38 +216,18 @@ int String_indexof(String s, String t, int pos)
 		return 0;
 	}
 
-	// 定位串s的pos位置节点
 	int index = pos;
-	StrNodePtr posPtr = s->head;
-	while (--index) {
-		posPtr = posPtr->next;
-	}
+	String sub = String_subString(s, pos, tlen);
 
-	// 跟t进行对比
-	int cur = pos;
-	StrNodePtr sPtr = posPtr;
-	StrNodePtr tPtr = t->head;
-
-	while (slen - cur + 1 >= tlen) {
-		Bool findit = TRUE;
-
-		while (tPtr->next) {
-			if (sPtr->ch != tPtr->ch) {
-				findit = FALSE;
-				break;
-			}
-
-			sPtr = sPtr->next;
-			tPtr = tPtr->next;
+	while (tlen == String_length(sub))
+	{
+		if (String_compare(sub, t) == 0) {
+			return index;
 		}
-
-		if (!findit) {
-			sPtr = posPtr = posPtr->next;
-			tPtr = t->head;
-			cur++;
-		}
-		else {
-			return cur;
+		else
+		{
+			index++;
+			sub = String_subString(s, index, tlen);
 		}
 	}
 
