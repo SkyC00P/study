@@ -107,16 +107,27 @@ void test_delete()
 	EXPECT_EQ_INT(0, String_compare(str, s1));
 	tostring = String_toString(str);
 	EXPECT_EQ_INT(0, strcmp(tostring, "Acdefg"));
-	printAllChar(s1);
 
 	malloc_space = getPtrNum();
 	str = String_delete(s1, String_length(s1), 1);
-	printAllChar(s1);
 	EXPECT_EQ_INT(malloc_space - getSpace(1, 0), getPtrNum());
 	tostring = String_toString(str);
-	printAllChar(s1);
-	// EXPECT_EQ_INT(0, strcmp(tostring, "Acdef"));
-	// EXPECT_EQ_INT(5, String_length(str));
+	EXPECT_EQ_INT(0, strcmp(tostring, "Acdef"));
+	EXPECT_EQ_INT(5, String_length(str));
+
+	malloc_space = getPtrNum();
+	str = String_delete(s1, 2, 2);
+	EXPECT_EQ_INT(malloc_space - getSpace(2, 0), getPtrNum());
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "Aef"));
+	EXPECT_EQ_INT(3, String_length(str));
+
+	malloc_space = getPtrNum();
+	str = String_delete(s1, 2, 100);
+	EXPECT_EQ_INT(malloc_space - getSpace(2, 0), getPtrNum());
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "A"));
+	EXPECT_EQ_INT(1, String_length(str));
 
 	printf("\n");
 }

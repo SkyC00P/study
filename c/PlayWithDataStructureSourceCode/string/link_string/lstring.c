@@ -306,28 +306,42 @@ String String_delete(String s, int pos, int len)
 		fprintf(stderr, "%s:%d: 非法参数:len = %d\n", __FILE__, __LINE__, len);
 		return NULL;
 	}
-	int index = pos;
-	StrNodePtr posPtr = s->head;
-	while (--index > 1) {
-		posPtr = posPtr->next;
-	}
 
+	// 这里的链表设计成单链表真是败笔，而且还是没有头结点的单链表
+	// 导致删除时需要前置节点,要分类讨论首位删除和非首位删除
+	StrNodePtr delBeforePtr, delNode, tmp;
 	int delNum = 0;
-	StrNodePtr tmp = NULL;
-	StrNodePtr delNode = posPtr ;
-
-	while (delNum != len && delNode) {
-		tmp = delNode->next;
-		printFree("[String_delete]1", sizeof(*delNode));
-		free(delNode);
-		delNum++;
-		delNode = tmp;
-	}
-
-	if (posPtr == s->head) {
+	if (pos == 1) {
+		delNode = s->head;
+		while (delNum != len && delNode) {
+			tmp = delNode->next;
+			printFree("[String_delete]", sizeof(*delNode));
+			free(delNode);
+			delNum++;
+			delNode = tmp;
+		}
 		s->head = delNode;
 	}
-	s->len -=delNum;
+	else
+	{
+		delBeforePtr = s->head;
+		for (int i = 2; i < pos; i++) {
+			delBeforePtr = delBeforePtr->next;
+		}
+		delNode = delBeforePtr->next;
+
+		while (delNum != len && delNode->ch != '\0')
+		{
+			tmp = delNode->next;
+			delBeforePtr->next = delNode->next;
+			printFree("[String_delete]", sizeof(*delNode));
+			free(delNode);
+			delNum++;
+			delNode = tmp;
+		}
+	}
+
+	s->len -= delNum;
 	return s;
 }
 
