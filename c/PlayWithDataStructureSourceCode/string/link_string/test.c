@@ -7,18 +7,21 @@
 #else
 #define PSIZEOF(x) 
 #endif // DEBUG
-static void test_init();
+
+ void test();
+ void test_init();
+ void test_replace();
+ void test_indexof();
+ void test_insert();
+ void test_delete();
+ void test_substring();
+ void test_clear();
+ void test_concat();
+ void test_compare();
+ void test_copy();
+
 static int getSpace(int node, int string);
-static void test();
-void test_replace();
-void test_indexof();
-void test_insert();
-void test_delete();
-void test_substring();
-void test_clear();
-void test_concat();
-void test_compare();
-void test_copy();
+
 extern void printPtrNum();
 extern void resetPtrNum();
 extern int getPtrNum();
@@ -40,8 +43,8 @@ void test() {
 
 	//test_substring();
 
-	test_delete();
-	// test_insert();
+	// test_delete();
+	test_insert();
 	// test_indexof();
 	// test_replace();
 }
@@ -53,12 +56,157 @@ void test_replace()
 
 void test_indexof()
 {
-	puts("(9)字符匹配搜索测试"); printf("\n");
+	puts("(9)字符匹配搜索测试"); 
+	printf("\n");
 }
 
+/*
+ 1. 入参检测
+ 2. 非空字符串首位插入非空字符串
+ 3. 非空字符串末尾插入非空字符串
+ 4. 非空字符串中间位置插入非空字符串
+ 5. 非空字符串插入空字符串
+ 6. 空字符串插入非空字符串
+ 7. 空字符串插入空字符串
+ 8. 字符串插入本身
+
+ 测试要点:
+  1. 返回字符串长度和内容符合预期
+  2. 内存分配符合预期
+  3. 返回字符串内存地址和需插入的字符串相同
+  4. 插入的字符串是传入的副本而不是实际的字符串
+*/
 void test_insert()
 {
 	puts("(8)字符插入测试");
+
+	char * tostring;
+	int malloc_space;
+	String insertStr;
+	String str;
+
+	// 非法入参检测
+	String s1 = String_new("abc");
+	insertStr = String_new("12");
+	malloc_space = getPtrNum();
+	str = String_insert(s1, 0, insertStr);
+	EXPECT_TRUE(NULL == str);
+	str = String_insert(s1, String_length(s1)+2, insertStr);
+	EXPECT_TRUE(NULL == str);
+	EXPECT_EQ_INT(0, malloc_space - getPtrNum());
+
+	// 非空字符串首位插入非空字符串
+	String s2 = String_new("12");
+	insertStr = String_new("-10");
+	malloc_space = getPtrNum();
+	str = String_insert(s2, 1, insertStr);
+	EXPECT_EQ_INT(5, String_length(str));
+	EXPECT_EQ_INT(getSpace(3, 0), getPtrNum() - malloc_space );
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "-1012"));
+	EXPECT_TRUE(str == s2);
+	insertStr->head->ch = '0';
+	tostring = String_toString(insertStr);
+	EXPECT_EQ_INT(0, strcmp(tostring, "010"));
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "-1012"));
+
+	// 非空字符串末尾插入非空字符串
+	String s3 = String_new("123");
+	insertStr = String_new("46");
+	malloc_space = getPtrNum();
+	str = String_insert(s3, 4, insertStr);
+	EXPECT_EQ_INT(getSpace(2, 0), getPtrNum() - malloc_space);
+	EXPECT_EQ_INT(5, String_length(str));
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "12346"));
+	EXPECT_TRUE(str == s3);
+	insertStr->head->ch = '0';
+	tostring = String_toString(insertStr);
+	EXPECT_EQ_INT(0, strcmp(tostring, "06"));
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "12346"));
+	insertStr = String_new("5");
+	malloc_space = getPtrNum();
+	str = String_insert(s3, 5, insertStr);
+	EXPECT_EQ_INT(getSpace(1, 0), getPtrNum() - malloc_space);
+	EXPECT_EQ_INT(6, String_length(str));
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "123456"));
+	EXPECT_TRUE(str == s3);
+	insertStr->head->ch = '0';
+	tostring = String_toString(insertStr);
+	EXPECT_EQ_INT(0, strcmp(tostring, "0"));
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "123456"));
+
+	// 非空字符串中间位置插入非空字符串
+	String s4 = String_new("145");
+	insertStr = String_new("23");
+	malloc_space = getPtrNum();
+	str = String_insert(s4, 2, insertStr);
+	EXPECT_EQ_INT(getSpace(2, 0), getPtrNum() - malloc_space);
+	EXPECT_EQ_INT(5, String_length(str));
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "12345"));
+	EXPECT_TRUE(str == s4);
+	insertStr->head->ch = '0';
+	tostring = String_toString(insertStr);
+	EXPECT_EQ_INT(0, strcmp(tostring, "03"));
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "12345"));
+
+	// 非空字符串插入空字符串
+	String s5 = String_new("1");
+	insertStr = String_new("");
+	malloc_space = getPtrNum();
+	str = String_insert(s5, 1, insertStr);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
+	EXPECT_EQ_INT(1, String_length(str));
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "1"));
+	EXPECT_TRUE(str == s5);
+	
+	// 空字符串插入非空字符串
+	String s6 = String_new("");
+	insertStr = String_new("123");
+	malloc_space = getPtrNum();
+	str = String_insert(s6, 1, insertStr);
+	EXPECT_EQ_INT(getSpace(3, 0), getPtrNum() - malloc_space);
+	EXPECT_EQ_INT(3, String_length(str));
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "123"));
+	EXPECT_TRUE(str == s6);
+	insertStr->head->ch = '0';
+	tostring = String_toString(insertStr);
+	EXPECT_EQ_INT(0, strcmp(tostring, "023"));
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "123"));
+
+	// 空字符串插入空字符串
+	String s7 = String_new("");
+	insertStr = String_new("");
+	malloc_space = getPtrNum();
+	str = String_insert(s7, 1, insertStr);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
+	EXPECT_EQ_INT(0, String_length(str));
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, ""));
+	EXPECT_TRUE(str == s7);
+	insertStr->head->ch = '0';
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, ""));
+
+	// 字符串插入本身
+	String s8 = String_new("123");
+	malloc_space = getPtrNum();
+	str = String_insert(s8, 2, s8);
+	EXPECT_EQ_INT(getSpace(3, 0), getPtrNum() - malloc_space);
+	EXPECT_EQ_INT(6, String_length(str));
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "112323"));
+	EXPECT_TRUE(str == s8);
+
 	printf("\n");
 }
 
@@ -128,6 +276,14 @@ void test_delete()
 	tostring = String_toString(str);
 	EXPECT_EQ_INT(0, strcmp(tostring, "A"));
 	EXPECT_EQ_INT(1, String_length(str));
+
+	malloc_space = getPtrNum();
+	str = String_delete(s1, 1, 100);
+	printAllChar(s1);
+	EXPECT_EQ_INT(malloc_space - getSpace(1, 0), getPtrNum());
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, ""));
+	EXPECT_EQ_INT(0, String_length(str));
 
 	printf("\n");
 }
