@@ -46,6 +46,14 @@ void test() {
 	test_replace();
 }
 
+/*
+  1. 不重复字符串替换首字符
+  2. 不重复字符串替换末尾字符
+  3. 不重复字符串替换多个字符
+  4. 不重复字符串替换不存在字符串
+  5. 重复字符替换所有重复的字符串
+  6.
+*/
 void test_replace()
 {
 	puts("(10)字符替换测试");
@@ -59,61 +67,89 @@ void test_replace()
   3. 定位末尾
   4. 定位多个字符
   5. 忽略前n个字符
+  6. 定位未找到
 
-  测试要点：返回位置符合预期
+  测试要点：返回位置符合预期，不分配内存
 */
 void test_indexof()
 {
 	puts("(9)字符匹配搜索测试");
 	int index;
 	String search;
-
+	unsigned int malloc_space = 0;
 	// 入参检测
 	String s1 = String_new("123");
 
 	search = String_new("");
+	malloc_space = getPtrNum();
 	index = String_indexof(s1, search, 1);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
 	EXPECT_EQ_INT(0, index);
 
 	search = String_new("1");
+	malloc_space = getPtrNum();
 	index = String_indexof(s1, search, 0);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
 	EXPECT_EQ_INT(0, index);
 
+	malloc_space = getPtrNum();
 	index = String_indexof(s1, search, 4);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
 	EXPECT_EQ_INT(0, index);
 
 	search = String_new("23");
+	malloc_space = getPtrNum();
 	index = String_indexof(s1, search, 3);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
 	EXPECT_EQ_INT(0, index);
 
-	index = String_indexof(String_new(""), search, 1);
+	String empty = String_new("");
+	malloc_space = getPtrNum();
+	index = String_indexof(empty, search, 1);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
 	EXPECT_EQ_INT(0, index);
 
 	// 定位首字符
 	String s2 = String_new("456");
 	search = String_new("4");
+	malloc_space = getPtrNum();
 	index = String_indexof(s2, search, 1);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
 	EXPECT_EQ_INT(1, index);
 
 	search = String_new("5");
+	malloc_space = getPtrNum();
 	index = String_indexof(s2, search, 1);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
 	EXPECT_EQ_INT(2, index);
 	// 定位末尾
 	search = String_new("6");
+	malloc_space = getPtrNum();
 	index = String_indexof(s2, search, 1);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
 	EXPECT_EQ_INT(3, index);
 
 	// 定位多个字符
 	String s3 = String_new("123234");
 	search = String_new("234");
+	malloc_space = getPtrNum();
 	index = String_indexof(s3, search, 1);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
 	EXPECT_EQ_INT(4, index);
 
 	// 忽略前n个字符
 	search = String_new("23");
+	malloc_space = getPtrNum();
 	index = String_indexof(s3, search, 3);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
 	EXPECT_EQ_INT(4, index);
 
+	String s4 = String_new("abcdef");
+	search = String_new("23");
+	malloc_space = getPtrNum();
+	index = String_indexof(s4, search, 3);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
+	EXPECT_EQ_INT(0, index);
 	printf("\n");
 }
 

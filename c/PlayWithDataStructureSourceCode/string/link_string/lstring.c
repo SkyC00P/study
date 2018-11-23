@@ -222,15 +222,32 @@ int String_indexof(String s, String t, int pos)
 	while (tlen == String_length(sub))
 	{
 		if (String_compare(sub, t) == 0) {
+			String_clear(sub);
+			printFree("[String_indexof]", sizeof(*(sub->head)));
+			free(sub->head);
+			printFree("[String_indexof]", sizeof(*sub));
+			free(sub);
 			return index;
 		}
 		else
 		{
 			index++;
+			String_clear(sub);
+			printFree("[String_indexof]", sizeof(*(sub->head)));
+			free(sub->head);
+			printFree("[String_indexof]", sizeof(*sub));
+			free(sub);
 			sub = String_subString(s, index, tlen);
 		}
 	}
 
+	if (sub) {
+		String_clear(sub);
+		printFree("[String_indexof]", sizeof(*(sub->head)));
+		free(sub->head);
+		printFree("[String_indexof]", sizeof(*sub));
+		free(sub);
+	}
 	return 0;
 }
 
