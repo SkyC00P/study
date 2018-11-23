@@ -52,11 +52,117 @@ void test() {
   3. 不重复字符串替换多个字符
   4. 不重复字符串替换不存在字符串
   5. 重复字符替换所有重复的字符串
-  6.
+  6. 不等长替换
+  7. 入参检测，两个字符串不能为空
+
+  测试的要点:
+  1. 返回的字符串符合预期
+  2. 内存分配，|replace -search| * 字符节点大小
 */
 void test_replace()
 {
 	puts("(10)字符替换测试");
+	unsigned int malloc_space = 0;
+	String str, search, replace;
+	char * tostring;
+
+	str = String_new("abcdef");
+	search = String_new("a");
+	replace = String_new("1");
+	malloc_space = getPtrNum();
+	String_replace(str, search, replace);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
+	replace->head->ch = '2';
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "1bcdef"));
+	EXPECT_EQ_INT(6, String_length(str));
+
+	search = String_new("f");
+	replace = String_new("2");
+	malloc_space = getPtrNum();
+	String_replace(str, search, replace);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
+	replace->head->ch = 'a';
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "1bcde2"));
+	EXPECT_EQ_INT(6, String_length(str));
+
+	search = String_new("cde");
+	replace = String_new("abc");
+	malloc_space = getPtrNum();
+	String_replace(str, search, replace);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
+	replace->head->ch = '1';
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "1babc2"));
+	EXPECT_EQ_INT(6, String_length(str));
+
+	search = String_new("456");
+	malloc_space = getPtrNum();
+	String_replace(str, search, replace);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "1babc2"));
+	EXPECT_EQ_INT(6, String_length(str));
+
+	str = String_new("abcabcabc");
+	search = String_new("abc");
+	replace = String_new("123");
+	malloc_space = getPtrNum();
+	String_replace(str, search, replace);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
+	replace->head->ch = 'a';
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "123123123"));
+	EXPECT_EQ_INT(9, String_length(str));
+
+	search = String_new("123");
+	replace = String_new("23");
+	malloc_space = getPtrNum();
+	String_replace(str, search, replace);
+	EXPECT_EQ_INT(getSpace(3, 0), malloc_space - getPtrNum());
+	replace->head->ch = 'a';
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "232323"));
+	EXPECT_EQ_INT(6, String_length(str));
+
+	search = String_new("23");
+	replace = String_new("456");
+	malloc_space = getPtrNum();
+	String_replace(str, search, replace);
+	EXPECT_EQ_INT(getSpace(3, 0), getPtrNum() - malloc_space);
+	replace->head->ch = 'a';
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "456456456"));
+	EXPECT_EQ_INT(9, String_length(str));
+
+	search = String_new("");
+	replace = String_new("123");
+	malloc_space = getPtrNum();
+	String_replace(str, search, replace);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "456456456"));
+	EXPECT_EQ_INT(9, String_length(str));
+
+	search = String_new("123");
+	replace = String_new("");
+	malloc_space = getPtrNum();
+	String_replace(str, search, replace);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, "456456456"));
+	EXPECT_EQ_INT(9, String_length(str));
+
+	str = String_new("");
+	search = String_new("123");
+	replace = String_new("123");
+	malloc_space = getPtrNum();
+	String_replace(str, search, replace);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
+	tostring = String_toString(str);
+	EXPECT_EQ_INT(0, strcmp(tostring, ""));
+	EXPECT_EQ_INT(0, String_length(str));
 
 	printf("\n");
 }
@@ -150,6 +256,13 @@ void test_indexof()
 	index = String_indexof(s4, search, 3);
 	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
 	EXPECT_EQ_INT(0, index);
+
+	search = String_new("2");
+	malloc_space = getPtrNum();
+	index = String_indexof(s4, search, 1);
+	EXPECT_EQ_INT(0, getPtrNum() - malloc_space);
+	EXPECT_EQ_INT(0, index);
+
 	printf("\n");
 }
 

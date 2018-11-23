@@ -44,8 +44,8 @@ String String_subString(String s, int pos, int len);
 /*  串S和T存在，T是非空串，1<=pos<=StrLength(S).若主串S存在和串T值相同的子串，则返回它在主串S中第pos个字符之后第一次出现的位置，否则返回0. */
 int String_indexof(String s, String t, int pos);
 
-/* 返回替换主串S中出现的所有与replaceStr相等的不重叠子串。 */
-String String_replace(String s, String replaceStr);
+/* 用replaceStr替换主串S中出现的所有与search相等的不重叠子串。 */
+void String_replace(String s, String search, String replaceStr);
 
 /* 串S，串T存在，1<=pos<=StrLength(S) + 1，在串S的第pos个字符之前插入串T。 */
 String String_insert(String s, int pos, String t);

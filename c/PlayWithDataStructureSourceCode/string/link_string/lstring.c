@@ -84,7 +84,7 @@ void String_clear(String s)
 	StrNodePtr tmpNode = NULL;
 	while (freeNode) {
 		tmpNode = freeNode->next;
-		printFree("[String_clear]", sizeof(*tmpNode));
+		printFree("[String_clear]", sizeof(*freeNode));
 		free(freeNode);
 		freeNode = tmpNode;
 	}
@@ -207,7 +207,7 @@ int String_indexof(String s, String t, int pos)
 	}
 
 	if (pos < 1 || pos > slen) {
-		fprintf(stderr, "%s:%d: 非法参数:pos = %d\n", __FILE__, __LINE__, pos);
+		fprintf(stderr, "%s:%d: 非法参数:slen = %d, pos = %d\n", __FILE__, __LINE__,slen, pos);
 		return 0;
 	}
 
@@ -219,7 +219,7 @@ int String_indexof(String s, String t, int pos)
 	int index = pos;
 	String sub = String_subString(s, pos, tlen);
 
-	while (tlen == String_length(sub))
+	while (1)
 	{
 		if (String_compare(sub, t) == 0) {
 			String_clear(sub);
@@ -237,6 +237,10 @@ int String_indexof(String s, String t, int pos)
 			free(sub->head);
 			printFree("[String_indexof]", sizeof(*sub));
 			free(sub);
+			if (tlen > slen - index + 1) {
+				sub = NULL;
+				break;
+			}
 			sub = String_subString(s, index, tlen);
 		}
 	}
@@ -251,9 +255,31 @@ int String_indexof(String s, String t, int pos)
 	return 0;
 }
 
-String String_replace(String s, String replaceStr)
+void String_replace(String s, String search, String replaceStr)
 {
-	return NULL;
+	
+	CheckPtr(s);
+	CheckPtr(search);
+	CheckPtr(replaceStr);
+
+	if (String_isEmpty(s) || String_isEmpty(search) || String_isEmpty(replaceStr)) {
+		fprintf(stderr, "%s:%d: 非法参数:不能为空字符串\n",
+			__FILE__, __LINE__);
+		return;
+	}
+
+	int len = String_length(s);
+	int index = 1;
+
+	do {
+		index = String_indexof(s, search, index);
+		if (index != 0) {
+			String_delete(s, index, String_length(search));
+			String_insert(s, index, replaceStr);
+			index += String_length(replaceStr);
+			len = String_length(s);
+		}
+	} while (index != 0 && index <=len );
 }
 
 // 复制t得到副本cp,cp插入s
@@ -268,9 +294,9 @@ String String_insert(String s, int pos, String t)
 	if (String_isEmpty(t)) {
 		return s;
 	}
-	
+
 	String cp = String_copy(t);
-	StrNodePtr rearBef,rear;
+	StrNodePtr rearBef, rear;
 	rear = cp->head;
 	while (rear->ch != '\0')
 	{
@@ -305,6 +331,7 @@ String String_insert(String s, int pos, String t)
 	return s;
 }
 
+/* 删除len个字符 */
 String String_delete(String s, int pos, int len)
 {
 	CheckPtr(s);
