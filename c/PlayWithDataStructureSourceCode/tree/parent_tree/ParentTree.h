@@ -28,7 +28,7 @@ void ParentTree_clear(PTree * T);
 void ParentTree_destory(PTree * T);
 
 /* 判断树是否为空 */
-Status ParentTree_isEmpty(PTree T);
+Bool ParentTree_isEmpty(PTree T);
 
 /* 按文件的层序序列构造树 */
 Status ParentTree_create(FILE *fp, PTree *T);
