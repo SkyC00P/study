@@ -1,7 +1,22 @@
 /*
  树的数据结构不适合用顺序存储结构来存储，实在是太不方便了
  他的优势就是存取是O(1)，可以根据层序号拿到结点，结点的双亲
- 不直观，而且层序如果跟
+ 通过一个唯一标识符来获得树的结点，那么这个唯一标识符是什么呢？
+ 如果允许存储的数据不重复，而且存储的数据可以进行比较，那么可以用存储的数据来作为唯一的标识符
+ 例如存储的数据为字符类型且不重复，那么就OK: A为根结点，BCD为A的孩子结点。
+ 但如果是允许重复，则得给存储的类型搞一个Hash函数，通过该哈希函数来获得唯一值，
+
+ 树的API设计难的点是:
+ 1. 根据什么来获得指定的结点
+ 2. 结点存储的数据允不允许重复
+ 3. 树的各结点顺序是否需要维护
+
+ 主要的API
+ 3. 插入子树，插入孩子结点，插入兄弟结点
+ 4. 删除子树
+ 5. 查找指定值的结点
+ 6. 查找指定结点的双亲，兄弟，孩子，堂兄弟
+ 7. 树的各结点层序号
 */
 #include "ParentTree.h"
 #include "test.h"
@@ -85,7 +100,7 @@ void test() {
 	printf("(4)函数 ParentTree_assign 测试...\n");
 	{
 		ParentTree_assign(&tree, 'B', 'X');
-		EXPECT_TRUE(2 == ParentTree_order(tree, 'X'));
+		EXPECT_TRUE(1 == ParentTree_order(tree, 'X'));
 		printf("\n");
 	}
 
@@ -111,26 +126,39 @@ void test() {
 		fp = fopen("parent_tree/TestData_T0.txt", "r");
 		ParentTree_create(fp, &T0);
 		fclose(fp);
+		ParentTree_print(tree);
 		ParentTree_print(T0);
 		printf("将树 T0 插入为树 T 中结点 %c 的第 %d 棵子树后，T = \n", 'X', 1);
-		ParentTree_insertTree(&tree, 'X', 1, T0);
+		ParentTree_insertTree(&tree, 'D', 2, T0);
 		ParentTree_print(tree);
 		printf("\n");
 	}
+
+	printf("(6)删除树测试\n");				//18.函数DeleteTree_P测试
+	{
+		ParentTree_print(tree);
+		printf("删除 T 中结点 %c 的第 %d 棵子树后，T = \n", '0', 3);
+		ParentTree_delteTree(&tree, '0', 3);
+		ParentTree_print(tree);
+		printf("\n");
+	}
+
+	ParentTree_clear(&tree);
+	EXPECT_EQ_INT(TRUE, ParentTree_isEmpty(tree));
 }
 
 void test_order() {
 	puts("(3) 获取序列测试"); {
-		EXPECT_TRUE(1 == ParentTree_order(tree, 'A'));
-		EXPECT_TRUE(2 == ParentTree_order(tree, 'B'));
-		EXPECT_TRUE(3 == ParentTree_order(tree, 'C'));
-		EXPECT_TRUE(4 == ParentTree_order(tree, 'D'));
-		EXPECT_TRUE(5 == ParentTree_order(tree, 'E'));
-		EXPECT_TRUE(6 == ParentTree_order(tree, 'F'));
-		EXPECT_TRUE(7 == ParentTree_order(tree, 'G'));
-		EXPECT_TRUE(8 == ParentTree_order(tree, 'H'));
-		EXPECT_TRUE(9 == ParentTree_order(tree, 'I'));
-		EXPECT_TRUE(10 == ParentTree_order(tree, 'J'));
+		EXPECT_TRUE(0 == ParentTree_order(tree, 'A'));
+		EXPECT_TRUE(1 == ParentTree_order(tree, 'B'));
+		EXPECT_TRUE(2 == ParentTree_order(tree, 'C'));
+		EXPECT_TRUE(3 == ParentTree_order(tree, 'D'));
+		EXPECT_TRUE(4 == ParentTree_order(tree, 'E'));
+		EXPECT_TRUE(5 == ParentTree_order(tree, 'F'));
+		EXPECT_TRUE(6 == ParentTree_order(tree, 'G'));
+		EXPECT_TRUE(7 == ParentTree_order(tree, 'H'));
+		EXPECT_TRUE(8 == ParentTree_order(tree, 'I'));
+		EXPECT_TRUE(9 == ParentTree_order(tree, 'J'));
 		EXPECT_TRUE(-1 == ParentTree_order(tree, 'Z'));
 	}
 	puts("");

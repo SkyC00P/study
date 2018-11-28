@@ -1,9 +1,18 @@
 #include "ParentTree.h"
-
 Status ParentTree_init(PTree * T)
 {
 	T->n = 0;
 	return OK;
+}
+
+void ParentTree_clear(PTree * T)
+{
+	T->n = 0;
+}
+
+void ParentTree_destory(PTree * T)
+{
+
 }
 
 Bool ParentTree_isEmpty(PTree T)
@@ -121,16 +130,19 @@ TElemType ParentTree_value(PTree T, int i)
 
 int ParentTree_order(PTree T, TElemType data)
 {
-	if (ParentTree_isEmpty(T)) {
-		return -1;
-	}
+	int i;
+	int k = -1;
 
-	for (int i = 0; i < T.n; i++) {
-		if (data == T.nodes[i].data) {
-			return i + 1;
+	for (i = 0; i < T.n; i++)
+	{
+		if (T.nodes[i].data == data)
+		{
+			k = i;
+			break;
 		}
 	}
-	return -1;
+
+	return k;
 }
 
 Status ParentTree_assign(PTree * T, TElemType e, TElemType value)
@@ -188,16 +200,27 @@ TElemType ParentTree_siblingVaule(PTree T, TElemType e, int order)
 
 int ParentTree_ChildCount(PTree T, TElemType p)
 {
-	int count = 0;
-	for (int i = 0; i < T.n; i++) {
-		if (p == T.nodes[i].data) {
-			for (int j = i + 1; j < T.n; j++) {
-				if (T.nodes[j].parent == i) {
-					count++;
-				}
-			}
-		}
+	int k1, k2, count;
+
+	if (ParentTree_isEmpty(T))						//空树 
+		return -1;
+
+	k1 = ParentTree_order(T, p);
+
+	if (k1 < 0)								//p结点不存在 
+		return -2;
+
+	k2 = k1 + 1;
+	count = 0;
+	while (k2 < T.n)							//统计孩子个数 
+	{
+		if (T.nodes[k2].parent == k1)
+			count++;
+		if (T.nodes[k2].parent > k1)
+			break;
+		k2++;
 	}
+
 	return count;
 }
 
@@ -233,9 +256,9 @@ int ParentTree_seat(PTree T, TElemType p, int i)
 		{
 			if (T.nodes[k2].parent >= k1)
 			{
-				count++;
 				if (count == i)
 					break;
+				count++;
 			}
 
 			k2++;
@@ -245,9 +268,14 @@ int ParentTree_seat(PTree T, TElemType p, int i)
 	return k2;
 }
 
+/* 插入孩子结点的弊端在于要数组都要后移一位，而且要保证层序号一致 */
 Status ParentTree_insertChild(PTree * T, TElemType p, int i, TElemType e)
 {
 	int k0, start, end;
+
+	if (ParentTree_isEmpty(*T) || !e) {
+		return ERROR;
+	}
 
 	k0 = 0;									//k0标记p的位置 
 	while (k0 < (*T).n)
@@ -260,7 +288,8 @@ Status ParentTree_insertChild(PTree * T, TElemType p, int i, TElemType e)
 	if (k0 == (*T).n)							//p不存在 
 		return ERROR;
 
-	start = ParentTree_seat(*T, p, i);			//e结点的插入位置 
+	start = ParentTree_seat(*T, p, i);			//e结点的插入位置
+	printf("[ParentTree_insertChild] 插入的位置:%d\n", start);
 	if (start <= 0)							//插入位置不正确 
 		return ERROR;
 
@@ -282,19 +311,107 @@ Status ParentTree_insertChild(PTree * T, TElemType p, int i, TElemType e)
 	return OK;
 }
 
-/* */
+/* 
+ 插入子树有个特殊的要求：插入的子树里的结点跟原来被插的树结点不能重合
+*/
 Status ParentTree_insertTree(PTree * T, TElemType p, int i, PTree t)
 {
-	int k;
 	if (ParentTree_isEmpty((*T)) || ParentTree_isEmpty(t))				//空树 
 		return ERROR;
-	for (k = 0; k < t.n; k++)
+	for (int k = 0; k < t.n; k++)
 	{
 		if (k == 0)
+			// 在树T的p结点的第i个位置插入孩子结点 t的根结点
 			ParentTree_insertChild(T, p, i, t.nodes[k].data);
 		else
+			// 在树T的上一个以插好的父节点追加孩子结点
 			ParentTree_insertChild(T, t.nodes[t.nodes[k].parent].data, 0, t.nodes[k].data);
 	}
+
+	return OK;
+}
+
+Status ParentTree_delteTree(PTree * T, TElemType p, int i)
+{
+	int k1;											//k1标记p的位置 
+	int k2, count;									//k2标记第i棵子树起点 
+	int k3;
+	int stack[MAX_TREE_NODE], m, n;
+	int k4, k5, order[MAX_TREE_NODE] = {};
+
+	// 找到p的位置 k1
+	for (k1 = 0; k1 < (*T).n; k1++)
+	{
+		if ((*T).nodes[k1].data == p)
+			break;
+		if (k1 == (*T).n - 1)
+			return ERROR;
+	}
+	// --
+	// 找p位置下要删除的子树结点 k2
+	count = 0;
+	for (k2 = k1 + 1; k2 < (*T).n; k2++)
+	{
+		if ((*T).nodes[k2].parent == k1)
+		{
+			count++;
+			if (count == i)
+				break;
+		}
+		if (k2 == (*T).n - 1)
+			return ERROR;
+	}
+	// --
+
+	m = n = 0;
+	stack[n] = k2;
+	n++;
+	(*T).nodes[k2].data = '\0';					//抹掉此处的值
+
+	k3 = k2 + 1;
+	while (k3 < (*T).n && m < n)
+	{
+		if ((*T).nodes[k3].parent < stack[m])
+			k3++;
+		else if ((*T).nodes[k3].parent > stack[m])
+			m++;
+		else		//(*T).nodes[k3].parent==stack[m]
+		{
+			(*T).nodes[k3].data = '\0';					//抹掉此处的值
+			stack[n] = k3;
+			n++;
+			k3++;
+		}
+	}
+
+	k5 = 0;
+	for (k4 = 0; k4 < (*T).n; k4++)							//遍历树，找出各结点现在的实际位置 
+	{
+		if ((*T).nodes[k4].data)
+		{
+			order[k4] = k5;
+			k5++;
+
+			if (k4)										//不为头结点 
+				(*T).nodes[k4].parent = order[(*T).nodes[k4].parent];	//当前结点双亲结点位置发生变化 
+		}
+	}
+
+	k4 = -1;
+	k5 = 0;
+	while (k5 < (*T).n)										//遍历，去掉删除的结点 
+	{
+		if ((*T).nodes[k5].data)
+		{
+			k4++;
+			(*T).nodes[k4].data = (*T).nodes[k5].data;
+			(*T).nodes[k4].parent = (*T).nodes[k5].parent;
+		}
+
+		k5++;
+	}
+
+	(*T).n = k4 + 1;
 
 	return OK;
 }

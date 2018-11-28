@@ -2,6 +2,7 @@
 #define HAVE_PARENT_TREE_H
 #include <stdio.h>
 #include "common.h"
+
 #define MAX_TREE_NODE 100
 
 #ifndef TELEM_TYPE
