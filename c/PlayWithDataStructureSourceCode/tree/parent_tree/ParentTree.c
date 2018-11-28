@@ -363,6 +363,7 @@ Status ParentTree_delteTree(PTree * T, TElemType p, int i)
 	}
 	// --
 
+	// 遍历子树，删掉 k2 下所有的孩子结点和孙子结点，其实并不是真正的删除，只是标记该处方便后面移位置
 	m = n = 0;
 	stack[n] = k2;
 	n++;
@@ -383,7 +384,9 @@ Status ParentTree_delteTree(PTree * T, TElemType p, int i)
 			k3++;
 		}
 	}
+	// --
 
+	// 调整删除后的位置
 	k5 = 0;
 	for (k4 = 0; k4 < (*T).n; k4++)							//遍历树，找出各结点现在的实际位置 
 	{

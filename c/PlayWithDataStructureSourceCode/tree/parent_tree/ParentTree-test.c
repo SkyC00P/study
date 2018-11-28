@@ -137,7 +137,7 @@ void test() {
 	printf("(6)删除树测试\n");				//18.函数DeleteTree_P测试
 	{
 		ParentTree_print(tree);
-		printf("删除 T 中结点 %c 的第 %d 棵子树后，T = \n", '0', 3);
+		printf("删除 T 中结点 %c 的第 %d 棵子树后，T = \n", 'D', 3);
 		ParentTree_delteTree(&tree, '0', 3);
 		ParentTree_print(tree);
 		printf("\n");
