@@ -46,7 +46,7 @@ TElemType ParentTree_root(PTree T);
 TElemType ParentTree_value(PTree T, int i);
 
 /* 返回结点e的值位置(在数组中位置)，-1代表无此结点 */
-int ParentTree_order(PTree T, int i);
+int ParentTree_order(PTree T, TElemType i);
 
 /* 换结点e的值为value */
 Status ParentTree_assign(PTree *T, TElemType e, TElemType value);
@@ -64,7 +64,7 @@ int ParentTree_ChildCount(PTree T, TElemType p);
 int ParentTree_seat(PTree T, TElemType p, int i);
 
 /* 将结点e插入为树T中p结点的第i个孩子（层序计数），i=0定义为最后一个孩子。 */
-Status ParentTree_insertChild(PTree T, TElemType p, int i, TElemType e);
+Status ParentTree_insertChild(PTree * T, TElemType p, int i, TElemType e);
 
 /* 将树t插入为树T中p结点的第i棵子树（层序计数），i=0定义为最后一棵子树。 */
 Status ParentTree_insertTree(PTree *T, TElemType p, int i, PTree t);
@@ -73,7 +73,7 @@ Status ParentTree_insertTree(PTree *T, TElemType p, int i, PTree t);
 Status ParentTree_delteTree(PTree *T, TElemType p, int i);
 
 /* 层序遍历树。 */
-void ParentTree_levelOrderTraverse_P(PTree T, void(Visit)(TElemType));
+void ParentTree_levelOrderTraverse(PTree T, void(Visit)(TElemType));
 
 /* 打印树 */
 void ParentTree_print(PTree T);
