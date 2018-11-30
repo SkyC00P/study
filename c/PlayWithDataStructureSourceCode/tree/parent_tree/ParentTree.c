@@ -366,13 +366,13 @@ Status ParentTree_delteTree(PTree * T, TElemType p, int i)
 	// 遍历子树，删掉 k2 下所有的孩子结点和孙子结点，其实并不是真正的删除，只是标记该处方便后面移位置
 	m = n = 0;
 	stack[n] = k2;
-	n++;
+	n++; // 已标记的值
 	(*T).nodes[k2].data = '\0';					//抹掉此处的值
 
 	k3 = k2 + 1;
 	while (k3 < (*T).n && m < n)
 	{
-		if ((*T).nodes[k3].parent < stack[m])
+		if ((*T).nodes[k3].parent < stack[m]) // 排除掉所有的右兄弟和左侄子
 			k3++;
 		else if ((*T).nodes[k3].parent > stack[m])
 			m++;

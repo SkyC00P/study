@@ -138,7 +138,7 @@ void test() {
 	{
 		ParentTree_print(tree);
 		printf("删除 T 中结点 %c 的第 %d 棵子树后，T = \n", 'D', 3);
-		ParentTree_delteTree(&tree, '0', 3);
+		ParentTree_delteTree(&tree, 'D', 3);
 		ParentTree_print(tree);
 		printf("\n");
 	}
