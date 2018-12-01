@@ -9,7 +9,6 @@ static int findIndex(ChildTree * T, char c) {
 			return i;
 		}
 	}
-	//fprintf(stderr, "[findIndex] : err\n");
 	return -1;
 }
 Status ChildTree_init(ChildTree * T, FILE *fp) {
@@ -61,29 +60,73 @@ Status ChildTree_init(ChildTree * T, FILE *fp) {
 	return OK;
 }
 
+/* 1. 数组长度重置为0
+   2. 清掉孩子链表
+ */
 Status ChildTree_clear(ChildTree * T)
 {
+	if (!T) {
+		return ERROR;
+	}
+	if (T->nodeNum == 0) {
+		return OK;
+	}
+
+	for (int i = 0; i < T->nodeNum; i++)
+	{
+		if (T->nodes[i].fristChild) {
+			ClearList(&(T->nodes[i].fristChild));
+		}
+		T->nodes[i].data = 0;
+		T->nodes[i].parent = 0;
+	}
+	T->nodeNum = 0;
 	return OK;
 }
 
 Bool ChildTree_isEmpty(ChildTree T)
 {
-	return TRUE;
+	return T.nodeNum == 0 ? TRUE : FALSE;
 }
 
+/* 遍历所有的结点的孩子链表，取最长 */
 int ChildTree_degree(ChildTree T)
 {
-	return 0;
+	if (T.nodeNum == 0) {
+		return 0;
+	}
+	
+	int max = 0;
+	for (int i = 0; i < T.nodeNum; i++) {
+		if (T.nodes[i].fristChild) {
+			int len = ListLength(T.nodes[i].fristChild);
+			if (len > max) {
+				max = len;
+			}
+		}
+	}
+	return max;
 }
 
+/* 我这里的实现是有序树，所以可以追踪数组的最后一位到根结点的距离来算出树的深度 */
 int ChildTree_depth(ChildTree T)
 {
-	return 0;
+	int depth = 0;
+	if (T.nodeNum) {
+		ChildNode tail = T.nodes[T.nodeNum - 1];
+		while (tail.parent != -1)
+		{
+			depth++;
+			tail = T.nodes[tail.parent];
+		}
+		depth += 1;
+	}
+	return depth;
 }
 
 ChildNodeType ChildTree_root(ChildTree T)
 {
-	return '\0';
+	return T.nodeNum ? T.nodes[0].data : '\0';
 }
 
 ChildNodeType ChildTree_vaule(ChildTree T, int order)
@@ -126,18 +169,25 @@ Status ChildTree_deleteTree(ChildTree * T, ChildNodeType e, int order)
 	return OK;
 }
 
+/* 这里的层序直接按数组的下标来就行了 */
 void ChildTree_levelOrderTraverse(ChildTree T, void(Visit)(ChildNodeType))
 {
+	if (T.nodeNum == 0) {
+		return;
+	}
+	for (int i = 0; i < T.nodeNum; i++) {
+		Visit(T.nodes[i].data);
+	}
+	printf("\n");
 }
 
 void ChildTree_print(ChildTree T)
 {
-	printf("size is %d\n", T.nodeNum);
-	printf("| %2s | %4s | %6s | child\n", "i", "data", "parent");
+	printf("| %-3s | %-4s | %6s | child\n", "i", "data", "parent");
 	if (T.nodeNum) {
 		for (int i = 0; i < T.nodeNum; i++) {
 			ChildNode node = T.nodes[i];
-			printf("| %2d | %4c | %6d | ", i, node.data, node.parent);
+			printf("| %-3.1d |  %-3c |    %-3d | ", i, node.data, node.parent);
 			if (node.fristChild) {
 				int len = ListLength(node.fristChild);
 				if (len == 0) {
