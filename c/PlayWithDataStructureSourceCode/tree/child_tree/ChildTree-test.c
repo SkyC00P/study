@@ -1,5 +1,6 @@
 #include "test.h"
 #include "ChildTree.h"
+#include <stdlib.h>
 
 static ChildTree tree;
 static void test();
@@ -10,12 +11,13 @@ int main() {
 }
 
 static void test() {
-	puts("(1) ³õÊ¼»¯²âÊÔ");
+	puts("(1) åˆå§‹åŒ–æµ‹è¯•");
 	{
 		FILE * fp = fopen("child_tree/TestData_T.txt", "r");
 		if (fp) {
 			EXPECT_EQ_INT(OK, ChildTree_init(&tree, fp));
 			fclose(fp);
+			ChildTree_print(tree);
 		}
 		else
 		{

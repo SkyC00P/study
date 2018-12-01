@@ -15,7 +15,7 @@ typedef char ChildNodeType;
 #endif // !CHILD_TREE_NODE_TYPE
 
 
-typedef strcut ChildNode{
+typedef struct ChildNode{
 	ChildNodeType data;
 	int parent;
 	DuLinkList fristChild;
@@ -62,7 +62,7 @@ ChildNodeType ChildTree_findChild(ChildTree T, ChildNodeType e, int order);
 ChildNodeType ChildTree_findBrother(ChildTree T, ChildNodeType e, int order);
 
 /* 返回指定结点的孩子结点总数 */
-int ChildTree_getChildCount(ChildNode T, ChildNodeType e);
+int ChildTree_getChildCount(ChildTree T, ChildNodeType e);
 
 /* 在树T搜索值为e的结点下插入子树t */
 Status ChildTree_insertTree(ChildTree * T, ChildNodeType e, ChildTree t);
