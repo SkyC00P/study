@@ -2,6 +2,7 @@
  孩子表示法的关键点用一维数组保存所有的结点，跟双亲表示法一样，结点保存了双亲的域，但同时保存了一个指向所有该结点的孩子的链表的头指针
  链表的实现采用双向循环列表的实现
  树的关键API设计是用什么来定位结点
+ 根结点是否要直接暴露出去，设计成是固定下标为根结点还是可以指定。
 */
 #ifndef HAVE_CHILD_TREE_H
 #define HAVE_CHILD_TREE_H
@@ -52,8 +53,27 @@ ChildNodeType ChildTree_vaule(ChildTree T, int order);
 int ChildTree_order(ChildTree T, ChildNodeType data);
 
 /* 替换结点的值 */
-Status ChildTree_Assign(ChildTree T, ChildNodeType old, ChildNodeType new);
+Status ChildTree_assign(ChildTree T, ChildNodeType old, ChildNodeType new);
 
-ChildNodeType 
+/* 返回指定结点的第N个孩子结点的值 */
+ChildNodeType ChildTree_findChild(ChildTree T, ChildNodeType e, int order);
+
+/* 返回指定结点的第n个兄弟结点的值 */
+ChildNodeType ChildTree_findBrother(ChildTree T, ChildNodeType e, int order);
+
+/* 返回指定结点的孩子结点总数 */
+int ChildTree_getChildCount(ChildNode T, ChildNodeType e);
+
+/* 在树T搜索值为e的结点下插入子树t */
+Status ChildTree_insertTree(ChildTree * T, ChildNodeType e, ChildTree t);
+
+/* 在树T搜索值为e的结点删除其第i棵子树 */
+Status ChildTree_deleteTree(ChildTree * T, ChildNodeType e, int order);
+
+/* 层序遍历树 */
+void ChildTree_levelOrderTraverse(ChildTree T, void(Visit)(ChildNodeType));
+
+/* 打印树 */
+void ChildTree_print(ChildTree T);
 
 #endif // !HAVE_CHILD_TREE_H

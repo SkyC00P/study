@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-typedef char ElemType;
+typedef int ElemType;
 typedef struct Node {
 	ElemType data;
 	struct Node * next;

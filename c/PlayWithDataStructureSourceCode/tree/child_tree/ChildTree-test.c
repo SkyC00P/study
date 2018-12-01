@@ -10,8 +10,18 @@ int main() {
 }
 
 static void test() {
-	FILE * fp = fopen("child_tree/TestData_T.txt", "r");
-	if (fp) {
-		EXPECT_EQ_INT(OK, ChildTree_init(&tree,fp));
+	puts("(1) ≥ı ºªØ≤‚ ‘");
+	{
+		FILE * fp = fopen("child_tree/TestData_T.txt", "r");
+		if (fp) {
+			EXPECT_EQ_INT(OK, ChildTree_init(&tree, fp));
+			fclose(fp);
+		}
+		else
+		{
+			fprintf(stderr, "IO ERROR");
+			exit(-1);
+		}
 	}
+
 }
