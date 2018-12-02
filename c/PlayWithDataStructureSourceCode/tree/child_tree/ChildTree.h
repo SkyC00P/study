@@ -61,7 +61,7 @@ ChildNodeType ChildTree_vaule(ChildTree T, int order);
 int ChildTree_order(ChildTree T, ChildNodeType data);
 
 /* 替换结点的值 */
-Status ChildTree_assign(ChildTree T, ChildNodeType old, ChildNodeType new);
+Status ChildTree_assign(ChildTree * T, ChildNodeType old, ChildNodeType new);
 
 /* 返回指定结点的第N个孩子结点的值 */
 ChildNodeType ChildTree_findChild(ChildTree T, ChildNodeType e, int order);

@@ -49,6 +49,50 @@ static void test() {
 		}
 	}
 
+	puts("(2) 查询测试"); 
+	{
+		puts("-> 验证ChildTree_vaule()");
+		EXPECT_EQ_INT('R', ChildTree_vaule(tree, 0));
+		EXPECT_EQ_INT('D', ChildTree_vaule(tree, 4));
+		EXPECT_EQ_INT('I', ChildTree_vaule(tree, 10));
+
+		EXPECT_EQ_INT('0', ChildTree_vaule(subtree, 0));
+		EXPECT_EQ_INT('3', ChildTree_vaule(subtree, 3));
+		EXPECT_EQ_INT('5', ChildTree_vaule(subtree, 5));
+
+		puts("-> 验证ChildTree_order()");
+		EXPECT_EQ_INT(0, ChildTree_order(tree, 'R'));
+		EXPECT_EQ_INT(4, ChildTree_order(tree, 'D'));
+		EXPECT_EQ_INT(10, ChildTree_order(tree, 'I'));
+
+		EXPECT_EQ_INT(0, ChildTree_order(subtree, '0'));
+		EXPECT_EQ_INT(3, ChildTree_order(subtree, '3'));
+		EXPECT_EQ_INT(5, ChildTree_order(subtree, '5'));
+
+		puts("-> 验证ChildTree_assign()");
+		puts("将树tree根结点R替换Z");
+		EXPECT_EQ_INT(OK, ChildTree_assign(&tree, 'R', 'Z'));
+		puts("将树tree结点D替换O");
+		EXPECT_EQ_INT(OK, ChildTree_assign(&tree, 'D', 'O'));
+		ChildTree_print(tree);
+
+		puts("-> 验证ChildTree_findChild()");
+		EXPECT_TRUE(ChildTree_findChild(tree, 'F', 2) == 'H');
+		EXPECT_TRUE(ChildTree_findChild(tree, 'F', 1) == 'G');
+		EXPECT_TRUE(ChildTree_findChild(tree, 'B', 2) == '\0');
+
+		puts("-> 验证ChildTree_findBrother()");
+		EXPECT_TRUE(ChildTree_findBrother(tree, 'H', 1) == 'G');
+		EXPECT_TRUE(ChildTree_findBrother(tree, 'H', 2) == 'I');
+		EXPECT_TRUE(ChildTree_findBrother(tree, 'H', 3) == '\0');
+
+		puts("-> 验证ChildTree_getChildCount()");
+		EXPECT_EQ_INT(3, ChildTree_getChildCount(tree, 'F'));
+		EXPECT_EQ_INT(2, ChildTree_getChildCount(tree, 'A'));
+		EXPECT_EQ_INT(3, ChildTree_getChildCount(tree, 'Z'));
+		EXPECT_EQ_INT(0, ChildTree_getChildCount(tree, 'B'));
+	}
+
 }
 
 static void showChar(ChildNodeType e) {

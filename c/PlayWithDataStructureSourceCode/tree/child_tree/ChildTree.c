@@ -131,31 +131,89 @@ ChildNodeType ChildTree_root(ChildTree T)
 
 ChildNodeType ChildTree_vaule(ChildTree T, int order)
 {
-	return '\0';
+	return T.nodeNum == 0 ? '\0' : T.nodes[order].data;
 }
 
 int ChildTree_order(ChildTree T, ChildNodeType data)
 {
-	return 0;
+	if (T.nodeNum == 0) {
+		return -1;
+	}
+	for (int i = 0; i < T.nodeNum; i++) {
+		if (T.nodes[i].data == data) {
+			return i;
+		}
+	}
+	return -1;
 }
 
-Status ChildTree_assign(ChildTree T, ChildNodeType old, ChildNodeType new)
+Status ChildTree_assign(ChildTree * T, ChildNodeType old, ChildNodeType new)
 {
-	return OK;
+	int order = ChildTree_order(*T, old);
+	if (order != -1) {
+		T->nodes[order].data = new;
+		return OK;
+	}
+	return ERROR;
 }
 
-ChildNodeType ChildTree_findChild(ChildTree T, ChildNodeType e, int order)
+ChildNodeType ChildTree_findChild(ChildTree T, ChildNodeType e, int corder)
 {
+	int order = ChildTree_order(T, e);
+	if (order != -1) {
+		DuLinkList list = T.nodes[order].fristChild;
+		if (list) {
+			ElemType e;
+			GetElem(list, corder, &e);
+			return T.nodes[e].data;
+		}
+	}
 	return '\0';
 }
 
-ChildNodeType ChildTree_findBrother(ChildTree T, ChildNodeType e, int order)
+ChildNodeType ChildTree_findBrother(ChildTree T, ChildNodeType e, int corder)
 {
+	int order = ChildTree_order(T, e);
+
+	if (order < 0) {
+		return '\0';
+	}
+
+	int parent = T.nodes[order].parent;
+	ChildNode * pNode = &(T.nodes[parent]);
+	DuLinkList list = pNode->fristChild;
+
+	if (!list) {
+		return '\0';
+	}
+
+	int count = 0;
+	int len = ListLength(list);
+
+	for (int i = 0; i < len; i++) {
+		if (list->data != e) {
+			count++;
+		}
+
+		if (count == corder) {
+			return list->data;
+		}
+
+		list = list->next;
+	}
+
 	return '\0';
 }
 
 int ChildTree_getChildCount(ChildTree T, ChildNodeType e)
 {
+	int order = ChildTree_order(T, e);
+	if (order < 0) {
+		return -1;
+	}
+	if (T.nodes[order].fristChild) {
+		return ListLength(T.nodes[order].fristChild);
+	}
 	return 0;
 }
 
