@@ -171,11 +171,14 @@ ChildNodeType ChildTree_findChild(ChildTree T, ChildNodeType e, int corder)
 	return '\0';
 }
 
+// 这里我忘了我的循环链表是用尾指针来实现的,而且当初没有实现一个遍历链表的方法
+// 这里直接操作结构体里的细节了
 ChildNodeType ChildTree_findBrother(ChildTree T, ChildNodeType e, int corder)
 {
 	int order = ChildTree_order(T, e);
 
 	if (order < 0) {
+		
 		return '\0';
 	}
 
@@ -189,19 +192,21 @@ ChildNodeType ChildTree_findBrother(ChildTree T, ChildNodeType e, int corder)
 
 	int count = 0;
 	int len = ListLength(list);
+	list = list->next->next;
 
-	for (int i = 0; i < len; i++) {
-		if (list->data != e) {
+	ChildNodeType data;
+	for (int i = 1; i <= len; i++) {
+		data = T.nodes[list->data].data;
+		if (data != e) {
 			count++;
 		}
 
 		if (count == corder) {
-			return list->data;
+			return data;
 		}
 
 		list = list->next;
 	}
-
 	return '\0';
 }
 

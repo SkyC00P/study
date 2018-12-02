@@ -83,7 +83,7 @@ static void test() {
 
 		puts("-> 验证ChildTree_findBrother()");
 		EXPECT_TRUE(ChildTree_findBrother(tree, 'H', 1) == 'G');
-		EXPECT_TRUE(ChildTree_findBrother(tree, 'H', 2) == 'I');
+		EXPECT_TRUE(ChildTree_findBrother(tree, 'H', 2) == 'K');
 		EXPECT_TRUE(ChildTree_findBrother(tree, 'H', 3) == '\0');
 
 		puts("-> 验证ChildTree_getChildCount()");
