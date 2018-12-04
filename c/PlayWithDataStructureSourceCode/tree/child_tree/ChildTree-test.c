@@ -12,7 +12,7 @@ int main() {
 	test();
 	TEST_REPORT;
 }
-
+Status ChildTree_insertChild(ChildTree * T, ChildNodeType e, ChildNodeType new, int order);
 static void test() {
 	puts("(1) 初始化测试");
 	{
@@ -93,6 +93,20 @@ static void test() {
 		EXPECT_EQ_INT(0, ChildTree_getChildCount(tree, 'B'));
 	}
 
+	puts("(3) 新增结点测试");
+	{
+		//ChildTree_insertChild(&tree, 'Z', 'W',2);
+		//ChildTree_insertChild(&tree, 'W', 'X', 0);
+		ChildTree_print(tree);
+		ChildTree_print(subtree);
+		//ChildTree_insertTree(&tree, 'Z', 2, subtree);
+		EXPECT_EQ_INT(OK, ChildTree_insertTree(&tree, 'Z', 2, subtree));
+		ChildTree_print(tree);
+		//ChildTree tmp; 
+		//ChildTree_init(&tmp, fopen("child_tree/TestData_T1.txt","r"));
+		//ChildTree_print(tmp);
+		//ChildTree_insertChild(&tmp, '3', '4', 0);
+	}
 }
 
 static void showChar(ChildNodeType e) {

@@ -221,9 +221,22 @@ int ChildTree_getChildCount(ChildTree T, ChildNodeType e)
 	return 0;
 }
 
-static Node List_get(DuLinkList list, int i) {
+static void List_print(DuLinkList list) {
+	if (!list) {
+		return;
+	}
+	int len = ListLength(list);
+	Node * pNode = list;
+	for (int i = 0; i < len; i++) {
+		printf("%d ", pNode->data);
+		pNode = pNode->prior;
+	}
+	printf("\n");
+}
+
+static Node * List_get(DuLinkList list, int i) {
 	if (list) {
-		Node node = list->next; // head point
+		Node * node = list->next; // head point
 		int len = ListLength(list);
 
 		if (i > len) {
@@ -232,16 +245,16 @@ static Node List_get(DuLinkList list, int i) {
 		}
 
 		for (int j = 0; j < len && j < i; j++) {
-			node = node.next;
+			node = node->next;
 		}
 		return node;
 	}
 	return NULL;
 }
 
-static Status ChildTree_insertChild(ChildTree * T, ChildNodeType e, ChildNodeType new, int order) {
+Status ChildTree_insertChild(ChildTree * T, ChildNodeType e, ChildNodeType new, int order) {
 	// 1. 找到父节点
-	int parent = ChildTree_order(T, e);
+	int parent = ChildTree_order(*T, e);
 	// 2. 在父节点的孩子链表插入值并更新剩下的值
 	ChildNode * parentNode = &(T->nodes[parent]);
 	if (!parentNode->fristChild) {
@@ -251,40 +264,102 @@ static Status ChildTree_insertChild(ChildTree * T, ChildNodeType e, ChildNodeTyp
 	int len = ListLength(list);
 	int insertIndex;
 	if (order == 0 || order > len) {
-		ElemType lastIndex; 
-		GetElem(list,len, &lastIndex);
-		insertIndex = lastIndex + 1;
-		ListInsert(list, ListLength(list) + 1, insertIndex);
+		ElemType lastIndex;
+		if (GetElem(list, len, &lastIndex)) {
+			insertIndex = lastIndex + 1;
+		}
+		else {
+			
+			// 插入的位置:父节点的左兄弟的最后一个孩子结点的下标
+			// 插入的位置:父节点的最右兄弟结点
+			DuLinkList uncleList = T->nodes[T->nodes[parent].parent].fristChild;
+			int len = ListLength(uncleList);
+			int findIt = 0;
+			while (len) {
+				if (uncleList->data == parent && len - 1 > 0) {
+					findIt = 1;
+					break;
+				}
+				uncleList = uncleList->prior;
+				len--;
+			}
+			if (findIt &&  T->nodes[uncleList->prior->data].fristChild) {
+				insertIndex = T->nodes[uncleList->prior->data].fristChild->data + 1;
+			}
+			else {
+				insertIndex = uncleList->data + 1;
+			}
+
+		}
+		ListInsert(&list, ListLength(list) + 1, insertIndex);
+		T->nodes[parent].fristChild = list;
 	}
-	else if(order < 1){
+	else if (order < 1) {
 		fprintf(stderr, "Error:order <1\n");
 		return ERROR;
 	}
 	else
 	{
 		GetElem(list, order, &insertIndex);
-		ListInsert(list, order, insertIndex);
+		ListInsert(&list, order, insertIndex);
 		// 链表少了个设置相应位置值的方法,只好自己再写个
-		Node n = List_get(list, insertIndex);
+		Node * n = List_get(list, insertIndex);
 		int len = ListLength(list);
-		for (int i = order+1; i < len; i++) {
-			n.next.data += 1;
-			n = n.next;
+		for (int i = insertIndex + 1; i <= len; i++) {
+			n->next->data += 1;
+			n = n->next;
 		}
+		T->nodes[parent].fristChild = list;
 	}
-
-	// 更新所有剩下所有结点的数据
-	for (int i = insertIndex; i < T->nodeNum; i++) {
-		int pVaule = T->nodes[i].parent;
+	// 更新并移动所有剩下所有结点的数据
+	for (int i = T->nodeNum; i > insertIndex; i--) {
+		int pVaule = T->nodes[i - 1].parent;
 		if (pVaule >= insertIndex) {
-			T->nodes[i].parent++;
+			T->nodes[i].parent = pVaule + 1;
+		}
+		else
+		{
+			T->nodes[i].parent = pVaule;
 		}
 
+		DuLinkList list = T->nodes[i - 1].fristChild;
+		if (list) {
+			Node * head = list->next->next;
+			int len = ListLength(list);
+			for (int i = 0; i < len; i++) {
+				if (head->data >= insertIndex) {
+					head->data++;
+				}
+				head = head->next;
+			}
+			T->nodes[i].fristChild = list;
+		}
+		else
+		{
+			T->nodes[i].fristChild = NULL;
+		}
+		T->nodes[i].data = T->nodes[i - 1].data;
+	}
+	// 更新左兄弟的孩子链表
+	for (int i = parent + 1; i < insertIndex; i++) {
 		DuLinkList list = T->nodes[i].fristChild;
 		if (list) {
-
+			Node * head = list->next->next;
+			int len = ListLength(list);
+			for (int i = 0; i < len; i++) {
+				if (head->data >= insertIndex) {
+					head->data++;
+				}
+				head = head->next;
+			}
 		}
 	}
+	T->nodes[insertIndex].data = new;
+	T->nodes[insertIndex].parent = parent;
+	T->nodes[insertIndex].fristChild = NULL;
+	T->nodeNum++;
+	
+	return OK;
 }
 
 /* 插入时如果要维护层序，那么数组的实现是否真的好？

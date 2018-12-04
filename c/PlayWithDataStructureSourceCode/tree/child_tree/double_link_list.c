@@ -145,7 +145,7 @@ Status ListDelete(DuLinkList * L, int i, ElemType * e)
 	}
 
 	Node * del = del_before->next;
-	*e = del->data;
+	if (e) { *e = del->data; }
 	del_before->next = del->next;
 	del->next->prior = del_before;
 	free(del);
