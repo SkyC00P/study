@@ -39,7 +39,7 @@ Status ChildTree_init(ChildTree * T, FILE *fp) {
 			fprintf(stderr, "File Read Error, expect is '='\n");
 			return ERROR;
 		}
-		
+
 		while (1) {
 			ch = fgetc(fp);
 			if (ch == '\n' || ch == EOF) {
@@ -95,7 +95,7 @@ int ChildTree_degree(ChildTree T)
 	if (T.nodeNum == 0) {
 		return 0;
 	}
-	
+
 	int max = 0;
 	for (int i = 0; i < T.nodeNum; i++) {
 		if (T.nodes[i].fristChild) {
@@ -178,7 +178,6 @@ ChildNodeType ChildTree_findBrother(ChildTree T, ChildNodeType e, int corder)
 	int order = ChildTree_order(T, e);
 
 	if (order < 0) {
-		
 		return '\0';
 	}
 
@@ -222,8 +221,53 @@ int ChildTree_getChildCount(ChildTree T, ChildNodeType e)
 	return 0;
 }
 
-Status ChildTree_insertTree(ChildTree * T, ChildNodeType e, ChildTree t)
+static Status ChildTree_insertChild(ChildTree * T, ChildNodeType e, ChildNodeType new, int order) {
+	// 1. 找到父节点
+	int parent = ChildTree_order(T, e);
+	// 2. 在父节点的孩子链表插入值
+	ChildNode * parentNode = &(T->nodes[parent]);
+	if (!parentNode->fristChild) {
+		InitList(&(parentNode->fristChild));
+	}
+	DuLinkList list = parentNode->fristChild;
+	int len = ListLength(list);
+	int insertIndex;
+	if (order == 0 || order > len) {
+		ElemType lastIndex; 
+		GetElem(list,len, &lastIndex);
+		insertIndex = lastIndex + 1;
+		ListInsert(list, ListLength(list) + 1, lastIndex);
+	}
+	else if(order < 1){
+		fprintf(stderr, "Error:order <1\n");
+		return ERROR;
+	}
+	else
+	{
+		ElemType lastIndex;
+		GetElem(list, order, &lastIndex);
+	}
+
+}
+
+/* 插入时如果要维护层序，那么数组的实现是否真的好？
+   如果需要维护层序，那么需要维护到具体的下标吗？还是只要能判断出任意两个结点的大小即可呢？
+   插入子树可以等同于插入一个结点
+*/
+Status ChildTree_insertTree(ChildTree * T, ChildNodeType e, int order, ChildTree t)
 {
+	if (T->nodeNum == 0 || t.nodeNum == 0) {
+		return ERROR;
+	}
+
+	// 插入根结点
+	ChildTree_insertChild(T, e, t.nodes[0].data, order);
+
+	// 插入孩子结点
+	for (int i = 1; i < t.nodeNum; i++) {
+		ChildTree_insertChild(T, t.nodes[t.nodes[i].parent].data, t.nodes[i].data, 0);
+	}
+
 	return OK;
 }
 

@@ -73,7 +73,7 @@ ChildNodeType ChildTree_findBrother(ChildTree T, ChildNodeType e, int order);
 int ChildTree_getChildCount(ChildTree T, ChildNodeType e);
 
 /* 在树T搜索值为e的结点下插入子树t */
-Status ChildTree_insertTree(ChildTree * T, ChildNodeType e, ChildTree t);
+Status ChildTree_insertTree(ChildTree * T, ChildNodeType e, int order, ChildTree t);
 
 /* 在树T搜索值为e的结点删除其第i棵子树 */
 Status ChildTree_deleteTree(ChildTree * T, ChildNodeType e, int order);
