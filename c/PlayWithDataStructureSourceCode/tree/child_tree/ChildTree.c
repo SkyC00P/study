@@ -221,10 +221,28 @@ int ChildTree_getChildCount(ChildTree T, ChildNodeType e)
 	return 0;
 }
 
+static Node List_get(DuLinkList list, int i) {
+	if (list) {
+		Node node = list->next; // head point
+		int len = ListLength(list);
+
+		if (i > len) {
+			fprintf(stderr, "List get is Error i:[%d]\n", i);
+			return NULL;
+		}
+
+		for (int j = 0; j < len && j < i; j++) {
+			node = node.next;
+		}
+		return node;
+	}
+	return NULL;
+}
+
 static Status ChildTree_insertChild(ChildTree * T, ChildNodeType e, ChildNodeType new, int order) {
 	// 1. 找到父节点
 	int parent = ChildTree_order(T, e);
-	// 2. 在父节点的孩子链表插入值
+	// 2. 在父节点的孩子链表插入值并更新剩下的值
 	ChildNode * parentNode = &(T->nodes[parent]);
 	if (!parentNode->fristChild) {
 		InitList(&(parentNode->fristChild));
@@ -236,7 +254,7 @@ static Status ChildTree_insertChild(ChildTree * T, ChildNodeType e, ChildNodeTyp
 		ElemType lastIndex; 
 		GetElem(list,len, &lastIndex);
 		insertIndex = lastIndex + 1;
-		ListInsert(list, ListLength(list) + 1, lastIndex);
+		ListInsert(list, ListLength(list) + 1, insertIndex);
 	}
 	else if(order < 1){
 		fprintf(stderr, "Error:order <1\n");
@@ -244,10 +262,29 @@ static Status ChildTree_insertChild(ChildTree * T, ChildNodeType e, ChildNodeTyp
 	}
 	else
 	{
-		ElemType lastIndex;
-		GetElem(list, order, &lastIndex);
+		GetElem(list, order, &insertIndex);
+		ListInsert(list, order, insertIndex);
+		// 链表少了个设置相应位置值的方法,只好自己再写个
+		Node n = List_get(list, insertIndex);
+		int len = ListLength(list);
+		for (int i = order+1; i < len; i++) {
+			n.next.data += 1;
+			n = n.next;
+		}
 	}
 
+	// 更新所有剩下所有结点的数据
+	for (int i = insertIndex; i < T->nodeNum; i++) {
+		int pVaule = T->nodes[i].parent;
+		if (pVaule >= insertIndex) {
+			T->nodes[i].parent++;
+		}
+
+		DuLinkList list = T->nodes[i].fristChild;
+		if (list) {
+
+		}
+	}
 }
 
 /* 插入时如果要维护层序，那么数组的实现是否真的好？
