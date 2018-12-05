@@ -221,40 +221,9 @@ int ChildTree_getChildCount(ChildTree T, ChildNodeType e)
 	return 0;
 }
 
-static void List_print(DuLinkList list) {
-	if (!list) {
-		return;
-	}
-	int len = ListLength(list);
-	Node * pNode = list;
-	for (int i = 0; i < len; i++) {
-		printf("%d ", pNode->data);
-		pNode = pNode->prior;
-	}
-	printf("\n");
-}
-
-static Node * List_get(DuLinkList list, int i) {
-	if (list) {
-		Node * node = list->next; // head point
-		int len = ListLength(list);
-
-		if (i > len) {
-			fprintf(stderr, "List get is Error i:[%d]\n", i);
-			return NULL;
-		}
-
-		for (int j = 0; j < len && j < i; j++) {
-			node = node->next;
-		}
-		return node;
-	}
-	return NULL;
-}
-
 /*
  必须保证order非负数
- 1. 如果孩子链表为空，则插入位置为 parent + 1
+ 1. 如果孩子链表为空，即插入叶子结点时，则插入位置为从父结点开始第一个双亲大于父结点的结点
  2. 如果孩子链表不为空，看order情况
   1. 如果order为0或order大于列表长度，则插入位置为末尾的孩子下标 + 1
   2. 如果 1 <= order <= listLen, 则插入的值为list在order位置的值
@@ -267,6 +236,12 @@ static int ChildTree_findInsertIndex(ChildTree T, int parent, int order) {
 
 	ChildNode * pNode = &(T.nodes[parent]);
 	if (!pNode->fristChild) {
+		for (int i = parent + 1; i < T.nodeNum; i++) {
+			if (T.nodes[i].parent > parent) {
+				return i;
+			}
+		}
+		// 如果没找到，代表插入的是最末尾的叶子结点
 		return parent + 1;
 	}
 
@@ -277,7 +252,7 @@ static int ChildTree_findInsertIndex(ChildTree T, int parent, int order) {
 
 	if (order >= 1 && order <= len) {
 		ElemType e;
-		GetElem(pNode, order, &e);
+		GetElem(pNode->fristChild, order, &e);
 		return e;
 	}
 
@@ -294,7 +269,7 @@ static int ChildTree_findInsertIndex(ChildTree T, int parent, int order) {
    4. 遍历祖父结点到最后的叶节点，修改孩子链表和双亲结点的值
    5. 在腾出的新位置上插入数据
 */
-Status ChildTree_insertChild_1(ChildTree * T, ChildNodeType e, ChildNodeType new, int order) {
+Status ChildTree_insertChild(ChildTree * T, ChildNodeType e, ChildNodeType new, int order) {
 	int parent = ChildTree_order(*T, e);
 	if (parent < 0) {
 		return ERROR;
@@ -308,14 +283,14 @@ Status ChildTree_insertChild_1(ChildTree * T, ChildNodeType e, ChildNodeType new
 	ChildNode * parentNode = &(T->nodes[parent]);
 	if (!parentNode->fristChild) {
 		InitList(&(parentNode->fristChild));
-		ListInsert(parentNode->fristChild, 1, insertIndex);
+		ListInsert(&(parentNode->fristChild), 1, insertIndex);
 	}
 	else {
 		int lastIndex = parentNode->fristChild->data;
-		ListInsert(parentNode->fristChild, ListLength(parentNode->fristChild) + 1, lastIndex + 1);
+		ListInsert(&(parentNode->fristChild), ListLength(parentNode->fristChild) + 1, lastIndex + 1);
 	}
 
-	for (int i = T->nodeNum; i < insertIndex; i--) {
+	for (int i = T->nodeNum; i > insertIndex; i--) {
 		T->nodes[i].data = T->nodes[i - 1].data;
 		T->nodes[i].parent = T->nodes[i - 1].parent;
 		T->nodes[i].fristChild = T->nodes[i - 1].fristChild;
@@ -333,8 +308,8 @@ Status ChildTree_insertChild_1(ChildTree * T, ChildNodeType e, ChildNodeType new
 		}
 
 		if (node->fristChild) {
-			for (Node * n = node->fristChild, int i = ListLength(node->fristChild);
-				i > 0; i--)
+			Node * n; int i;
+			for (n = node->fristChild, i = ListLength(node->fristChild); i > 0; i--)
 			{
 				if (n->data >= insertIndex) {
 					n->data = n->data + 1;
@@ -348,117 +323,6 @@ Status ChildTree_insertChild_1(ChildTree * T, ChildNodeType e, ChildNodeType new
 	T->nodes[insertIndex].fristChild = NULL;
 	T->nodes[insertIndex].parent = parent;
 	T->nodeNum++;
-}
-
-Status ChildTree_insertChild(ChildTree * T, ChildNodeType e, ChildNodeType new, int order) {
-
-	return ChildTree_insertChild_1(T, e, new, order);
-	// 1. 找到父节点
-	int parent = ChildTree_order(*T, e);
-	// 2. 在父节点的孩子链表插入值并更新剩下的值
-	ChildNode * parentNode = &(T->nodes[parent]);
-	if (!parentNode->fristChild) {
-		InitList(&(parentNode->fristChild));
-	}
-	DuLinkList list = parentNode->fristChild;
-	int len = ListLength(list);
-	int insertIndex;
-	if (order == 0 || order > len) {
-		ElemType lastIndex;
-		if (GetElem(list, len, &lastIndex)) {
-			insertIndex = lastIndex + 1;
-		}
-		else {
-
-			// 插入的位置:父节点的左兄弟的最后一个孩子结点的下标
-			// 插入的位置:父节点的最右兄弟结点
-			DuLinkList uncleList = T->nodes[T->nodes[parent].parent].fristChild;
-			int len = ListLength(uncleList);
-			int findIt = 0;
-			while (len) {
-				if (uncleList->data == parent && len - 1 > 0) {
-					findIt = 1;
-					break;
-				}
-				uncleList = uncleList->prior;
-				len--;
-			}
-			if (findIt &&  T->nodes[uncleList->prior->data].fristChild) {
-				insertIndex = T->nodes[uncleList->prior->data].fristChild->data + 1;
-			}
-			else {
-				insertIndex = uncleList->data + 1;
-			}
-
-		}
-		ListInsert(&list, ListLength(list) + 1, insertIndex);
-		T->nodes[parent].fristChild = list;
-	}
-	else if (order < 1) {
-		fprintf(stderr, "Error:order <1\n");
-		return ERROR;
-	}
-	else
-	{
-		GetElem(list, order, &insertIndex);
-		ListInsert(&list, order, insertIndex);
-		// 链表少了个设置相应位置值的方法,只好自己再写个
-		Node * n = List_get(list, insertIndex);
-		int len = ListLength(list);
-		for (int i = insertIndex + 1; i <= len; i++) {
-			n->next->data += 1;
-			n = n->next;
-		}
-		T->nodes[parent].fristChild = list;
-	}
-	// 更新并移动所有剩下所有结点的数据
-	for (int i = T->nodeNum; i > insertIndex; i--) {
-		int pVaule = T->nodes[i - 1].parent;
-		if (pVaule >= insertIndex) {
-			T->nodes[i].parent = pVaule + 1;
-		}
-		else
-		{
-			T->nodes[i].parent = pVaule;
-		}
-
-		DuLinkList list = T->nodes[i - 1].fristChild;
-		if (list) {
-			Node * head = list->next->next;
-			int len = ListLength(list);
-			for (int i = 0; i < len; i++) {
-				if (head->data >= insertIndex) {
-					head->data++;
-				}
-				head = head->next;
-			}
-			T->nodes[i].fristChild = list;
-		}
-		else
-		{
-			T->nodes[i].fristChild = NULL;
-		}
-		T->nodes[i].data = T->nodes[i - 1].data;
-	}
-	// 更新左兄弟的孩子链表
-	for (int i = parent + 1; i < insertIndex; i++) {
-		DuLinkList list = T->nodes[i].fristChild;
-		if (list) {
-			Node * head = list->next->next;
-			int len = ListLength(list);
-			for (int i = 0; i < len; i++) {
-				if (head->data >= insertIndex) {
-					head->data++;
-				}
-				head = head->next;
-			}
-		}
-	}
-	T->nodes[insertIndex].data = new;
-	T->nodes[insertIndex].parent = parent;
-	T->nodes[insertIndex].fristChild = NULL;
-	T->nodeNum++;
-
 	return OK;
 }
 
@@ -535,23 +399,28 @@ void ChildTree_print(ChildTree T)
 Bool ChildTree_isTheSame(ChildTree T, ChildTree t)
 {
 	if (T.nodeNum == t.nodeNum) {
-		for (int i = 0, j = 0; i < T.nodeNum, j < t.nodeNum; i++, j++) {
+		int i, j;
+		for (i = 0, j = 0; i < T.nodeNum; i++, j++) {
 			ChildNode n1 = T.nodes[i];
 			ChildNode n2 = t.nodes[j];
 
 			if (n1.data != n2.data) {
+				fprintf(stdout, "[data][T:%c] neq [t:%c]\n", n1.data, n2.data);
 				return FALSE;
 			}
 
 			if (n1.parent != n2.parent) {
+				fprintf(stdout, "[parent][T:%d] neq [t:%d]\n", n1.parent, n2.parent);
 				return FALSE;
 			}
 
 			if (!List_isTheSame(n1.fristChild, n2.fristChild)) {
+				fprintf(stdout, "[fristChild][T] neq [t]\n");
 				return FALSE;
 			}
 		}
 		return TRUE;
 	}
+	fprintf(stdout, "[nodeNum][T] neq [t]\n");
 	return FALSE;
 }

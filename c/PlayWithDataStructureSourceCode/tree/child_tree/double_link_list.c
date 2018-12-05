@@ -166,12 +166,14 @@ Bool List_isTheSame(DuLinkList L, DuLinkList l)
 		int len2 = ListLength(l);
 
 		if (len1 != len2) {
+			fprintf(stdout, "[List:len][T] neq [t]\n");
 			return FALSE;
 		}
 		Node * rear1 = L;
 		Node * rear2 = l;
 		for (int i = 1; i <= len1; i++) {
 			if (rear1->data != rear2->data) {
+				fprintf(stdout, "[List:data-%d][T:%d] neq [t:%d]\n", i, rear1->data, rear2->data);
 				return FALSE;
 			}
 			rear1 = rear1->prior;
@@ -180,6 +182,7 @@ Bool List_isTheSame(DuLinkList L, DuLinkList l)
 		return TRUE;
 	}
 	else {
+		fprintf(stdout, "[List:ptr][T] neq [t]\n");
 		return FALSE;
 	}
 }
