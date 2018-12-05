@@ -84,4 +84,6 @@ void ChildTree_levelOrderTraverse(ChildTree T, void(Visit)(ChildNodeType));
 /* 打印树 */
 void ChildTree_print(ChildTree T);
 
+/* 判断树是否相等 */
+Bool ChildTree_isTheSame(ChildTree T, ChildTree t);
 #endif // !HAVE_CHILD_TREE_H

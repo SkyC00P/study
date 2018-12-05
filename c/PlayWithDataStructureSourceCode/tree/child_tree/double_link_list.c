@@ -155,3 +155,31 @@ Status ListDelete(DuLinkList * L, int i, ElemType * e)
 	}
 	return OK;
 }
+
+Bool List_isTheSame(DuLinkList L, DuLinkList l)
+{
+	if (!L && !l) {
+		return TRUE;
+	}
+	else if (L && l) {
+		int len1 = ListLength(L);
+		int len2 = ListLength(l);
+
+		if (len1 != len2) {
+			return FALSE;
+		}
+		Node * rear1 = L;
+		Node * rear2 = l;
+		for (int i = 1; i <= len1; i++) {
+			if (rear1->data != rear2->data) {
+				return FALSE;
+			}
+			rear1 = rear1->prior;
+			rear2 = rear2->prior;
+		}
+		return TRUE;
+	}
+	else {
+		return FALSE;
+	}
+}

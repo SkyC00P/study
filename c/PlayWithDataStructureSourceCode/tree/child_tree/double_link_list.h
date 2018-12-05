@@ -44,4 +44,6 @@ Status ListInsert(DuLinkList *L, int i, ElemType e);
 /* 操作结果：删除L的第i个数据元素，并用e返回其值，L的长度减1 */
 Status ListDelete(DuLinkList *L, int i, ElemType *e);
 
+Bool List_isTheSame(DuLinkList L, DuLinkList l);
+
 #endif // !DOUBLE_LINK_LIST_H

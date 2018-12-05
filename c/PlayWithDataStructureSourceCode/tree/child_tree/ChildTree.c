@@ -251,8 +251,22 @@ static Node * List_get(DuLinkList list, int i) {
 	}
 	return NULL;
 }
+/* 1. 确定插入的结点的数据: 
+	1. 插入的下标
+	2. 结点的双亲的下标 
+	3. 孩子链表置空(因为是以叶子结点插入的)
+	4. 数据已知
+   2. 腾出新的位置，将插入位置下的所有位置下移一位，保持数据不变
+   3. 遍历祖父结点到最后的叶节点，修改孩子链表和双亲结点的值
+   4. 在腾出的新位置上插入数据
+*/
+Status ChildTree_insertChild_1(ChildTree * T, ChildNodeType e, ChildNodeType new, int order) {
+
+}
 
 Status ChildTree_insertChild(ChildTree * T, ChildNodeType e, ChildNodeType new, int order) {
+	
+	return ChildTree_insertChild_1(T, e, new, order);
 	// 1. 找到父节点
 	int parent = ChildTree_order(*T, e);
 	// 2. 在父节点的孩子链表插入值并更新剩下的值
@@ -430,4 +444,28 @@ void ChildTree_print(ChildTree T)
 		}
 		printf("\n");
 	}
+}
+
+Bool ChildTree_isTheSame(ChildTree T, ChildTree t)
+{
+	if (T.nodeNum == t.nodeNum) {
+		for (int i = 0, j = 0; i < T.nodeNum, j < t.nodeNum; i++, j++) {
+			ChildNode n1 = T.nodes[i];
+			ChildNode n2 = t.nodes[j];
+
+			if (n1.data != n2.data) {
+				return FALSE;
+			}
+
+			if (n1.parent != n2.parent) {
+				return FALSE;
+			}
+
+			if (!List_isTheSame(n1.fristChild, n2.fristChild)) {
+				return FALSE;
+			}
+		}
+		return TRUE;
+	}
+	return FALSE;
 }
