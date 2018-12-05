@@ -251,21 +251,107 @@ static Node * List_get(DuLinkList list, int i) {
 	}
 	return NULL;
 }
-/* 1. 确定插入的结点的数据: 
+
+/*
+ 必须保证order非负数
+ 1. 如果孩子链表为空，则插入位置为 parent + 1
+ 2. 如果孩子链表不为空，看order情况
+  1. 如果order为0或order大于列表长度，则插入位置为末尾的孩子下标 + 1
+  2. 如果 1 <= order <= listLen, 则插入的值为list在order位置的值
+*/
+static int ChildTree_findInsertIndex(ChildTree T, int parent, int order) {
+	if (order < 0) {
+		fprintf(stderr, "[ChildTree_findInsertIndex] 非负数\n");
+		return -1;
+	}
+
+	ChildNode * pNode = &(T.nodes[parent]);
+	if (!pNode->fristChild) {
+		return parent + 1;
+	}
+
+	int len = ListLength(pNode->fristChild);
+	if (order == 0 || order > len) {
+		return pNode->fristChild->data + 1;
+	}
+
+	if (order >= 1 && order <= len) {
+		ElemType e;
+		GetElem(pNode, order, &e);
+		return e;
+	}
+
+	return -1;
+}
+
+/* 1. 确定插入的结点的数据:
 	1. 插入的下标
-	2. 结点的双亲的下标 
+	2. 结点的双亲的下标
 	3. 孩子链表置空(因为是以叶子结点插入的)
 	4. 数据已知
-   2. 腾出新的位置，将插入位置下的所有位置下移一位，保持数据不变
-   3. 遍历祖父结点到最后的叶节点，修改孩子链表和双亲结点的值
-   4. 在腾出的新位置上插入数据
+   2. 修改双亲结点的孩子链表
+   3. 腾出新的位置，将插入位置下的所有位置下移一位，保持数据不变
+   4. 遍历祖父结点到最后的叶节点，修改孩子链表和双亲结点的值
+   5. 在腾出的新位置上插入数据
 */
 Status ChildTree_insertChild_1(ChildTree * T, ChildNodeType e, ChildNodeType new, int order) {
+	int parent = ChildTree_order(*T, e);
+	if (parent < 0) {
+		return ERROR;
+	}
 
+	int insertIndex = ChildTree_findInsertIndex(*T, parent, order);
+	if (insertIndex < 0 || T->nodeNum + 1 > MAX_TREE_SIZE) {
+		return ERROR;
+	}
+
+	ChildNode * parentNode = &(T->nodes[parent]);
+	if (!parentNode->fristChild) {
+		InitList(&(parentNode->fristChild));
+		ListInsert(parentNode->fristChild, 1, insertIndex);
+	}
+	else {
+		int lastIndex = parentNode->fristChild->data;
+		ListInsert(parentNode->fristChild, ListLength(parentNode->fristChild) + 1, lastIndex + 1);
+	}
+
+	for (int i = T->nodeNum; i < insertIndex; i--) {
+		T->nodes[i].data = T->nodes[i - 1].data;
+		T->nodes[i].parent = T->nodes[i - 1].parent;
+		T->nodes[i].fristChild = T->nodes[i - 1].fristChild;
+	}
+
+	int grandpa = T->nodes[parent].parent;
+	for (int i = grandpa + 1; i <= T->nodeNum; i++) {
+		if (i == insertIndex || i == parent) {
+			continue;
+		}
+
+		ChildNode * node = &(T->nodes[i]);
+		if (node->parent >= insertIndex) {
+			node->parent = node->parent + 1;
+		}
+
+		if (node->fristChild) {
+			for (Node * n = node->fristChild, int i = ListLength(node->fristChild);
+				i > 0; i--)
+			{
+				if (n->data >= insertIndex) {
+					n->data = n->data + 1;
+				}
+				n = n->prior;
+			}
+		}
+	}
+
+	T->nodes[insertIndex].data = new;
+	T->nodes[insertIndex].fristChild = NULL;
+	T->nodes[insertIndex].parent = parent;
+	T->nodeNum++;
 }
 
 Status ChildTree_insertChild(ChildTree * T, ChildNodeType e, ChildNodeType new, int order) {
-	
+
 	return ChildTree_insertChild_1(T, e, new, order);
 	// 1. 找到父节点
 	int parent = ChildTree_order(*T, e);
@@ -283,7 +369,7 @@ Status ChildTree_insertChild(ChildTree * T, ChildNodeType e, ChildNodeType new, 
 			insertIndex = lastIndex + 1;
 		}
 		else {
-			
+
 			// 插入的位置:父节点的左兄弟的最后一个孩子结点的下标
 			// 插入的位置:父节点的最右兄弟结点
 			DuLinkList uncleList = T->nodes[T->nodes[parent].parent].fristChild;
@@ -372,7 +458,7 @@ Status ChildTree_insertChild(ChildTree * T, ChildNodeType e, ChildNodeType new, 
 	T->nodes[insertIndex].parent = parent;
 	T->nodes[insertIndex].fristChild = NULL;
 	T->nodeNum++;
-	
+
 	return OK;
 }
 
