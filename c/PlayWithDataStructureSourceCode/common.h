@@ -18,4 +18,7 @@ typedef int Bool;
 #define	OVERFLOW	-2			//堆栈上溢
 #define UNDERFLOW	-3			//堆栈下溢
 #endif
+
+#define DG(x) printf("%d\n",x)
+
 #endif // !HAVE_COMMON_H

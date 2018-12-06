@@ -1,4 +1,6 @@
 #include "ChildTree.h"
+#include <stdlib.h>
+
 static int findIndex(ChildTree * T, char c) {
 	if (T->nodeNum == 0) {
 		return 0;
@@ -374,67 +376,99 @@ Status ChildTree_deleteTree(ChildTree * T, ChildNodeType e, int order)
 	if (delIndex <= 0 || delIndex >= T->nodeNum) {
 		return ERROR;
 	}
-
+	DG(1);
 	// 从删除结点开始标记要删除的所有结点
 	const int delFlag = -2;
 	DuLinkList delList, clist1, clist2;
 	InitList(&delList);
 	ChildNode * delPtr = &(T->nodes[delIndex]);
 	ElemType e1, e2, e3;
-	/*{
+	do {
 		delPtr->data = delFlag;
 		clist1 = delPtr->fristChild;
-		if (!clist1) {
-			goto loopcheck;
-		}
+		if (clist1) {
+			for (int i = 1; i <= ListLength(clist1); i++) {
+				GetElem(clist1, i, &e1);
+				T->nodes[e1].data = delFlag;
+				clist2 = T->nodes[e1].fristChild;
 
-		for (int i = 1; i <= ListLength(clist1); i++) {
-			GetElem(clist1, i, &e1);
-			T->nodes[e1].data = delFlag;
-			clist2 = T->nodes[e1].fristChild;
-
-			if (clist2) {
-				for (int j = 1; j <= ListLength(clist2); j++) {
-					GetElem(clist2, j, &e2);
-					ListInsert(&delList, 1, e2);
+				if (clist2) {
+					for (int j = 1; j <= ListLength(clist2); j++) {
+						GetElem(clist2, j, &e2);
+						ListInsert(&delList, 1, e2);
+					}
 				}
 			}
 		}
 
-	loopcheck:;
 		if (!ListDelete(&delList, 1, &e3)) {
+			free(delList);
+			if (clist1) { free(clist1); }
+			if (clist2) { free(clist2); }
 			break;
 		}
 		else {
 			delPtr = &(T->nodes[e3]);
 		}
-	}do while (1);*/
+	} while (1);
 
 	/*3. 遍历树，未删除的结点向上移动填补上空闲的位置
-		如果有孩子链表，同时修改孩子链表的双亲值，顺便删掉所有结点的孩子链表*/
+		如果有孩子链表，同时修改孩子链表的双亲值*/
 	int offset = 0; // 偏移量
+	int exchange = 0;
 	ElemType childIndex;
 	for (int i = 0; i < T->nodeNum; i++) {
-
-		while (T->nodes[i].data == delFlag) {
+		exchange = i + offset;
+		printf("i:%d,exchange:%d\n", i, exchange);
+		while (exchange != T->nodeNum - 1 && T->nodes[exchange].data == delFlag) {
 			offset += 1;
-			i++;
+			exchange++;
+			printf("offset:%d,i:%d,exchange:%d\n", offset, i, exchange);
 		}
-
-		DuLinkList list = T->nodes[i].fristChild;
-
+		// 校正双亲
 		if (offset > 0) {
-			T->nodes[i].data = T->nodes[i + offset].data;
-			if (list) {
-				for (int j = 1; j <= ListLength(list); j++) {
-					GetElem(list, j, childIndex);
-					T->nodes[childIndex].parent = i;
-				}
+			if (T->nodes[exchange].parent > delIndex) {
+				T->nodes[i].parent = T->nodes[exchange].parent - offset;
 			}
+			else {
+				T->nodes[i].parent = T->nodes[exchange].parent;
+			}
+			T->nodes[i].data = T->nodes[exchange].data;
 		}
-		if (list) { ClearList(&list) };
+		if (exchange == T->nodeNum - 1) {
+			break;
+		}
 	}
+	for (int i = 0; i < 11; i++) {
+		printf("%d:%d:%c\n", i, T->nodes[i].parent, T->nodes[i].data);
+	}
+	//重新遍历一遍生成新的孩子链表，修改树的大小
+	DuLinkList list;
+	for (int i = 0; i < T->nodeNum; i++) {
+		list = T->nodes[i].fristChild;
+		if (list) {
+			ClearList(&list);
+			free(list);
+		}
+		T->nodes[i].fristChild = NULL;
+	}
+	DG(4);
+	int len;
+	for (int i = 1; i < T->nodeNum; i++) {
+		int parent = T->nodes[i].parent;
+		printf("i:%d, parent:%d,data:%c\n", i, parent, T->nodes[i].data);
+		
+		if (!T->nodes[parent].fristChild) {
+			printf("i:%d, parent:%d --> Init\n", i, parent);
+			InitList(&(T->nodes[parent].fristChild));
+		}
+		len = ListLength(T->nodes[parent].fristChild) + 1;
+		printf("i:%d, parent:%d,len:%d --> insert\n", i, parent,len);
+		ListInsert(&(T->nodes[parent].fristChild), len, i);
 
+	}
+	DG(5);
+	T->nodeNum = T->nodeNum - offset;
 	return OK;
 }
 

@@ -72,8 +72,8 @@ static void test() {
 		puts("-> 验证ChildTree_assign()");
 		puts("将树tree根结点R替换Z");
 		EXPECT_EQ_INT(OK, ChildTree_assign(&tree, 'R', 'Z'));
-		puts("将树tree结点D替换O");
-		EXPECT_EQ_INT(OK, ChildTree_assign(&tree, 'D', 'O'));
+		puts("将树tree结点D替换T");
+		EXPECT_EQ_INT(OK, ChildTree_assign(&tree, 'D', 'T'));
 		ChildTree_print(tree);
 
 		puts("-> 验证ChildTree_findChild()");
@@ -101,6 +101,15 @@ static void test() {
 		ChildTree_init(&tmp, fopen("child_tree/TestData_T1.txt","r"));
 		EXPECT_TRUE(ChildTree_isTheSame(tree, tmp));
 	}
+
+	puts("(4) 删除结点测试"); {
+		EXPECT_EQ_INT(OK, ChildTree_deleteTree(&tree, 'Z', 2));
+		ChildTree tmp;
+		ChildTree_init(&tmp, fopen("child_tree/TestData_T2.txt", "r"));
+		ChildTree_print(tmp);
+		EXPECT_TRUE(ChildTree_isTheSame(tree, tmp));
+	}
+
 }
 
 static void showChar(ChildNodeType e) {
