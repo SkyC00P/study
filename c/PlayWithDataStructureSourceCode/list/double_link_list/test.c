@@ -208,7 +208,10 @@ static void test_clear_list() {
 	ListInsert(&list, 1, 1);
 	ListInsert(&list, 2, 2);
 	printf("expect clear node num is 2,and actual ");
+	DuLinkList bPtr = list;
 	EXPECT_EQ_INT(OK, ClearList(&list));
+	DuLinkList afPtr = list;
+	EXPECT_FALSE(bPtr == afPtr);
 	EXPECT_EQ_INT(0, ListLength(list));
 	EXPECT_TRUE(list->next == list->prior && list == list->prior);
 	printf("\n");

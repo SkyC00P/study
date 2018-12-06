@@ -349,11 +349,10 @@ Status ChildTree_insertTree(ChildTree * T, ChildNodeType e, int order, ChildTree
 
 /*
  1. 找到删除的结点下标 delIndex
- 2. 从删除结点开始标记要删除的所有结点并回收资源
+ 2. 从删除结点开始标记要删除的所有结点
  3. 遍历树，未删除的结点向上移动填补上空闲的位置
 	如果有孩子链表，同时修改孩子链表的双亲值，顺便删掉所有结点的孩子链表
  4. 重新遍历一遍生成新的孩子链表，修改树的大小
-
 */
 Status ChildTree_deleteTree(ChildTree * T, ChildNodeType e, int order)
 {
@@ -376,12 +375,13 @@ Status ChildTree_deleteTree(ChildTree * T, ChildNodeType e, int order)
 		return ERROR;
 	}
 
+	// 从删除结点开始标记要删除的所有结点
 	const int delFlag = -2;
 	DuLinkList delList, clist1, clist2;
 	InitList(&delList);
 	ChildNode * delPtr = &(T->nodes[delIndex]);
-	ElemType e1, e2,e3;
-	{
+	ElemType e1, e2, e3;
+	/*{
 		delPtr->data = delFlag;
 		clist1 = delPtr->fristChild;
 		if (!clist1) {
@@ -408,7 +408,32 @@ Status ChildTree_deleteTree(ChildTree * T, ChildNodeType e, int order)
 		else {
 			delPtr = &(T->nodes[e3]);
 		}
-	}do while (1);
+	}do while (1);*/
+
+	/*3. 遍历树，未删除的结点向上移动填补上空闲的位置
+		如果有孩子链表，同时修改孩子链表的双亲值，顺便删掉所有结点的孩子链表*/
+	int offset = 0; // 偏移量
+	ElemType childIndex;
+	for (int i = 0; i < T->nodeNum; i++) {
+
+		while (T->nodes[i].data == delFlag) {
+			offset += 1;
+			i++;
+		}
+
+		DuLinkList list = T->nodes[i].fristChild;
+
+		if (offset > 0) {
+			T->nodes[i].data = T->nodes[i + offset].data;
+			if (list) {
+				for (int j = 1; j <= ListLength(list); j++) {
+					GetElem(list, j, childIndex);
+					T->nodes[childIndex].parent = i;
+				}
+			}
+		}
+		if (list) { ClearList(&list) };
+	}
 
 	return OK;
 }

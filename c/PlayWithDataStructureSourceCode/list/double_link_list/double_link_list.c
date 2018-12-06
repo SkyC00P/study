@@ -47,6 +47,7 @@ Status ClearList(DuLinkList * L) {
 		freeTimes++;
 		freeNode = next;
 	}
+	*L = headNode;
 	(*L)->next = *L;
 	(*L)->prior = *L;
 	printf("clear node num is %d\n", freeTimes++);
