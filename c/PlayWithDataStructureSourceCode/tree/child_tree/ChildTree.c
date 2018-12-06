@@ -352,9 +352,10 @@ Status ChildTree_insertTree(ChildTree * T, ChildNodeType e, int order, ChildTree
 /*
  1. 找到删除的结点下标 delIndex
  2. 从删除结点开始标记要删除的所有结点
- 3. 遍历树，未删除的结点向上移动填补上空闲的位置
-	如果有孩子链表，同时修改孩子链表的双亲值，顺便删掉所有结点的孩子链表
- 4. 重新遍历一遍生成新的孩子链表，修改树的大小
+ 3. 遍历树，通过删除标记删除给结点孩子链表的值并修正剩余的值
+ 4. 根据删除标记校正位置
+ 5. 遍历树，根据各结点的孩子链表修正双亲
+ 6. 修正树的大小
 */
 Status ChildTree_deleteTree(ChildTree * T, ChildNodeType e, int order)
 {
@@ -376,7 +377,6 @@ Status ChildTree_deleteTree(ChildTree * T, ChildNodeType e, int order)
 	if (delIndex <= 0 || delIndex >= T->nodeNum) {
 		return ERROR;
 	}
-	DG(1);
 	// 从删除结点开始标记要删除的所有结点
 	const int delFlag = -2;
 	DuLinkList delList, clist1, clist2;
@@ -403,8 +403,6 @@ Status ChildTree_deleteTree(ChildTree * T, ChildNodeType e, int order)
 
 		if (!ListDelete(&delList, 1, &e3)) {
 			free(delList);
-			if (clist1) { free(clist1); }
-			if (clist2) { free(clist2); }
 			break;
 		}
 		else {
@@ -412,63 +410,69 @@ Status ChildTree_deleteTree(ChildTree * T, ChildNodeType e, int order)
 		}
 	} while (1);
 
-	/*3. 遍历树，未删除的结点向上移动填补上空闲的位置
-		如果有孩子链表，同时修改孩子链表的双亲值*/
-	int offset = 0; // 偏移量
-	int exchange = 0;
-	ElemType childIndex;
+	// 遍历树，通过删除标记删除给结点孩子链表的值并修正剩余的值
+	int delNum = 0;
 	for (int i = 0; i < T->nodeNum; i++) {
-		exchange = i + offset;
-		printf("i:%d,exchange:%d\n", i, exchange);
+		DuLinkList list = T->nodes[i].fristChild;
+		if (list) {
+			int len = ListLength(list);
+			Node * node = list->next->next; // 第一个有效的值
+			for (int i = 1; i <= len; i++) {
+				int cIndex = node->data;
+				if (T->nodes[cIndex].data == delFlag) {
+					ListDelete(&list, i, NULL);
+					if (ListEmpty(list)) {
+						free(list);
+						T->nodes[i].fristChild = NULL;
+					}
+					delNum++;
+				}
+				else {
+					node->data = node->data - delNum;
+				}
+				node = node->next;
+			}
+		}
+	}
+	DG(1);
+	printf("%d,%d,", T->nodes[2].data, T->nodes[2].parent);
+	int count = ListLength(T->nodes[2].fristChild);
+	Node * c = T->nodes[2].fristChild;
+	while (count--) {
+		printf("%c ", c->data);
+		c = c->next;
+	}
+	//ChildTree_print(*T);
+	// 根据删除标记校正位置
+	int offset = 0; // 偏移量
+	for (int i = 0; i < T->nodeNum; i++) {
+		int exchange = i + offset;
 		while (exchange != T->nodeNum - 1 && T->nodes[exchange].data == delFlag) {
 			offset += 1;
 			exchange++;
-			printf("offset:%d,i:%d,exchange:%d\n", offset, i, exchange);
 		}
-		// 校正双亲
 		if (offset > 0) {
-			if (T->nodes[exchange].parent > delIndex) {
-				T->nodes[i].parent = T->nodes[exchange].parent - offset;
-			}
-			else {
-				T->nodes[i].parent = T->nodes[exchange].parent;
-			}
 			T->nodes[i].data = T->nodes[exchange].data;
+			T->nodes[i].fristChild = T->nodes[exchange].fristChild;
+			T->nodes[exchange].fristChild = NULL;
 		}
 		if (exchange == T->nodeNum - 1) {
 			break;
 		}
 	}
-	for (int i = 0; i < 11; i++) {
-		printf("%d:%d:%c\n", i, T->nodes[i].parent, T->nodes[i].data);
-	}
-	//重新遍历一遍生成新的孩子链表，修改树的大小
-	DuLinkList list;
-	for (int i = 0; i < T->nodeNum; i++) {
-		list = T->nodes[i].fristChild;
-		if (list) {
-			ClearList(&list);
-			free(list);
-		}
-		T->nodes[i].fristChild = NULL;
-	}
-	DG(4);
-	int len;
-	for (int i = 1; i < T->nodeNum; i++) {
-		int parent = T->nodes[i].parent;
-		printf("i:%d, parent:%d,data:%c\n", i, parent, T->nodes[i].data);
-		
-		if (!T->nodes[parent].fristChild) {
-			printf("i:%d, parent:%d --> Init\n", i, parent);
-			InitList(&(T->nodes[parent].fristChild));
-		}
-		len = ListLength(T->nodes[parent].fristChild) + 1;
-		printf("i:%d, parent:%d,len:%d --> insert\n", i, parent,len);
-		ListInsert(&(T->nodes[parent].fristChild), len, i);
 
-	}
-	DG(5);
+	//遍历树，根据各结点的孩子链表修正双亲
 	T->nodeNum = T->nodeNum - offset;
+	for (int i = 0; i < T->nodeNum; i++) {
+		DuLinkList list = T->nodes[i].fristChild;
+		if (list) {
+			Node * fNode = list->next->next;
+			for (int j = 0; j < ListLength(list); j++) {
+				T->nodes[fNode->data].parent = i;
+				fNode = fNode->next;
+			}
+		}
+	}
 	return OK;
 }
 
