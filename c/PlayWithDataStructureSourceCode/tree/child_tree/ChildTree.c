@@ -445,13 +445,14 @@ Status ChildTree_deleteTree(ChildTree * T, ChildNodeType e, int order)
 	}
 	DG(1);
 	printf("%d,%d,", T->nodes[2].data, T->nodes[2].parent);
-	DG(2);
 	int count = ListLength(T->nodes[2].fristChild);
+	DG(count);
 	Node * c = T->nodes[2].fristChild;
 	while (count--) {
 		printf("%c ", c->data);
 		c = c->next;
 	}
+	DG(2);
 	//ChildTree_print(*T);
 	// 根据删除标记校正位置
 	int offset = 0; // 偏移量
