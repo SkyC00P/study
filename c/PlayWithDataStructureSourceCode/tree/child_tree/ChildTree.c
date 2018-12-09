@@ -414,13 +414,22 @@ Status ChildTree_deleteTree(ChildTree * T, ChildNodeType e, int order)
 	int delNum = 0;
 	for (int i = 0; i < T->nodeNum; i++) {
 		DuLinkList list = T->nodes[i].fristChild;
-		if (list) {
-			int len = ListLength(list);
+		if (!list) {
+			continue;
+		}
+		int len = ListLength(list);
+		if (T->nodes[i].data == delFlag) {
+			delNum = delNum + len;
+			ClearList(&list);
+			free(list);
+		}
+		else
+		{
 			Node * node = list->next->next; // 第一个有效的值
-			for (int i = 1; i <= len; i++) {
+			for (int j = 1; j <= len; j++) {
 				int cIndex = node->data;
 				if (T->nodes[cIndex].data == delFlag) {
-					ListDelete(&list, i, NULL);
+					ListDelete(&list, j, NULL);
 					if (ListEmpty(list)) {
 						free(list);
 						T->nodes[i].fristChild = NULL;
@@ -436,6 +445,7 @@ Status ChildTree_deleteTree(ChildTree * T, ChildNodeType e, int order)
 	}
 	DG(1);
 	printf("%d,%d,", T->nodes[2].data, T->nodes[2].parent);
+	DG(2);
 	int count = ListLength(T->nodes[2].fristChild);
 	Node * c = T->nodes[2].fristChild;
 	while (count--) {
