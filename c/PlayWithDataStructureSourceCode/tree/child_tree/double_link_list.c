@@ -56,6 +56,7 @@ Status ClearList(DuLinkList * L) {
 
 int ListLength(DuLinkList L)
 {
+	CheckPtr(L);
 	int len = 0;
 	Node * node = L;
 	while (L != node->next) {

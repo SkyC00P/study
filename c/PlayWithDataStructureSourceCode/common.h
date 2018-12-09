@@ -1,5 +1,7 @@
 #ifndef HAVE_COMMON_H
 #define HAVE_COMMON_H 1
+#include <stdlib.h>
+#include <stdio.h>
 
 typedef int Status;
 typedef int Bool;
@@ -20,5 +22,10 @@ typedef int Bool;
 #endif
 
 #define DG(x) printf("%d\n",x)
-
+static inline void CheckPtr(const void * ptr) {
+	if (!ptr) {
+		fprintf(stderr, "%s:%d: 空指针异常\n", __FILE__, __LINE__);
+		exit(-1);
+	}
+}
 #endif // !HAVE_COMMON_H
