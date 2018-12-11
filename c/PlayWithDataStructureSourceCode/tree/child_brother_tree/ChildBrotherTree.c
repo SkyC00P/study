@@ -1,14 +1,10 @@
 #include "ChildBrotherTree.h"
+#include <ctype.h>
 
 Status CBTree_init(CBTree * T)
 {
 	if (*T) { return ERROR; }
-	*T = malloc(sizeof(CBNode));
-	if (!(*T)) {
-		return ERROR;
-	}
-	(*T)->brotherList = NULL;
-	(*T)->childList = NULL;
+	*T = NULL;
 	return OK;
 }
 
@@ -22,11 +18,52 @@ void CBTree_destroy(CBTree * T)
 
 Bool CBTree_isEmpty(CBTree T)
 {
-	return OK;
+	return T == NULL ? TRUE : FALSE;
 }
-
+/*
+ 如何根据文件的定义来生成树也是主要的API
+ 例如如何把html解析成dom树，如何将代码解析成表达式树
+*/
 Status CBTree_create(FILE * fp, CBTree * T)
 {
+	CheckPtr(fp);
+	CheckPtr(T);
+
+	CBTree tree = *T;
+	CBData ch;
+	// 获得根结点
+	fscanf(fp, "%c", &ch);
+	if (!CBTree_isEmpty(tree) || isspace(ch)) {
+		return ERROR;
+	}
+
+	tree = malloc(sizeof(CBNode));
+	tree->nextBrother = NULL;
+	tree->fristChild = NULL;
+	tree->data = ch;
+
+	CBTree root = tree;
+	CBTree child, brother;
+	while (!feof(fp)){
+		// 跳过=号
+		ch = fgetc(fp);
+		if (ch != '=') {
+			fprintf(stderr, "File Read Error, expect is '='\n");
+			return ERROR;
+		}
+		// 读取孩子结点
+		while (1){
+			ch = fgetc(fp);
+			if (ch == '\n' || ch == EOF) {
+				break;
+			}
+			CBNodePtr node = malloc(CBNode);
+			node->data = ch;
+			if (!root->fristChild) {
+				root->fristChild = node;
+			}
+		}
+	}
 	return OK;
 }
 

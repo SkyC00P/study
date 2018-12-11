@@ -98,16 +98,33 @@ static void test() {
 		EXPECT_EQ_INT(OK, ChildTree_insertTree(&tree, 'Z', 2, subtree));
 		ChildTree_print(tree);
 		ChildTree tmp; 
-		ChildTree_init(&tmp, fopen("child_tree/TestData_T1.txt","r"));
-		EXPECT_TRUE(ChildTree_isTheSame(tree, tmp));
+		FILE * fp = fopen("child_tree/TestData_T1.txt", "r");
+		if (fp) {
+			ChildTree_init(&tmp, fp);
+			fclose(fp);
+			EXPECT_TRUE(ChildTree_isTheSame(tree, tmp));
+		}
+		else {
+			fprintf(stderr, "IO ERROR");
+			exit(-1);
+		}
 	}
 
 	puts("(4) 删除结点测试"); {
 		EXPECT_EQ_INT(OK, ChildTree_deleteTree(&tree, 'Z', 2));
 		ChildTree tmp;
-		ChildTree_init(&tmp, fopen("child_tree/TestData_T2.txt", "r"));
-		ChildTree_print(tmp);
-		EXPECT_TRUE(ChildTree_isTheSame(tree, tmp));
+		FILE * fp = fopen("child_tree/TestData_T2.txt", "r");
+		if (fp) {
+			ChildTree_init(&tmp, fp);
+			ChildTree_print(tmp);
+			EXPECT_TRUE(ChildTree_isTheSame(tree, tmp));
+		}
+		else
+		{
+			fprintf(stderr, "IO ERROR");
+			exit(-1);
+		}
+		
 	}
 
 }

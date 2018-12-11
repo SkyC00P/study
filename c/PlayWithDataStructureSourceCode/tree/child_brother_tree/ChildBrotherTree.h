@@ -6,7 +6,8 @@
 typedef int CBData;
 typedef struct ChildBrotherNode{
 	CBData data;
-	DuLinkList childList, brotherList;
+	struct ChildBrotherNode * fristChild;
+	struct ChildBrotherNode * nextBrother;
 }CBNode, * CBNodePtr;
 
 typedef CBNode * CBTree;
