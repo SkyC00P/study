@@ -1,10 +1,1 @@
-R=ABC
-A=DE
-B=
-C=F
-D=
-E=
-F=GHK
-G=
-H=
-K=
+RA#ADBB#CCF#D#EE##FG#G#HH#KK##
