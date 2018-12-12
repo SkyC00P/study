@@ -4,6 +4,7 @@
 
 typedef char HashMap_Key_T;
 typedef void * HashMap_Vaule_T;
+typedef void(*pfcb_hmap_value_free)(void* value);
 
 typedef struct Entry
 {
@@ -29,6 +30,6 @@ void HashMap_put(HashMap map, HashMap_Key_T key, HashMap_Vaule_T value);
 
 Bool HashMap_isEmpty(HashMap map);
 
-void HashMap_destory(HashMap map);
+void HashMap_destory(HashMap map, pfcb_hmap_value_free);
 
 #endif // !HAVE_HASH_MAP_H

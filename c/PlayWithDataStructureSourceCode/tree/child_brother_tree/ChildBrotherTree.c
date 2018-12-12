@@ -2,6 +2,8 @@
 #include <ctype.h>
 #include <string.h>
 #include "help/HashMap.h"
+static CBNodePtr get_node_from_cache(HashMap cache, HashMap_Key_T key);
+static void CBNodePtr_free(CBNodePtr value);
 
 Status CBTree_init(CBTree * T)
 {
@@ -44,7 +46,7 @@ Bool CBTree_isEmpty(CBTree T)
 在这里我需要一个查找结构。Key - Value的Map
 
 解题步骤:
-	1. 读取文件并将里面的内容作为字符串处理
+	1. 读取文件并将里面的内容作为字符串处理,一行字符串等于一棵树
 	2. 每次处理从字符串中取3个值，判断这3个值是否已经在缓存里，如果不在生成一个新的结点，如果在，则从缓存里获取结点，通过第二和第三位的结点使得第一个结点的数据完整，未完整的结点保存到缓存里
 	3. 重复第二步直到字符串结束
 */
@@ -54,7 +56,7 @@ Status CBTree_create(FILE * fp, CBTree * T)
 	CheckPtr(T);
 
 	char str[255];
-	fgets(str, sizeof(str), fp);
+	fgets(str, sizeof(str), fp); // 不考虑Buffer溢出的情况，不会弄一个超大树文件
 	if (!feof(fp)) {
 		fprintf(stderr, "more than one line\n");
 		return ERROR;
@@ -99,7 +101,7 @@ Status CBTree_create(FILE * fp, CBTree * T)
 	}
 
 	Status status = HashMap_isEmpty(cache) ? ERROR : OK;
-	HashMap_destory(cache);
+	HashMap_destory(cache, CBNodePtr_free);
 	return status;
 }
 
@@ -188,4 +190,8 @@ void CBTree_inorder_traverse(CBTree T, void(Visit)(CBData))
 
 void CBTree_print(CBTree T)
 {
+}
+
+static void CBNodePtr_free(CBNodePtr value) {
+
 }
