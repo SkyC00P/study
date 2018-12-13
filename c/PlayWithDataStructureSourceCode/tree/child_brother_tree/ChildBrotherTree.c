@@ -190,8 +190,31 @@ void CBTree_inorder_traverse(CBTree T, void(Visit)(CBData))
 
 void CBTree_print(CBTree T)
 {
+	CBNodePtr printNode = T;
+	CBNodePtr brother, child;
+	if (!T) {
+		fprintf(stderr, "Null point\n");
+		return;
+	}
+	else {
+		// 打印根结点
+		printf("Root:%c\n", T->data);
+	}
+
+	while (printNode)
+	{
+		if (printNode->nextBrother) {
+			brother = printNode;
+			while (brother) {
+				printf(" %c", brother->data);
+				brother = brother->nextBrother;
+			}
+		}
+	}
 }
 
 static void CBNodePtr_free(CBNodePtr value) {
-
+	if (value) {
+		free(value);
+	}
 }
