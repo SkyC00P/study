@@ -15,7 +15,6 @@ typedef struct Entry
 	HashMap_Key_T key;
 	HashMap_Vaule_T value;
 	hashmap_use_state used; /* unused_0, used_1 */
-
 }Entry;
 
 typedef struct HashMap
@@ -33,10 +32,11 @@ HashMap_Vaule_T HashMap_get(HashMap map, HashMap_Key_T key);
 
 HashMap_Vaule_T HashMap_remove(HashMap map, HashMap_Key_T key);
 
-void HashMap_put(HashMap map, HashMap_Key_T key, HashMap_Vaule_T value);
+Status HashMap_put(HashMap map, HashMap_Key_T key, HashMap_Vaule_T value);
 
 Bool HashMap_isEmpty(HashMap map);
 
 void HashMap_destory(HashMap map, HashMap_FucPtr_value_free method);
 
+int HashMap_size(HashMap map);
 #endif // !HAVE_HASH_MAP_H

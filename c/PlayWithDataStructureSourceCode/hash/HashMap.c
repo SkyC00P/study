@@ -1,6 +1,8 @@
 #include "HashMap.h"
 #include <stdlib.h>
 
+static int _hashmap_hash(HashMap in, HashMap_Key_T key);
+
 HashMap HashTable_init()
 {
 	HashMap map = malloc(sizeof(struct HashMap));
@@ -57,18 +59,23 @@ HashMap_Vaule_T HashMap_remove(HashMap map, HashMap_Key_T key)
 	return val;
 }
 
-void HashMap_put(HashMap map, HashMap_Key_T key, HashMap_Vaule_T value)
+Status HashMap_put(HashMap map, HashMap_Key_T key, HashMap_Vaule_T value)
 {
 	CheckPtr(map);
 	int index = _hashmap_hash(map, key);
 	if (map->elem[index].used && map->elem[index].key != key) {
 		fprintf(stderr, "Duplicate value conflict\n");
-		exit(-1);
+		return ERROR;
 	}
-	map->elem[index].used = hashmap_used_1;
+	if (!map->elem[index].used) {
+		map->elem[index].used = hashmap_used_1;
+		map->length++;
+	}
+	
 	map->elem[index].key = key;
 	map->elem[index].value = value;
-	map->length++;
+	
+	return OK;
 }
 
 Bool HashMap_isEmpty(HashMap map)
@@ -90,6 +97,13 @@ void HashMap_destory(HashMap map, HashMap_FucPtr_value_free method)
 	}
 }
 
+int HashMap_size(HashMap map)
+{
+	CheckPtr(map);
+	return map->length;
+}
+
 static int _hashmap_hash(HashMap in, HashMap_Key_T key) {
+	CheckPtr(in);
 	return (int)key % in->tablesize;
 }
