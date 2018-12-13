@@ -5,7 +5,7 @@
 static HashMap map;
 static void test();
 static void map_free_value(void * val);
-static unsigned int free_space = 0;
+static int free_space = 0;
 
 static char test_data_upper_case[] = {
 	'A','B','C','D','E','F','G',
@@ -130,7 +130,7 @@ static void test() {
 	puts("(4) Map销毁测试");
 	{
 		HashMap_destory(map, map_free_value);
-		EXPECT_EQ_INT(63 * sizeof(ChNode), free_space);
+		EXPECT_EQ_INT((int)(63 * sizeof(ChNode)), free_space);
 	}
 }
 

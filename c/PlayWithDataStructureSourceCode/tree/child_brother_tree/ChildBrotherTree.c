@@ -188,29 +188,15 @@ void CBTree_inorder_traverse(CBTree T, void(Visit)(CBData))
 {
 }
 
+/*
+  按正常的树结构依层次打印出来，例如如下3层的树打印出来如下:
+  R
+  A  B  C
+  DE FG HI
+*/
 void CBTree_print(CBTree T)
 {
-	CBNodePtr printNode = T;
-	CBNodePtr brother, child;
-	if (!T) {
-		fprintf(stderr, "Null point\n");
-		return;
-	}
-	else {
-		// 打印根结点
-		printf("Root:%c\n", T->data);
-	}
-
-	while (printNode)
-	{
-		if (printNode->nextBrother) {
-			brother = printNode;
-			while (brother) {
-				printf(" %c", brother->data);
-				brother = brother->nextBrother;
-			}
-		}
-	}
+	
 }
 
 static void CBNodePtr_free(CBNodePtr value) {
