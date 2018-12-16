@@ -21,4 +21,3 @@ D LinkQueue_remove(T t);
 #undef D
 
 #endif // !HAVE_LINK_QUEUE_H
-

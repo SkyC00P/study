@@ -66,7 +66,7 @@ Status CBTree_create(FILE * fp, CBTree * T)
 	}
 
 	int len = strlen(str);
-	if (len % 3 != 0) {
+	if (len == 0 || len % 3 != 0) {
 		fprintf(stderr, "The content is Non-conformity\n");
 		return ERROR;
 	}
@@ -198,11 +198,11 @@ void CBTree_inorder_traverse(CBTree T, void(Visit)(CBData))
 }
 
 /*
-  按正常的树结构依层次打印出来，例如如下3层的树打印出来如下:
+  按正常的树结构依层次打印出来，例如如下4层的树打印出来如下:
   R:A-
   A:DB B:FC C:H-
-  D:-E E:-- F:-G G:-- H:-I I:--
-
+  D:-E E:-- F:-G 
+  G:-- H:-I I:--
 */
 void CBTree_print(CBTree T)
 {
