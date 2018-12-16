@@ -18,7 +18,7 @@ void LinkQueue_destory(T t, LinkQueue_FucPtr_value_free method);
 D LinkQueue_remove(T t);
 
 #undef T
-#undef D LinkQueue_Data_T
+#undef D
 
 #endif // !HAVE_LINK_QUEUE_H
 

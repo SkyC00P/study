@@ -5,7 +5,7 @@
 #include "help/link_queue.h"
 
 static CBNodePtr get_node_from_cache(HashMap cache, HashMap_Key_T key);
-static void CBNodePtr_free(CBNodePtr value);
+static void CBNodePtr_free(void * value);
 static void printNode(CBNodePtr ptr);
 
 Status CBTree_init(CBTree * T)
@@ -28,10 +28,10 @@ Bool CBTree_isEmpty(CBTree T)
 	return T == NULL ? TRUE : FALSE;
 }
 /*
- ?ÈçºÎ¸ù¾ÝÎÄ¼þµÄ¶¨ÒåÀ´Éú³ÉÊ÷Ò²ÊÇÖ÷ÒªµÄAPI
- ?ÀýÈçÈçºÎ°Ñhtml½âÎö³ÉdomÊ÷£¬ÈçºÎ½«´úÂë½âÎö³É±í´ïÊ½Ê÷
+ ?å¦‚ä½•æ ¹æ®æ–‡ä»¶çš„å®šä¹‰æ¥ç”Ÿæˆæ ‘ä¹Ÿæ˜¯ä¸»è¦çš„API
+ ?ä¾‹å¦‚å¦‚ä½•æŠŠhtmlè§£æžæˆdomæ ‘ï¼Œå¦‚ä½•å°†ä»£ç è§£æžæˆè¡¨è¾¾å¼æ ‘
 
-½â·¨:Ã¿¸öÊ÷½áµã¶¼±£´æÊý¾Ý£¬´ó¶ù×Ó£¬´óÐÖµÜÈý¸öÖµ£¬Èç¹û°´²ãÐò½«½áµãÒÀ´ÎÅÅÁÐ¡£ÈçÏÂ
+è§£æ³•:æ¯ä¸ªæ ‘ç»“ç‚¹éƒ½ä¿å­˜æ•°æ®ï¼Œå¤§å„¿å­ï¼Œå¤§å…„å¼Ÿä¸‰ä¸ªå€¼ï¼Œå¦‚æžœæŒ‰å±‚åºå°†ç»“ç‚¹ä¾æ¬¡æŽ’åˆ—ã€‚å¦‚ä¸‹
 	R	A	^
 	A	D	B
 	B	^	C
@@ -42,16 +42,16 @@ Bool CBTree_isEmpty(CBTree T)
 	G	^	H
 	H	^	K
 	K	^	^
-	²âÊÔÊý¾ÝÀïµÄÊÇ RA#ADBB#CCF#D#EE##FG#G#HH#KK##
-1. Ã¿´Î¶ÁÈ¡Èý¸öÖµ£¬×î¶à²úÉú2¸ö½áµã£¬Ò»¶¨ÈÃÒ»¸ö½áµãÊý¾ÝÍêÕû£¬Ê¹µÃ²»ÍêÕûµÄ½áµãÊý¼õÒ»£¬²úÉúÐÂµÄ²»ÍêÕû½áµã¿ÉÄÜÖµÎª0£¬1£¬2
-2. Éè×ÜµÄ²»ÍêÕû½áµãÎªn£¬µÚÒ»´Î¶ÁÈ¡Ê±£¬nÎª1(¸ù½áµã)£¬ÔòÃ¿´Î¶ÁÈ¡£¬nµÄ½á¹û¿ÉÄÜÎª n-1, n, n+1
-3. Ã¿Ò»¸öÒ¶×Ó½áµã¶¼»áÊ¹n-1, Ò²¾ÍÊÇËµµ±Ê÷³õÊ¼»¯OKÊ±£¬nÎª0£¬¼´×îºóÒ»¸öÒ¶×Ó½áµãÒ²±»¶ÁÈ¡ÍêÕû¡£
-ÔÚÕâÀïÎÒÐèÒªÒ»¸ö²éÕÒ½á¹¹¡£Key - ValueµÄMap
+	æµ‹è¯•æ•°æ®é‡Œçš„æ˜¯ RA#ADBB#CCF#D#EE##FG#G#HH#KK##
+1. æ¯æ¬¡è¯»å–ä¸‰ä¸ªå€¼ï¼Œæœ€å¤šäº§ç”Ÿ2ä¸ªç»“ç‚¹ï¼Œä¸€å®šè®©ä¸€ä¸ªç»“ç‚¹æ•°æ®å®Œæ•´ï¼Œä½¿å¾—ä¸å®Œæ•´çš„ç»“ç‚¹æ•°å‡ä¸€ï¼Œäº§ç”Ÿæ–°çš„ä¸å®Œæ•´ç»“ç‚¹å¯èƒ½å€¼ä¸º0ï¼Œ1ï¼Œ2
+2. è®¾æ€»çš„ä¸å®Œæ•´ç»“ç‚¹ä¸ºnï¼Œç¬¬ä¸€æ¬¡è¯»å–æ—¶ï¼Œnä¸º1(æ ¹ç»“ç‚¹)ï¼Œåˆ™æ¯æ¬¡è¯»å–ï¼Œnçš„ç»“æžœå¯èƒ½ä¸º n-1, n, n+1
+3. æ¯ä¸€ä¸ªå¶å­ç»“ç‚¹éƒ½ä¼šä½¿n-1, ä¹Ÿå°±æ˜¯è¯´å½“æ ‘åˆå§‹åŒ–OKæ—¶ï¼Œnä¸º0ï¼Œå³æœ€åŽä¸€ä¸ªå¶å­ç»“ç‚¹ä¹Ÿè¢«è¯»å–å®Œæ•´ã€‚
+åœ¨è¿™é‡Œæˆ‘éœ€è¦ä¸€ä¸ªæŸ¥æ‰¾ç»“æž„ã€‚Key - Valueçš„Map
 
-½âÌâ²½Öè:
-	1. ¶ÁÈ¡ÎÄ¼þ²¢½«ÀïÃæµÄÄÚÈÝ×÷Îª×Ö·û´®´¦Àí,Ò»ÐÐ×Ö·û´®µÈÓÚÒ»¿ÃÊ÷
-	2. Ã¿´Î´¦Àí´Ó×Ö·û´®ÖÐÈ¡3¸öÖµ£¬ÅÐ¶ÏÕâ3¸öÖµÊÇ·ñÒÑ¾­ÔÚ»º´æÀï£¬Èç¹û²»ÔÚÉú³ÉÒ»¸öÐÂµÄ½áµã£¬Èç¹ûÔÚ£¬Ôò´Ó»º´æÀï»ñÈ¡½áµã£¬Í¨¹ýµÚ¶þºÍµÚÈýÎ»µÄ½áµãÊ¹µÃµÚÒ»¸ö½áµãµÄÊý¾ÝÍêÕû£¬Î´ÍêÕûµÄ½áµã±£´æµ½»º´æÀï
-	3. ÖØ¸´µÚ¶þ²½Ö±µ½×Ö·û´®½áÊø
+è§£é¢˜æ­¥éª¤:
+	1. è¯»å–æ–‡ä»¶å¹¶å°†é‡Œé¢çš„å†…å®¹ä½œä¸ºå­—ç¬¦ä¸²å¤„ç†,ä¸€è¡Œå­—ç¬¦ä¸²ç­‰äºŽä¸€æ£µæ ‘
+	2. æ¯æ¬¡å¤„ç†ä»Žå­—ç¬¦ä¸²ä¸­å–3ä¸ªå€¼ï¼Œåˆ¤æ–­è¿™3ä¸ªå€¼æ˜¯å¦å·²ç»åœ¨ç¼“å­˜é‡Œï¼Œå¦‚æžœä¸åœ¨ç”Ÿæˆä¸€ä¸ªæ–°çš„ç»“ç‚¹ï¼Œå¦‚æžœåœ¨ï¼Œåˆ™ä»Žç¼“å­˜é‡ŒèŽ·å–ç»“ç‚¹ï¼Œé€šè¿‡ç¬¬äºŒå’Œç¬¬ä¸‰ä½çš„ç»“ç‚¹ä½¿å¾—ç¬¬ä¸€ä¸ªç»“ç‚¹çš„æ•°æ®å®Œæ•´ï¼Œæœªå®Œæ•´çš„ç»“ç‚¹ä¿å­˜åˆ°ç¼“å­˜é‡Œ
+	3. é‡å¤ç¬¬äºŒæ­¥ç›´åˆ°å­—ç¬¦ä¸²ç»“æŸ
 */
 Status CBTree_create(FILE * fp, CBTree * T)
 {
@@ -59,7 +59,7 @@ Status CBTree_create(FILE * fp, CBTree * T)
 	CheckPtr(T);
 
 	char str[255];
-	fgets(str, sizeof(str), fp); // ²»¿¼ÂÇBufferÒç³öµÄÇé¿ö£¬²»»áÅªÒ»¸ö³¬´óÊ÷ÎÄ¼þ
+	fgets(str, sizeof(str), fp); // ä¸è€ƒè™‘Bufferæº¢å‡ºçš„æƒ…å†µï¼Œä¸ä¼šå¼„ä¸€ä¸ªè¶…å¤§æ ‘æ–‡ä»¶
 	if (!feof(fp)) {
 		fprintf(stderr, "more than one line\n");
 		return ERROR;
@@ -70,13 +70,19 @@ Status CBTree_create(FILE * fp, CBTree * T)
 		fprintf(stderr, "The content is Non-conformity\n");
 		return ERROR;
 	}
+
 	HashMap cache = HashTable_init();
+	*T = get_node_from_cache(cache, str[0]);
+	HashMap_put(cache, (*T)->data, *T);
+
 	for (int i = 0; i < len; i += 3) {
+
 		char c1 = str[i];
 		char c2 = str[i + 1];
 		char c3 = str[i + 2];
-
+		
 		CBNodePtr cp1, cp2, cp3;
+
 		cp1 = get_node_from_cache(cache, c1);
 		cp2 = cp3 = NULL;
 
@@ -102,24 +108,24 @@ Status CBTree_create(FILE * fp, CBTree * T)
 			HashMap_put(cache, c3, cp3);
 		}
 	}
-
-	Status status = HashMap_isEmpty(cache) ? ERROR : OK;
+	Status status = HashMap_isEmpty(cache) ? OK : ERROR;
 	HashMap_destory(cache, CBNodePtr_free);
+
 	return status;
 }
 
 static CBNodePtr get_node_from_cache(HashMap cache, HashMap_Key_T key) {
 	CBNodePtr node = NULL;
 	if (HashMap_contain(cache, key)) {
+		node = HashMap_get(cache, key);
+	}
+	else {
 		node = malloc(sizeof(CBNode));
 		if (!node) {
 			fprintf(stderr, "[get_node_from_cache] Error malloc.\n");
 			return NULL;
 		}
 		node->data = key;
-	}
-	else {
-		node = HashMap_get(cache, key);
 	}
 	return node;
 }
@@ -192,7 +198,7 @@ void CBTree_inorder_traverse(CBTree T, void(Visit)(CBData))
 }
 
 /*
-  °´Õý³£µÄÊ÷½á¹¹ÒÀ²ã´Î´òÓ¡³öÀ´£¬ÀýÈçÈçÏÂ3²ãµÄÊ÷´òÓ¡³öÀ´ÈçÏÂ:
+  æŒ‰æ­£å¸¸çš„æ ‘ç»“æž„ä¾å±‚æ¬¡æ‰“å°å‡ºæ¥ï¼Œä¾‹å¦‚å¦‚ä¸‹3å±‚çš„æ ‘æ‰“å°å‡ºæ¥å¦‚ä¸‹:
   R:A-
   A:DB B:FC C:H-
   D:-E E:-- F:-G G:-- H:-I I:--
@@ -200,6 +206,7 @@ void CBTree_inorder_traverse(CBTree T, void(Visit)(CBData))
 */
 void CBTree_print(CBTree T)
 {
+	printf("---> print tree <---\n");
 	if (!T) {
 		puts("Empty Tree");
 		return;
@@ -208,7 +215,7 @@ void CBTree_print(CBTree T)
 	int  nextLevelChildCount, curLevelChildCount;
 	LinkQueue queue = LinkQueue_init();
 
-	// ´òÓ¡¸ù½áµã
+	// æ‰“å°æ ¹ç»“ç‚¹
 	printNode(ptr);
 	if (ptr->fristChild) {
 		curLevelChildCount = 0;
@@ -222,7 +229,7 @@ void CBTree_print(CBTree T)
 	while (1) {
 		if (nextLevelChildCount == 0) {
 			LinkQueue_destory(queue, CBNodePtr_free);
-			return;
+			break;
 		}
 
 		curLevelChildCount = nextLevelChildCount;
@@ -233,10 +240,9 @@ void CBTree_print(CBTree T)
 		ptr = LinkQueue_remove(queue);
 		if (!ptr) {
 			fprintf(stderr, "CBNode is Null\n");
-			return;
+			break;
 		}
 		do {
-
 			printNode(ptr);
 
 			if (ptr->fristChild) {
@@ -249,20 +255,25 @@ void CBTree_print(CBTree T)
 			}
 			else {
 				curLevelChildCount--;
+				if (curLevelChildCount != 0) {
+					ptr = LinkQueue_remove(queue);
+				}
 			}
+
 		} while (curLevelChildCount);
 
 	}
+	printf("\n--------------------\n");
 }
 
 static void printNode(CBNodePtr ptr) {
 	CheckPtr(ptr);
 	CBData c1 = ptr->fristChild ? ptr->fristChild->data : '-';
 	CBData c2 = ptr->nextBrother ? ptr->nextBrother->data : '-';
-	printf("%c:%c%c ", ptr->data);
+	printf("%c:%c%c ", ptr->data, c1, c2);
 }
 
-static void CBNodePtr_free(CBNodePtr value) {
+static void CBNodePtr_free(void * value) {
 	if (value) {
 		free(value);
 	}

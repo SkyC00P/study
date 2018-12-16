@@ -1,7 +1,6 @@
 #ifndef HAVE_CHILD_BROTHER_TREE_H
 #define HAVE_CHILD_BROTHER_TREE_H
 #include "common.h"
-#include "double_link_list.h"
 
 typedef int CBData;
 typedef struct ChildBrotherNode{
@@ -12,63 +11,63 @@ typedef struct ChildBrotherNode{
 
 typedef CBNode * CBTree;
 
-/* ¹¹Ôì¿ÕÊ÷T (³õÊ¼»¯Ê÷) */
+/* æ„é€ ç©ºæ ‘T (åˆå§‹åŒ–æ ‘) */
 Status CBTree_init(CBTree * T);
 
-/* Çå¿ÕÊ÷ */
+/* æ¸…ç©ºæ ‘ */
 void CBTree_clear(CBTree * T);
 
-/* Ïú»ÙÊ÷ */
+/* é”€æ¯æ ‘ */
 void CBTree_destroy(CBTree * T);
 
-/* ÊÇ·ñÊÇ¿ÕÊ÷ */
+/* æ˜¯å¦æ˜¯ç©ºæ ‘ */
 Bool CBTree_isEmpty(CBTree T);
 
-/* °´ÎÄ¼ş´´½¨Ê÷ */
+/* æŒ‰æ–‡ä»¶åˆ›å»ºæ ‘ */
 Status CBTree_create(FILE *fp, CBTree *T);
 
-/* ·µ»ØÊ÷µÄ¶È */
+/* è¿”å›æ ‘çš„åº¦ */
 int CBTree_degree(CBTree T);
 
-/* ·µ»ØÊ÷µÄÉî¶È */
+/* è¿”å›æ ‘çš„æ·±åº¦ */
 int CBTree_depth(CBTree T);
 
-/* ·µ»ØÊ÷µÄ¸ù½áµãÖµ */
+/* è¿”å›æ ‘çš„æ ¹ç»“ç‚¹å€¼ */
 CBData CBTree_root(CBTree T);
 
-/* ·µ»ØÊ÷ÖĞµÚi¸ö½áµãÖµ£¨°´²ãĞò¼ÆÊı£© */
+/* è¿”å›æ ‘ä¸­ç¬¬iä¸ªç»“ç‚¹å€¼ï¼ˆæŒ‰å±‚åºè®¡æ•°ï¼‰ */
 int CBTree_value(CBTree T, int i);
 
-/* ·µ»ØÖ¸Ïò½áµãeµÄÖ¸Õë£¬NULL´ú±íÎŞ´Ë½áµã¡£ */
+/* è¿”å›æŒ‡å‘ç»“ç‚¹eçš„æŒ‡é’ˆï¼ŒNULLä»£è¡¨æ— æ­¤ç»“ç‚¹ã€‚ */
 CBNodePtr CBTree_order(CBTree T, CBData e);
 
-/* Ìæ»»½áµãeµÄÖµÎªvalue */
+/* æ›¿æ¢ç»“ç‚¹eçš„å€¼ä¸ºvalue */
 Status CBTree_assign(CBTree T, CBData old, CBData new);
 
-/* ·µ»Ø½áµãeµÄµÚorder¸öº¢×ÓµÄÖµ£¨´Ó×óÖÁÓÒ¼ÆÊı£© */
+/* è¿”å›ç»“ç‚¹eçš„ç¬¬orderä¸ªå­©å­çš„å€¼ï¼ˆä»å·¦è‡³å³è®¡æ•°ï¼‰ */
 CBData CBTree_child(CBTree T, CBData e, int order);
 
-/* ·µ»Ø½áµãeµÄµÚorder¸öĞÖµÜµÄÖµ£¨´Ó×óÖÁÓÒ¼ÆÊı£© */
+/* è¿”å›ç»“ç‚¹eçš„ç¬¬orderä¸ªå…„å¼Ÿçš„å€¼ï¼ˆä»å·¦è‡³å³è®¡æ•°ï¼‰ */
 CBData CBTree_brother(CBTree T, CBData e, int order);
 
-/* ·µ»Ø½áµãpµÄº¢×Ó½áµã£¨×ÓÊ÷£©¸öÊı£¬·µ»Ø¸ºÊı´ú±í½áµãp²»´æÔÚ¡£ */
+/* è¿”å›ç»“ç‚¹pçš„å­©å­ç»“ç‚¹ï¼ˆå­æ ‘ï¼‰ä¸ªæ•°ï¼Œè¿”å›è´Ÿæ•°ä»£è¡¨ç»“ç‚¹pä¸å­˜åœ¨ã€‚ */
 int CBTree_child_count(CBTree T, CBData p);
 
-/* ½«Ê÷t²åÈëÎªÊ÷TÖĞe½áµãµÄµÚi¿Ã×ÓÊ÷£¨²ãĞò¼ÆÊı£©£¬i=0¶¨ÒåÎª×îºóÒ»¿Ã×ÓÊ÷¡£ */
+/* å°†æ ‘tæ’å…¥ä¸ºæ ‘Tä¸­eç»“ç‚¹çš„ç¬¬iæ£µå­æ ‘ï¼ˆå±‚åºè®¡æ•°ï¼‰ï¼Œi=0å®šä¹‰ä¸ºæœ€åä¸€æ£µå­æ ‘ã€‚ */
 Status CBTree_insert(CBTree T, CBData e, int i, CBTree t);
 
-/* É¾³ıÊ÷TÖĞe½áµãµÄµÚi¿Ã×ÓÊ÷¡£ */
+/* åˆ é™¤æ ‘Tä¸­eç»“ç‚¹çš„ç¬¬iæ£µå­æ ‘ã€‚ */
 Status CBTree_delete(CBTree T, CBData e, int i);
 
-/* ²ãĞò±éÀúÊ÷¡£ */
+/* å±‚åºéå†æ ‘ã€‚ */
 void CBTree_level_order_traverse(CBTree T, void(Visit)(CBData));
 
-/* Ç°Ğò±éÀúÊ÷ */
+/* å‰åºéå†æ ‘ */
 void CBTree_preorder_traverse(CBTree T, void(Visit)(CBData));
 
-/* ÖĞĞò±éÀúÊ÷ */
+/* ä¸­åºéå†æ ‘ */
 void CBTree_inorder_traverse(CBTree T, void(Visit)(CBData));
 
-/* ´òÓ¡Ê÷ */
+/* æ‰“å°æ ‘ */
 void CBTree_print(CBTree T);
 #endif // !HAVE_CHILD_BROTHER_TREE_H
