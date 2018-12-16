@@ -2,8 +2,11 @@
 #include <ctype.h>
 #include <string.h>
 #include "help/HashMap.h"
+#include "help/link_queue.h"
+
 static CBNodePtr get_node_from_cache(HashMap cache, HashMap_Key_T key);
 static void CBNodePtr_free(CBNodePtr value);
+static void printNode(CBNodePtr ptr);
 
 Status CBTree_init(CBTree * T)
 {
@@ -190,13 +193,73 @@ void CBTree_inorder_traverse(CBTree T, void(Visit)(CBData))
 
 /*
   按正常的树结构依层次打印出来，例如如下3层的树打印出来如下:
-  R
-  A  B  C
-  DE FG HI
+  R:A-
+  A:DB B:FC C:H-
+  D:-E E:-- F:-G G:-- H:-I I:--
+
 */
 void CBTree_print(CBTree T)
 {
-	
+	if (!T) {
+		puts("Empty Tree");
+		return;
+	}
+	CBNodePtr ptr = T;
+	int  nextLevelChildCount, curLevelChildCount;
+	LinkQueue queue = LinkQueue_init();
+
+	// 打印根结点
+	printNode(ptr);
+	if (ptr->fristChild) {
+		curLevelChildCount = 0;
+		nextLevelChildCount = 1;
+		LinkQueue_add(queue, ptr->fristChild);
+	}
+	else {
+		curLevelChildCount = nextLevelChildCount = 0;
+	}
+
+	while (1) {
+		if (nextLevelChildCount == 0) {
+			LinkQueue_destory(queue, CBNodePtr_free);
+			return;
+		}
+
+		curLevelChildCount = nextLevelChildCount;
+		nextLevelChildCount = 0;
+
+		printf("\n");
+
+		ptr = LinkQueue_remove(queue);
+		if (!ptr) {
+			fprintf(stderr, "CBNode is Null\n");
+			return;
+		}
+		do {
+
+			printNode(ptr);
+
+			if (ptr->fristChild) {
+				nextLevelChildCount++;
+				LinkQueue_add(queue, ptr->fristChild);
+			}
+
+			if (ptr->nextBrother) {
+				ptr = ptr->nextBrother;
+			}
+			else {
+				curLevelChildCount--;
+			}
+		} while (curLevelChildCount);
+
+	}
+}
+
+static void printNode(CBNodePtr ptr) {
+	CheckPtr(ptr);
+	CBData c1 = ptr->fristChild ? ptr->fristChild->data : '-';
+	CBData c2 = ptr->nextBrother ? ptr->nextBrother->data : '-';
+	printf("%c:%c%c ", ptr->data);
 }
 
 static void CBNodePtr_free(CBNodePtr value) {

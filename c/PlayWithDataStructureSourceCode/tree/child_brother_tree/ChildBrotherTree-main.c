@@ -21,6 +21,8 @@ static void test() {
 		if (fp) {
 			EXPECT_EQ_INT(OK, CBTree_create(fp, &tree));
 			fclose(fp);
+
+			CBTree_print(tree);
 		}
 		else {
 			Error();
