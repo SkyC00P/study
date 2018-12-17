@@ -23,6 +23,7 @@ static void test() {
 			fclose(fp);
 
 			CBTree_print(tree);
+			EXPECT_EQ_INT(3, CBTree_degree(tree));
 		}
 		else {
 			Error();

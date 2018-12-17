@@ -24,7 +24,7 @@ typedef struct HashMap
 	int tablesize;
 }*HashMap;
 
-HashMap HashTable_init();
+HashMap HashMap_init();
 
 Bool HashMap_contain(HashMap map, HashMap_Key_T key);
 

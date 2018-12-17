@@ -39,7 +39,7 @@ int main() {
 static void test() {
 	puts("(1)初始化测试");
 	{
-		map = HashTable_init();
+		map = HashMap_init();
 		EXPECT_TRUE(map != NULL);
 		EXPECT_TRUE(HashMap_isEmpty(map));
 	}

@@ -17,10 +17,31 @@ Status CBTree_init(CBTree * T)
 
 void CBTree_clear(CBTree * T)
 {
+	if (*T) {
+		LinkQueue queue = LinkQueue_init();
+		LinkQueue_add(queue, *T);
+		CBNodePtr freeNode;
+		while (1) {
+			freeNode = (CBNodePtr)LinkQueue_remove(queue);
+			if (freeNode == NULL) {
+				LinkQueue_destory(queue, CBNodePtr_free);
+				break;
+			}
+			if (freeNode->fristChild) {
+				LinkQueue_add(queue, freeNode->fristChild);
+			}
+			if (freeNode->nextBrother) {
+				LinkQueue_add(queue, freeNode->nextBrother);
+			}
+			CBNodePtr_free(freeNode);
+		}
+	}
+	*T = NULL;
 }
 
 void CBTree_destroy(CBTree * T)
 {
+	CBTree_clear(T);
 }
 
 Bool CBTree_isEmpty(CBTree T)
@@ -71,7 +92,7 @@ Status CBTree_create(FILE * fp, CBTree * T)
 		return ERROR;
 	}
 
-	HashMap cache = HashTable_init();
+	HashMap cache = HashMap_init();
 	*T = get_node_from_cache(cache, str[0]);
 	HashMap_put(cache, (*T)->data, *T);
 
@@ -80,7 +101,7 @@ Status CBTree_create(FILE * fp, CBTree * T)
 		char c1 = str[i];
 		char c2 = str[i + 1];
 		char c3 = str[i + 2];
-		
+
 		CBNodePtr cp1, cp2, cp3;
 
 		cp1 = get_node_from_cache(cache, c1);
@@ -132,9 +153,40 @@ static CBNodePtr get_node_from_cache(HashMap cache, HashMap_Key_T key) {
 
 int CBTree_degree(CBTree T)
 {
-	return 0;
+	if (!T || !T->fristChild) {
+		return 0;
+	}
+
+	int max = 0;
+	LinkQueue queue = LinkQueue_init();
+	LinkQueue_add(queue, T->fristChild);
+	CBNodePtr node, tmp;
+	while (1) {
+		node = LinkQueue_remove(queue);
+		if (node == NULL) {
+			LinkQueue_destory(queue, CBNodePtr_free);
+			break;
+		}
+		int count = 0;
+		tmp = node;
+		while (tmp) {
+			count++;
+			if (tmp->fristChild) {
+				LinkQueue_add(queue, tmp->fristChild);
+			}
+			tmp = tmp->nextBrother;
+		}
+		if (count > max) {
+			max = count;
+		}
+	}
+	return max;
 }
 
+/*
+ 求树的深度可不可以等价于求解与图的关键路径，把树当初特殊的图
+ ？ 或者利用转变为二叉树利用二叉树的性质可以解决什么问题吗？
+*/
 int CBTree_depth(CBTree T)
 {
 	return 0;
@@ -201,15 +253,15 @@ void CBTree_inorder_traverse(CBTree T, void(Visit)(CBData))
   按正常的树结构依层次打印出来，例如如下4层的树打印出来如下:
   R:A-
   A:DB B:FC C:H-
-  D:-E E:-- F:-G 
+  D:-E E:-- F:-G
   G:-- H:-I I:--
 */
 void CBTree_print(CBTree T)
 {
 	printf("---> print tree <---\n");
 	if (!T) {
-		puts("Empty Tree");
-		return;
+		printf("Empty Tree");
+		goto fuc_end;
 	}
 	CBNodePtr ptr = T;
 	int  nextLevelChildCount, curLevelChildCount;
@@ -228,7 +280,6 @@ void CBTree_print(CBTree T)
 
 	while (1) {
 		if (nextLevelChildCount == 0) {
-			LinkQueue_destory(queue, CBNodePtr_free);
 			break;
 		}
 
@@ -263,7 +314,8 @@ void CBTree_print(CBTree T)
 		} while (curLevelChildCount);
 
 	}
-	printf("\n--------------------\n");
+	LinkQueue_destory(queue, CBNodePtr_free);
+fuc_end:printf("\n--------------------\n");
 }
 
 static void printNode(CBNodePtr ptr) {

@@ -3,7 +3,7 @@
 
 static int _hashmap_hash(HashMap in, HashMap_Key_T key);
 
-HashMap HashTable_init()
+HashMap HashMap_init()
 {
 	HashMap map = malloc(sizeof(struct HashMap));
 	if (!map) {
