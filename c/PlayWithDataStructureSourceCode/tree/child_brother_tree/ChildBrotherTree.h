@@ -68,6 +68,9 @@ void CBTree_preorder_traverse(CBTree T, void(Visit)(CBData));
 /* 中序遍历树 */
 void CBTree_inorder_traverse(CBTree T, void(Visit)(CBData));
 
+/* 后序遍历树 */
+void CBTree_postorder_traverse(CBTree T, void(Visit)(CBData));
+
 /* 打印树 */
 void CBTree_print(CBTree T);
 #endif // !HAVE_CHILD_BROTHER_TREE_H

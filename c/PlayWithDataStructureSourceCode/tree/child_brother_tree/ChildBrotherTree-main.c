@@ -3,7 +3,7 @@
 
 static CBTree tree;
 static void test();
-
+static void printNodeData(CBData);
 int main() {
 	test();
 	TEST_REPORT;
@@ -24,9 +24,37 @@ static void test() {
 
 			CBTree_print(tree);
 			EXPECT_EQ_INT(3, CBTree_degree(tree));
+			CBTree_preorder_traverse(tree, printNodeData);
+			printf("\n");
+			CBTree_inorder_traverse(tree, printNodeData);
+			printf("\n");
+			CBTree_postorder_traverse(tree, printNodeData);
+			printf("\n");
+		}
+		else {
+			Error();
+		}
+
+		CBTree t;
+		FILE * fpTmp = fopen("child_brother_tree/TestData_1.txt", "r");
+		if (fpTmp) {
+			EXPECT_EQ_INT(OK, CBTree_create(fpTmp, &t));
+			fclose(fpTmp);
+
+			CBTree_print(t);
+			CBTree_preorder_traverse(t, printNodeData);
+			printf("\n");
+			CBTree_inorder_traverse(t, printNodeData);
+			printf("\n");
+			CBTree_postorder_traverse(t, printNodeData);
+			printf("\n");
 		}
 		else {
 			Error();
 		}
 	}
+}
+
+static void printNodeData(CBData data) {
+	printf("%c ", data);
 }

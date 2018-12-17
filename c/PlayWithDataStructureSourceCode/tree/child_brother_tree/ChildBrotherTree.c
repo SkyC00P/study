@@ -241,12 +241,37 @@ void CBTree_level_order_traverse(CBTree T, void(Visit)(CBData))
 {
 }
 
+/* 根 左 右 */
 void CBTree_preorder_traverse(CBTree T, void(Visit)(CBData))
 {
+	if (!T) {
+		return;
+	}
+	Visit(T->data);
+	CBTree_preorder_traverse(T->fristChild, Visit);
+	CBTree_preorder_traverse(T->nextBrother, Visit);
 }
 
+/* 左 根 右 */
 void CBTree_inorder_traverse(CBTree T, void(Visit)(CBData))
 {
+	if (!T) {
+		return;
+	}
+	CBTree_inorder_traverse(T->fristChild, Visit);
+	Visit(T->data);
+	CBTree_inorder_traverse(T->nextBrother, Visit);
+}
+
+/* 左 右 根 */
+void CBTree_postorder_traverse(CBTree T, void(Visit)(CBData))
+{
+	if (!T) {
+		return;
+	}
+	CBTree_postorder_traverse(T->fristChild, Visit);
+	CBTree_postorder_traverse(T->nextBrother, Visit);
+	Visit(T->data);
 }
 
 /*
