@@ -24,6 +24,8 @@ static void test() {
 
 			CBTree_print(tree);
 			EXPECT_EQ_INT(3, CBTree_degree(tree));
+			EXPECT_EQ_INT(4, CBTree_depth(tree));
+
 			CBTree_level_order_traverse(tree, printNodeData);
 			printf("\n");
 			CBTree_preorder_traverse(tree, printNodeData);

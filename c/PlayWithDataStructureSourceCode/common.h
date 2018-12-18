@@ -21,7 +21,7 @@ typedef int Bool;
 #define UNDERFLOW	-3			//堆栈下溢
 #endif
 
-#define DG(x) printf("%d\n",x)
+#define DG(x) printf("%d\n",x);
 static inline void CheckPtr(const void * ptr) {
 	if (!ptr) {
 		fprintf(stderr, "%s:%d: 空指针异常\n", __FILE__, __LINE__);

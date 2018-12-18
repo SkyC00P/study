@@ -189,20 +189,23 @@ int CBTree_degree(CBTree T)
 */
 int CBTree_depth(CBTree T)
 {
-	int depth = 0;
 	CBNodePtr node = T;
+	int depth = T ? 1 : 0;
 	LinkQueue queue = LinkQueue_init();
-	int endLevel = 1;
-	while (node) {
+	// 
+	while (1) {
 		depth++;
-		if (node->fristChild) {
-			LinkQueue_add(queue, node->fristChild);
+		printf("%c - d:%d\n", node->data, depth);
+		int size = LinkQueue_size();
+		for (int i = 0; i < size; i++) {
+			node = LinkQueue_remove(queue);
+			if (node->fristChild) {
+				LinkQueue_add(queue, node->fristChild);
+			}
 		}
-		if (node->nextBrother) {
-			node = node->nextBrother;
-		}
+
 	}
-	LinkQueue_destory(queue, LinkQueue_FucPtr_value_free);
+	LinkQueue_destory(queue, CBNodePtr_free);
 	return depth;
 }
 
@@ -237,7 +240,7 @@ CBData CBTree_value(CBTree T, int i)
 		}
 	}
 
-	LinkQueue_destory(queue, LinkQueue_FucPtr_value_free);
+	LinkQueue_destory(queue, CBNodePtr_free);
 	return i == index ? ptr->data : -1;
 }
 
@@ -261,7 +264,7 @@ CBNodePtr CBTree_order(CBTree T, CBData e)
 			ptr = LinkQueue_remove(queue);
 		}
 	}
-	LinkQueue_destory(queue, LinkQueue_FucPtr_value_free);
+	LinkQueue_destory(queue, CBNodePtr_free);
 	return ptr;
 }
 
@@ -332,11 +335,12 @@ Status CBTree_insert(CBTree T, CBData e, int i, CBTree t)
 		return OK;
 	}
 	else {
-		CBNodePtr cNode = CBTree_child(T, e, i-1);
+		CBData data = CBTree_child(T, e, i - 1);
+		CBNodePtr cNode = CBTree_order(T, data);
 		if (cNode) {
 			t->nextBrother = cNode->nextBrother;
 			cNode->nextBrother = t;
-			retu OK;
+			return OK;
 		}
 		return ERROR;
 	}
@@ -347,20 +351,22 @@ Status CBTree_delete(CBTree T, CBData e, int i)
 {
 	CheckPtr(T);
 	CBNodePtr delTree = NULL;
+	CBNodePtr parentNode = CBTree_order(T, e);
+	if (!parentNode) {
+		return ERROR;
+	}
 	if (i == 1) {
-		CBNodePtr parentNode = CBTree_order(T, e);
-		if (parentNode) {
-			delTree = parentNode->fristChild;
-			parentNode->fristChild = parentNode->fristChild->nextBrother;
-		}
+		delTree = parentNode->fristChild;
+		parentNode->fristChild = parentNode->fristChild->nextBrother;
 	}
 	else
 	{
-		CBNodePtr delBefNode = CBTree_child(T, e, i-1);
+		CBData data = CBTree_child(T, e, i - 1);
+		CBNodePtr delBefNode = CBTree_order(T, data);
 		delTree = delBefNode ? delBefNode->nextBrother : NULL;
 		delBefNode->nextBrother = delTree ? delTree->nextBrother : NULL;
 	}
-	CBTree_clear(delTree);
+	CBTree_clear(&delTree);
 	return OK;
 }
 
