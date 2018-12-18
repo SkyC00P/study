@@ -186,27 +186,53 @@ int CBTree_degree(CBTree T)
 /*
  求树的深度可不可以等价于求解与图的关键路径，把树当初特殊的图
  ？ 或者利用转变为二叉树利用二叉树的性质可以解决什么问题吗？
+
+ 已知存在孩子结点的树结点，其树的深度必然大于树结点所在的层数。
+ 目标: 寻找是否存在某i层，使得第i层所有的结点都为叶子结点，如若存在，则i为树的深度
+
+ 解题步骤:
+  1. 获得第i层所有结点
+  2. 判断是否所有结点都无孩子结点 Y->3, N->4
+  3. 返回i
+  4. i++, 记录所有结点的孩子结点，重复1
 */
 int CBTree_depth(CBTree T)
 {
-	CBNodePtr node = T;
-	int depth = T ? 1 : 0;
-	LinkQueue queue = LinkQueue_init();
-	// 
+	if (!T) {
+		return 0;
+	}
+
+	int level = 1;
+	LinkQueue curLevelNodes = LinkQueue_init();
+	LinkQueue nextLevelNodes = LinkQueue_init();
+	LinkQueue_add(curLevelNodes, T);
+	CBNodePtr node;
 	while (1) {
-		depth++;
-		printf("%c - d:%d\n", node->data, depth);
-		int size = LinkQueue_size();
-		for (int i = 0; i < size; i++) {
-			node = LinkQueue_remove(queue);
-			if (node->fristChild) {
-				LinkQueue_add(queue, node->fristChild);
+		node = LinkQueue_remove(curLevelNodes);
+		while (node) {
+			CBNodePtr ptr = node;
+			while (ptr) {
+				if (ptr->fristChild) {
+					LinkQueue_add(nextLevelNodes, ptr->fristChild);
+				}
+				ptr = ptr->nextBrother;
 			}
+			node = LinkQueue_remove(curLevelNodes);
 		}
 
+		if (LinkQueue_isEmpty(nextLevelNodes)) {
+			LinkQueue_destory(curLevelNodes, CBNodePtr_free);
+			LinkQueue_destory(nextLevelNodes, CBNodePtr_free);
+			return level;
+		}
+		else {
+			level++;
+			LinkQueue tmp = curLevelNodes;
+			curLevelNodes = nextLevelNodes;
+			nextLevelNodes = tmp;
+		}
 	}
-	LinkQueue_destory(queue, CBNodePtr_free);
-	return depth;
+
 }
 
 CBData CBTree_root(CBTree T)

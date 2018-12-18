@@ -75,5 +75,10 @@ D LinkQueue_remove(T t)
 	t->len--;
 	return d;
 }
+Bool LinkQueue_isEmpty(T t)
+{
+	CheckPtr(t);
+	return t->len == 0;
+}
 #undef T
 #undef D
