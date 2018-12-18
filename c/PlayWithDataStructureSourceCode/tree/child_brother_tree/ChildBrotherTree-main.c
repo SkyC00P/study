@@ -34,28 +34,29 @@ static void test() {
 			printf("\n");
 			CBTree_postorder_traverse(tree, printNodeData);
 			printf("\n");
+			EXPECT_EQ_INT('A', CBTree_brother(tree, 'B', 1));
 		}
 		else {
 			Error();
 		}
 
-		CBTree t;
-		FILE * fpTmp = fopen("child_brother_tree/TestData_1.txt", "r");
-		if (fpTmp) {
-			EXPECT_EQ_INT(OK, CBTree_create(fpTmp, &t));
-			fclose(fpTmp);
-
-			CBTree_print(t);
-			CBTree_preorder_traverse(t, printNodeData);
-			printf("\n");
-			CBTree_inorder_traverse(t, printNodeData);
-			printf("\n");
-			CBTree_postorder_traverse(t, printNodeData);
-			printf("\n");
-		}
-		else {
-			Error();
-		}
+		//CBTree t;
+		//FILE * fpTmp = fopen("child_brother_tree/TestData_1.txt", "r");
+		//if (fpTmp) {
+		//	EXPECT_EQ_INT(OK, CBTree_create(fpTmp, &t));
+		//	fclose(fpTmp);
+		//
+		//	CBTree_print(t);
+		//	CBTree_preorder_traverse(t, printNodeData);
+		//	printf("\n");
+		//	CBTree_inorder_traverse(t, printNodeData);
+		//	printf("\n");
+		//	CBTree_postorder_traverse(t, printNodeData);
+		//	printf("\n");
+		//}
+		//else {
+		//	Error();
+		//}
 	}
 }
 

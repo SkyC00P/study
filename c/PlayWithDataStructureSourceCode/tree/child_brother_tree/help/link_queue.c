@@ -57,7 +57,9 @@ void LinkQueue_destory(T t, LinkQueue_FucPtr_value_free method)
 			break;
 		}
 		tmp = freeNode->next;
-		method(freeNode->data);
+		if (method) {
+			method(freeNode->data);
+		}
 		free(freeNode);
 		freeNode = tmp;
 		t->len--;

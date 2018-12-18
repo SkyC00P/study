@@ -1,3 +1,6 @@
+/*
+ 树的遍历很重要
+*/
 #ifndef HAVE_CHILD_BROTHER_TREE_H
 #define HAVE_CHILD_BROTHER_TREE_H
 #include "common.h"

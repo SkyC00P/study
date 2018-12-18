@@ -184,7 +184,7 @@ int CBTree_degree(CBTree T)
 }
 
 /*
- 求树的深度可不可以等价于求解与图的关键路径，把树当初特殊的图
+ 求树的深度可不可以等价于求解与图的关键路径，把树当成特殊的图
  ？ 或者利用转变为二叉树利用二叉树的性质可以解决什么问题吗？
 
  已知存在孩子结点的树结点，其树的深度必然大于树结点所在的层数。
@@ -324,7 +324,53 @@ CBData CBTree_child(CBTree T, CBData e, int order)
 CBData CBTree_brother(CBTree T, CBData e, int order)
 {
 	CheckPtr(T);
-	return 0;
+	if (T->data == e || !T->fristChild || order <= 0) {
+		return -1;
+	}
+	// 找到父结点
+	CBNodePtr parentNode;
+	int find_it = 0;
+	LinkQueue nodes = LinkQueue_init();
+	LinkQueue_add(nodes, T);
+	while (1) {
+		parentNode = LinkQueue_remove(nodes);
+		if (!parentNode) {
+			break;
+		}
+		CBNodePtr fcNode = parentNode->fristChild;
+		while (fcNode) {
+			if (fcNode->data == e) {
+				find_it = 1;
+				break;
+			}
+			if (fcNode->fristChild) {
+				LinkQueue_add(nodes, fcNode);
+			}
+			fcNode = fcNode->nextBrother;
+		}
+
+		if (find_it) {
+			LinkQueue_destory(nodes, NULL);
+			break;
+		}
+	}
+	printf("parent node is %c\n ", parentNode ? parentNode->data : '-');
+
+	CBNodePtr ptr = parentNode->fristChild;
+	int index = 1;
+	find_it = 0;
+	while (1) {
+		if (index == order) {
+			find_it = 1;
+			break;
+		}
+		index++;
+		ptr = ptr->nextBrother;
+	}
+	if (find_it && ptr) {
+		return ptr->data;
+	}
+	return -1;
 }
 
 int CBTree_child_count(CBTree T, CBData p)
