@@ -36,7 +36,7 @@ int CBTree_depth(CBTree T);
 CBData CBTree_root(CBTree T);
 
 /* 返回树中第i个结点值（按层序计数） */
-int CBTree_value(CBTree T, int i);
+CBData CBTree_value(CBTree T, int i);
 
 /* 返回指向结点e的指针，NULL代表无此结点。 */
 CBNodePtr CBTree_order(CBTree T, CBData e);

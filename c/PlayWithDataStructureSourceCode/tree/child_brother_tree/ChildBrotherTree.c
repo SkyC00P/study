@@ -189,56 +189,211 @@ int CBTree_degree(CBTree T)
 */
 int CBTree_depth(CBTree T)
 {
-	return 0;
+	int depth = 0;
+	CBNodePtr node = T;
+	LinkQueue queue = LinkQueue_init();
+	int endLevel = 1;
+	while (node) {
+		depth++;
+		if (node->fristChild) {
+			LinkQueue_add(queue, node->fristChild);
+		}
+		if (node->nextBrother) {
+			node = node->nextBrother;
+		}
+	}
+	LinkQueue_destory(queue, LinkQueue_FucPtr_value_free);
+	return depth;
 }
 
 CBData CBTree_root(CBTree T)
 {
-	return 0;
+	CheckPtr(T);
+	return T->data;
 }
 
-int CBTree_value(CBTree T, int i)
+CBData CBTree_value(CBTree T, int i)
 {
-	return 0;
+	CheckPtr(T);
+
+	int index = 0;
+	LinkQueue queue = LinkQueue_init();
+	CBNodePtr ptr = T;
+	while (ptr) {
+		i++;
+		if (i == index) {
+			break;
+		}
+
+		if (ptr->fristChild) {
+			LinkQueue_add(queue, ptr->fristChild);
+		}
+
+		if (ptr->nextBrother) {
+			ptr = ptr->nextBrother;
+		}
+		else {
+			ptr = LinkQueue_remove(queue);
+		}
+	}
+
+	LinkQueue_destory(queue, LinkQueue_FucPtr_value_free);
+	return i == index ? ptr->data : -1;
 }
 
 CBNodePtr CBTree_order(CBTree T, CBData e)
 {
-	return NULL;
+	LinkQueue queue = LinkQueue_init();
+	CBNodePtr ptr = T;
+	while (ptr) {
+		if (ptr->data == e) {
+			break;
+		}
+
+		if (ptr->fristChild) {
+			LinkQueue_add(queue, ptr->fristChild);
+		}
+
+		if (ptr->nextBrother) {
+			ptr = ptr->nextBrother;
+		}
+		else {
+			ptr = LinkQueue_remove(queue);
+		}
+	}
+	LinkQueue_destory(queue, LinkQueue_FucPtr_value_free);
+	return ptr;
 }
 
 Status CBTree_assign(CBTree T, CBData old, CBData new)
 {
-	return OK;
+	CBNodePtr ptr = CBTree_order(T, old);
+	if (ptr) {
+		ptr->data = new;
+		return OK;
+	}
+	return ERROR;
 }
 
 CBData CBTree_child(CBTree T, CBData e, int order)
 {
-	return 0;
+	CBNodePtr ptr = CBTree_order(T, e);
+
+	int index = 1;
+	CBNodePtr cNode = ptr ? ptr->fristChild : NULL;
+	while (cNode)
+	{
+		if (index == order) {
+			break;
+		}
+		cNode = cNode->nextBrother;
+		index++;
+	}
+	return cNode ? cNode->data : -1;
 }
 
 CBData CBTree_brother(CBTree T, CBData e, int order)
 {
+	CheckPtr(T);
 	return 0;
 }
 
 int CBTree_child_count(CBTree T, CBData p)
 {
-	return 0;
+	CBNodePtr ptr = CBTree_order(T, p);
+	int index = -1;
+	while (ptr) {
+		index++;
+		ptr = ptr->nextBrother;
+	}
+	return index;
 }
 
 Status CBTree_insert(CBTree T, CBData e, int i, CBTree t)
 {
-	return OK;
+	CheckPtr(T);
+	CheckPtr(t);
+
+	CBNodePtr parentNode = CBTree_order(T, e);
+	if (!parentNode || !parentNode->fristChild || i < 0) {
+		return ERROR;
+	}
+	if (i == 0) {
+		CBNodePtr cNode = parentNode->fristChild;
+		while (cNode->nextBrother) {
+			cNode = cNode->nextBrother;
+		}
+		cNode->nextBrother = t;
+		return OK;
+	}
+	if (i == 1) {
+		t->nextBrother = parentNode->fristChild;
+		parentNode->fristChild = t;
+		return OK;
+	}
+	else {
+		CBNodePtr cNode = CBTree_child(T, e, i-1);
+		if (cNode) {
+			t->nextBrother = cNode->nextBrother;
+			cNode->nextBrother = t;
+			retu OK;
+		}
+		return ERROR;
+	}
+
 }
 
 Status CBTree_delete(CBTree T, CBData e, int i)
 {
+	CheckPtr(T);
+	CBNodePtr delTree = NULL;
+	if (i == 1) {
+		CBNodePtr parentNode = CBTree_order(T, e);
+		if (parentNode) {
+			delTree = parentNode->fristChild;
+			parentNode->fristChild = parentNode->fristChild->nextBrother;
+		}
+	}
+	else
+	{
+		CBNodePtr delBefNode = CBTree_child(T, e, i-1);
+		delTree = delBefNode ? delBefNode->nextBrother : NULL;
+		delBefNode->nextBrother = delTree ? delTree->nextBrother : NULL;
+	}
+	CBTree_clear(delTree);
 	return OK;
 }
 
 void CBTree_level_order_traverse(CBTree T, void(Visit)(CBData))
 {
+	if (!T) {
+		return;
+	}
+
+	LinkQueue queue = LinkQueue_init();
+	CBNodePtr ptr = T;
+	int queue_size = 0;
+
+	Visit(ptr->data);
+	if (ptr->fristChild) {
+		queue_size = 1;
+		LinkQueue_add(queue, ptr->fristChild);
+	}
+
+	while (queue_size) {
+
+		ptr = LinkQueue_remove(queue);
+		while (ptr) {
+			Visit(ptr->data);
+			if (ptr->fristChild) {
+				queue_size++;
+				LinkQueue_add(queue, ptr->fristChild);
+			}
+			ptr = ptr->nextBrother;
+		}
+		queue_size--;
+	}
+	LinkQueue_destory(queue, CBNodePtr_free);
 }
 
 /* 根 左 右 */
