@@ -130,7 +130,7 @@ Status CBTree_create(FILE * fp, CBTree * T)
 		}
 	}
 	Status status = HashMap_isEmpty(cache) ? OK : ERROR;
-	HashMap_destory(cache, CBNodePtr_free);
+	HashMap_destory(cache, NULL);
 
 	return status;
 }
@@ -572,7 +572,7 @@ void CBTree_print(CBTree T)
 		} while (curLevelChildCount);
 
 	}
-	LinkQueue_destory(queue, CBNodePtr_free);
+	LinkQueue_destory(queue, NULL);
 fuc_end:printf("\n--------------------\n");
 }
 
