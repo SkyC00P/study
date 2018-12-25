@@ -4,6 +4,7 @@
 static BiTree tree;
 static void test();
 static void Error();
+void PrintElem(BiTData e){printf("%c ", e);}
 
 int main() {
 	test();
@@ -67,7 +68,20 @@ static void test() {
 		EXPECT_TRUE(rBnode == NULL);
 	}
 
-	puts("(3)增删测试");
+	puts("(3)遍历测试");
+	{
+		puts("-> 层序遍历");
+		BiTree_level_order_traverse(tree, PrintElem);
+		printf("\n-> 非递归版本 - 前序遍历\n");
+		BiTree_pre_order_traverse(tree, PrintElem);
+		printf("\n-> 非递归版本 - 中序遍历\n");
+		BiTree_in_order_traverse(tree, PrintElem);
+		printf("\n-> 非递归版本 - 后序遍历\n");
+		BiTree_post_order_traverse(tree, PrintElem);
+		printf("\n");
+	}
+
+	puts("(4)增删测试");
 	{
 		BiTree addTree;
 		FILE * fp = fopen("binary_tree/test_data/del.txt", "r");

@@ -1,6 +1,6 @@
 #include "BinaryTree.h"
 #include <math.h>
-
+#include "help/stack.h"
 /* µÝ¹é½â·¨ */
 void BiTree_clear(BiTree * T)
 {
@@ -195,16 +195,82 @@ void BiTree_level_order_traverse(BiTree T, void(Visit)(BiTData))
 	}
 }
 
+/* ·ÇµÝ¹é°æ±¾ - ÖÐÐò±éÀú */
 void BiTree_in_order_traverse(BiTree T, void(Visit)(BiTData))
 {
+	LinkStack stack = LinkStack_init();
+	LinkStack_push(stack, T);
+	while (!LinkStack_empty(stack)) {
+		BiTNode * node = LinkStack_top(stack);
+		
+		while (node){
+			LinkStack_push(stack, node->lchild);
+			node = LinkStack_top(stack);
+		}
+		LinkStack_pop(stack); // ÒÆ³ý¿ÕÖ¸Õë
+		
+		if (!LinkStack_empty(stack)) {
+			node = LinkStack_pop(stack);
+			Visit(node->data);
+			LinkStack_push(stack, node->rchild);
+		}
+	}
+	LinkStack_destory(stack);
 }
 
+/* ·ÇµÝ¹é°æ±¾ - Ç°Ðò±éÀú */
 void BiTree_pre_order_traverse(BiTree T, void(Visit)(BiTData))
 {
+	LinkStack stack = LinkStack_init();
+	LinkStack_push(stack, T);
+	if (T) {
+		Visit(T->data);
+	}
+	while (!LinkStack_empty(stack)) {
+		BiTNode * node = LinkStack_top(stack);
+
+		while (node) {
+			LinkStack_push(stack, node->lchild);
+			if (node->lchild) {
+				Visit(node->lchild->data);
+			}
+			node = LinkStack_top(stack);
+		}
+		LinkStack_pop(stack); // ÒÆ³ý¿ÕÖ¸Õë
+
+		if (!LinkStack_empty(stack)) {
+			node = LinkStack_pop(stack);
+			LinkStack_push(stack, node->rchild);
+			if (node->rchild) {
+				Visit(node->rchild->data);
+			}
+		}
+	}
+	LinkStack_destory(stack);
 }
 
+/* ·ÇµÝ¹é°æ±¾ - ºóÐò±éÀú*/
 void BiTree_post_order_traverse(BiTree T, void(Visit)(BiTData))
 {
+	LinkStack stack = LinkStack_init();
+	LinkStack_push(stack, T);
+
+	while (!LinkStack_empty(stack)) {
+		BiTNode * node = LinkStack_top(stack);
+
+		while (node) {
+			LinkStack_push(stack, node->lchild);
+			node = LinkStack_top(stack);
+		}
+		LinkStack_pop(stack); // ÒÆ³ý¿ÕÖ¸Õë
+
+		if (!LinkStack_empty(stack)) {
+			node = LinkStack_pop(stack);
+			LinkStack_push(stack, node->rchild);
+			Visit(node->data);
+		}
+	}
+	LinkStack_destory(stack);
 }
 
 void BiTree_print(BiTree T)
