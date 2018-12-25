@@ -12,11 +12,9 @@ typedef struct BiTNode {
 	struct BiTNode * rchild;
 }BiTNode, *BiTree;
 
-void BiTree_clear();
+void BiTree_clear(BiTree * T);
 
-void BiTree_destroy();
-
-Bool BiTree_isEmpty();
+Bool BiTree_isEmpty(BiTree T);
 
 Status BiTree_create(FILE *fp, BiTree *T);
 
@@ -25,17 +23,12 @@ int BiTree_length(BiTree T);
 
 int BiTree_depth(BiTree T);
 
-BiTNode BiTree_parent(BiTree T, BiTData data);
-
-BiTNode BiTree_left_child(BiTree T, BiTData data);
-
-BiTNode BiTree_right_child(BiTree T, BiTData data);
-
-BiTNode BiTree_left_brother(BiTree T, BiTData data);
-
-BiTNode BiTree_right_brother(BiTree T, BiTData data);
-
-BiTNode BiTree_locate(BiTree T, BiTData data);
+BiTNode * BiTree_parent(BiTree T, BiTData data);
+BiTNode * BiTree_left_child(BiTree T, BiTData data);
+BiTNode * BiTree_right_child(BiTree T, BiTData data);
+BiTNode * BiTree_left_brother(BiTree T, BiTData data);
+BiTNode * BiTree_right_brother(BiTree T, BiTData data);
+BiTNode * BiTree_locate(BiTree T, BiTData data);
 
 typedef enum _bitree_direction {
 	bitree_direction_left_0 = 0, bitree_direction_right_1 = 1

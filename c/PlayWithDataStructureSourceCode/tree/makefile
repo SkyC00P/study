@@ -28,7 +28,7 @@ bctree:
 	@echo "\n--------------------------------------------------\n"
 
 btree: 
-	gcc -g -Wall $(btree) -o $@ $(inc)
+	gcc -g -Wall $(btree) -lm -o $@ $(inc) 
 	@echo "\n------------------ Test $@ ------------------\n"
 	@./$@
 	@rm $@
