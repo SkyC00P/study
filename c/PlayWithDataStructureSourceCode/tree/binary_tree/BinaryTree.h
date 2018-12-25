@@ -18,9 +18,6 @@ Bool BiTree_isEmpty(BiTree T);
 
 Status BiTree_create(FILE *fp, BiTree *T);
 
-/* 返回二叉树长度（按完全二叉树计算） */
-int BiTree_length(BiTree T);
-
 int BiTree_depth(BiTree T);
 
 BiTNode * BiTree_parent(BiTree T, BiTData data);
