@@ -1,5 +1,5 @@
 /*
- ÏßË÷¶þ²æÊ÷ - ÐèÒª¾­³£±éÀú»òÐè²éÕÒ½áµãµÄÇ°ÇýºÍºó¼Ì
+ çº¿ç´¢äºŒå‰æ ‘ - éœ€è¦ç»å¸¸éåŽ†æˆ–éœ€æŸ¥æ‰¾ç»“ç‚¹çš„å‰é©±å’ŒåŽç»§
 */
 #ifndef HAVE_THREAD_BINARY_TREE_H
 #define HAVE_THREAD_BINARY_TREE_H
@@ -15,40 +15,42 @@ typedef struct TBNode {
 	struct TBNode * rchild;
 }TBNode, *TBTree;
 
-/*°´ÏÈÐòÐòÁÐ¹¹Ôì¶þ²æÊ÷£¬²¢½¨Á¢º¢×Ó±êÖ¾(ÎÞÏßË÷»¯)*/
+TBTree pre;
+
+/*æŒ‰å…ˆåºåºåˆ—æž„é€ äºŒå‰æ ‘ï¼Œå¹¶å»ºç«‹å­©å­æ ‡å¿—(æ— çº¿ç´¢åŒ–)*/
 Status TBTree_create(FILE * fp, TBTree * t);
 
-/*ÖÐÐòÈ«ÏßË÷»¯¡£*/
+/*ä¸­åºå…¨çº¿ç´¢åŒ–ã€‚*/
 void TBTree_inThreading(TBTree t);
 
-/*ÖÐÐò±éÀú¶þ²æÊ÷T£¬²¢½«ÆäÈ«ÏßË÷»¯*/
+/*ä¸­åºéåŽ†äºŒå‰æ ‘tï¼Œå¹¶å°†å…¶å…¨çº¿ç´¢åŒ–*/
 Status TBTree_inorder_Threading(TBTree * T, TBTree t);
 
-/*ÖÐÐò±éÀúÖÐÐòÈ«ÏßË÷¶þ²æÊ÷£¨·ÇµÝ¹éËã·¨£©*/
+/*ä¸­åºéåŽ†ä¸­åºå…¨çº¿ç´¢äºŒå‰æ ‘ï¼ˆéžé€’å½’ç®—æ³•ï¼‰*/
 Status TBTree_inOrder_traverse(TBTree T, void(Visit)(TBData));
 
-/*ÏÈÐòºó¼ÌÏßË÷»¯¡£*/
+/*å…ˆåºåŽç»§çº¿ç´¢åŒ–ã€‚*/
 void TBTree_preThreading(TBTree t);
 
-/*ÏÈÐò±éÀú¶þ²æÊ÷T£¬²¢½«Æäºó¼ÌÏßË÷»¯¡£*/
+/*å…ˆåºéåŽ†äºŒå‰æ ‘Tï¼Œå¹¶å°†å…¶åŽç»§çº¿ç´¢åŒ–ã€‚*/
 Status TBTree_preorder_Threading(TBTree * T, TBTree t);
 
-/*ÏÈÐò±éÀúÇ°Ðòºó¼ÌÏßË÷¶þ²æÊ÷£¨·ÇµÝ¹éËã·¨£©¡£*/
+/*å…ˆåºéåŽ†å‰åºåŽç»§çº¿ç´¢äºŒå‰æ ‘ï¼ˆéžé€’å½’ç®—æ³•ï¼‰ã€‚*/
 Status TBTree_preOrder_traverse(TBTree T, void(Visit)(TBData));
 
-/*ºóÐòºó¼ÌÏßË÷»¯¡£*/
+/*åŽåºåŽç»§çº¿ç´¢åŒ–ã€‚*/
 void TBTree_postThreading(TBTree t);
 
-/*ºóÐò±éÀú¶þ²æÊ÷T£¬²¢½«Æäºó¼ÌÏßË÷»¯¡£*/
+/*åŽåºéåŽ†äºŒå‰æ ‘Tï¼Œå¹¶å°†å…¶åŽç»§çº¿ç´¢åŒ–ã€‚*/
 Status TBTree_postorder_Threading(TBTree * T, TBTree t);
 
-/*ºóÐò±éÀúºóÐòºó¼ÌÏßË÷¶þ²æÊ÷£¨·ÇµÝ¹éËã·¨£©*/
+/*åŽåºéåŽ†åŽåºåŽç»§çº¿ç´¢äºŒå‰æ ‘ï¼ˆéžé€’å½’ç®—æ³•ï¼‰*/
 Status TBTree_postOrder_traverse(TBTree T, void(Visit)(TBData));
 
-/*²ãÐò±éÀú¶þ²æÊ÷½¨Á¢¸÷½áµãµÄË«Ç×½áµãÖ¸Õë¡£*/
+/*å±‚åºéåŽ†äºŒå‰æ ‘å»ºç«‹å„ç»“ç‚¹çš„åŒäº²ç»“ç‚¹æŒ‡é’ˆã€‚*/
 void TBTree_parent(TBTree T);
 
-/*ÔÚºóÐò±éÀúºóÐòºó¼ÌÏßË÷¶þ²æÊ÷Ê±£¬Ñ°ÕÒ½áµãpµÄºó¼Ì¡£*/
+/*åœ¨åŽåºéåŽ†åŽåºåŽç»§çº¿ç´¢äºŒå‰æ ‘æ—¶ï¼Œå¯»æ‰¾ç»“ç‚¹pçš„åŽç»§ã€‚*/
 TBTree TBTree_post_next(TBTree t, TBTree p);
 
 #endif // !HAVE_THREAD_BINARY_TREE_H
