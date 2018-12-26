@@ -72,11 +72,11 @@ static void test() {
 	{
 		puts("-> 层序遍历");
 		BiTree_level_order_traverse(tree, PrintElem);
-		printf("\n-> 非递归版本 - 前序遍历\n");
+		printf("\n-> 非递归版本 - 前序遍历:A B D G E H I C F J\n");
 		BiTree_pre_order_traverse(tree, PrintElem);
-		printf("\n-> 非递归版本 - 中序遍历\n");
+		printf("\n-> 非递归版本 - 中序遍历:G D B H E I A F J C\n");
 		BiTree_in_order_traverse(tree, PrintElem);
-		printf("\n-> 非递归版本 - 后序遍历\n");
+		printf("\n-> 非递归版本 - 后序遍历:G D H I E B J F C A\n");
 		BiTree_post_order_traverse(tree, PrintElem);
 		printf("\n");
 	}

@@ -164,9 +164,9 @@ Status BiTree_delete(BiTree T, BiTData data, bitree_direction direction)
 	BiTNode * node = BiTree_locate(T, data);
 	if (node) {
 		switch (direction) {
-			case bitree_direction_left_0: BiTree_clear(&(node->lchild)); break;
-			case bitree_direction_right_1:BiTree_clear(&(node->rchild)); break;
-			default:break;
+		case bitree_direction_left_0: BiTree_clear(&(node->lchild)); break;
+		case bitree_direction_right_1:BiTree_clear(&(node->rchild)); break;
+		default:break;
 		}
 		return OK;
 	}
@@ -195,82 +195,100 @@ void BiTree_level_order_traverse(BiTree T, void(Visit)(BiTData))
 	}
 }
 
-/* 非递归版本 - 中序遍历 */
+/* 
+  非递归版本 - 中序遍历 
+	1 申请一个新栈，记为stack，申请一个变量cur，初始时令cur为头节点；
+	2 先把cur节点压入栈中，对以cur节点为头的整棵子树来说，依次把整棵树的左子树压入栈中，即不断令cur=cur.left，然后重复步骤2；
+	3 不断重复步骤2，直到发现cur为空，此时从stack中弹出一个节点记为node，打印node的值，并让cur = node.right，然后继续重复步骤2；
+	4 当stack为空并且cur为空时结束。
+
+*/
 void BiTree_in_order_traverse(BiTree T, void(Visit)(BiTData))
 {
+	if (!T) {
+		return;
+	}
 	LinkStack stack = LinkStack_init();
-	LinkStack_push(stack, T);
-	while (!LinkStack_empty(stack)) {
-		BiTNode * node = LinkStack_top(stack);
-		
-		while (node){
-			LinkStack_push(stack, node->lchild);
-			node = LinkStack_top(stack);
+	BiTree cur = T;
+	while (!LinkStack_empty(stack) || cur != NULL) {
+		while (cur)
+		{
+			LinkStack_push(stack, cur);
+			cur = cur->lchild;
 		}
-		LinkStack_pop(stack); // 移除空指针
-		
-		if (!LinkStack_empty(stack)) {
-			node = LinkStack_pop(stack);
-			Visit(node->data);
-			LinkStack_push(stack, node->rchild);
-		}
+		cur = LinkStack_pop(stack);
+		Visit(cur->data);
+		cur = cur->rchild;
 	}
 	LinkStack_destory(stack);
 }
 
-/* 非递归版本 - 前序遍历 */
+/*
+ 非递归版本 - 前序遍历
+	1 首先申请一个新的栈，记为stack；
+	2 将头结点head压入stack中；
+	3 每次从stack中弹出栈顶节点，记为cur，然后打印cur值，如果cur右孩子不为空，则将右孩子压入栈中；如果cur的左孩子不为空，将其压入stack中；
+	4 重复步骤3，直到stack为空
+*/
+
 void BiTree_pre_order_traverse(BiTree T, void(Visit)(BiTData))
 {
+	if (!T) {
+		return;
+	}
 	LinkStack stack = LinkStack_init();
 	LinkStack_push(stack, T);
-	if (T) {
-		Visit(T->data);
-	}
+
 	while (!LinkStack_empty(stack)) {
-		BiTNode * node = LinkStack_top(stack);
-
-		while (node) {
-			LinkStack_push(stack, node->lchild);
-			if (node->lchild) {
-				Visit(node->lchild->data);
-			}
-			node = LinkStack_top(stack);
-		}
-		LinkStack_pop(stack); // 移除空指针
-
-		if (!LinkStack_empty(stack)) {
-			node = LinkStack_pop(stack);
-			LinkStack_push(stack, node->rchild);
+		BiTNode * node = LinkStack_pop(stack);
+		if (node) {
+			Visit(node->data);
 			if (node->rchild) {
-				Visit(node->rchild->data);
+				LinkStack_push(stack, node->rchild);
+			}
+			if (node->lchild) {
+				LinkStack_push(stack, node->lchild);
 			}
 		}
 	}
 	LinkStack_destory(stack);
 }
 
-/* 非递归版本 - 后序遍历*/
+/* 非递归版本 - 后序遍历
+	1 申请两个栈stack1，stack2，然后将头结点压入stack1中；
+	2 从stack1中弹出的节点记为cur，然后先把cur的左孩子压入stack1中，再把cur的右孩子压入stack1中；
+	3 在整个过程中，每一个从stack1中弹出的节点都放在第二个栈stack2中；
+	4 不断重复步骤2和步骤3，直到stack1为空，过程停止；
+	5 从stack2中依次弹出节点并打印，打印的顺序就是后序遍历的顺序；
+*/
 void BiTree_post_order_traverse(BiTree T, void(Visit)(BiTData))
 {
-	LinkStack stack = LinkStack_init();
-	LinkStack_push(stack, T);
-
-	while (!LinkStack_empty(stack)) {
-		BiTNode * node = LinkStack_top(stack);
-
-		while (node) {
-			LinkStack_push(stack, node->lchild);
-			node = LinkStack_top(stack);
+	if (!T) {
+		return;
+	}
+	LinkStack s1 = LinkStack_init();
+	LinkStack s2 = LinkStack_init();
+	LinkStack_push(s1, T);
+	BiTNode * node;
+	while (!LinkStack_empty(s1))
+	{
+		node = LinkStack_pop(s1);
+		LinkStack_push(s2, node);
+		if (node->lchild) {
+			LinkStack_push(s1, node->lchild);
 		}
-		LinkStack_pop(stack); // 移除空指针
-
-		if (!LinkStack_empty(stack)) {
-			node = LinkStack_pop(stack);
-			LinkStack_push(stack, node->rchild);
-			Visit(node->data);
+		if (node->rchild) {
+			LinkStack_push(s1, node->rchild);
 		}
 	}
-	LinkStack_destory(stack);
+
+	while (!LinkStack_empty(s2)) {
+		node = LinkStack_pop(s2);
+		Visit(node->data);
+	}
+
+	LinkStack_destory(s1);
+	LinkStack_destory(s2);
 }
 
 void BiTree_print(BiTree T)
