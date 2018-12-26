@@ -1,5 +1,6 @@
 /*
  线索二叉树 - 需要经常遍历或需查找结点的前驱和后继
+ 非递归中序遍历非线索二叉树不用栈 也可以用Morris 遍历
 */
 #ifndef HAVE_THREAD_BINARY_TREE_H
 #define HAVE_THREAD_BINARY_TREE_H
