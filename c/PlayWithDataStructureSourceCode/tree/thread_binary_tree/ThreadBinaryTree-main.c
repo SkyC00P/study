@@ -27,7 +27,35 @@ static void test() {
 		EXPECT_TRUE(0);
 	}
 
-	EXPECT_EQ_INT(OK, TBTree_preorder_Threading(&T1, t1));
+	puts("1. 测试先序遍历");
+	{
+		puts("线索化t1树为T1");
+		EXPECT_EQ_INT(OK, TBTree_preorder_Threading(&T1, t1));
+		puts("先序遍历T1:A B D G E H I C F J");
+		EXPECT_EQ_INT(OK, TBTree_preOrder_traverse(T1, PrintElem));
+
+		printf("\n");
+	}
+
+	puts("2. 测试中序遍历");
+	{
+		puts("线索化t2树为T2");
+		EXPECT_EQ_INT(OK, TBTree_inorder_Threading(&T2, t2));
+		puts("先序遍历T1:G D B H E I A F J C");
+		EXPECT_EQ_INT(OK, TBTree_inOrder_traverse(T2, PrintElem));
+
+		printf("\n");
+	}
+
+	//puts("3. 测试后序遍历");
+	//{
+	//	puts("线索化t3树为T3");
+	//	EXPECT_EQ_INT(OK, TBTree_postorder_Threading(&T3, t3));
+	//	puts("先序遍历T1:G D H I E B J F C A");
+	//	EXPECT_EQ_INT(OK, TBTree_postOrder_traverse(T3, PrintElem));
+	//
+	//	printf("\n");
+	//}
 }
 
 void PrintElem(TBData e) {

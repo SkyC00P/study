@@ -44,19 +44,47 @@ void TBTree_inThreading(TBTree t)
 Status TBTree_inorder_Threading(TBTree * T, TBTree t)
 {
 	*T = malloc(sizeof(TBNode));
-	
-	if (!*T){
+
+	if (!*T) {
 		exit(OVERFLOW);
 	}
 	(*T)->data = '\0';
-	(*T)->lchild = t;
 	(*T)->ltag = Link;
+	(*T)->rtag = Thread;
+	(*T)->rchild = *T;
+
+	if (!t) {
+		(*T)->lchild = (*T);
+	}
+	else {
+		(*T)->lchild = t;
+		pre = (*T);
+
+		TBTree_inThreading(t);
+
+		pre->rchild = *T;
+		pre->rtag = Thread;
+		(*T)->rchild = pre;
+	}
 
 	return OK;
 }
 
 Status TBTree_inOrder_traverse(TBTree T, void(Visit)(TBData))
 {
+	TBTree node = T->lchild;
+	while (node != T)
+	{
+		while (node->ltag == Link) {
+			node = node->lchild;
+		}
+		Visit(node->data);
+		while (node->rtag == Thread && node->rchild != T) {
+			node = node->rchild;
+			Visit(node->data);
+		}
+		node = node->rchild;
+	}
 	return OK;
 }
 
@@ -105,21 +133,89 @@ Status TBTree_preorder_Threading(TBTree * T, TBTree t)
 
 Status TBTree_preOrder_traverse(TBTree T, void(Visit)(TBData))
 {
+	TBNode * p = T;
+	while (p->rchild != T) {
+		while (p->lchild) {
+			p = p->lchild;
+			Visit(p->data);
+		}
+		if (p->rchild != T) {
+			p = p->rchild;
+			Visit(p->data);
+		}
+	}
+	return OK;
+}
+
+void TBTree_postThreading(TBTree p)
+{
+	if (p)
+	{
+		if (!p->rchild)						//为当前结点右子树建立后继线索 
+		{
+			p->rtag = Thread;
+			p->rchild = pre;
+		}
+
+		pre = p;							//pre在正常顺序中为后一个结点 
+
+		if (p->rtag != Thread)
+			TBTree_postThreading(p->rchild);		//线索化右子树 
+
+		TBTree_postThreading(p->lchild);			//线索化左子树 
+	}
+}
+
+Status TBTree_postorder_Threading(TBTree * Thrt, TBTree T)
+{
+	*Thrt = malloc(sizeof(TBNode));
+	if (!*Thrt)
+		exit(OVERFLOW);
+
+	(*Thrt)->data = '\0';
+	(*Thrt)->ltag = Link;
+	(*Thrt)->rtag = Thread;
+	(*Thrt)->rchild = *Thrt;
+
+	if (!T)
+		(*Thrt)->lchild = *Thrt;
+	else
+	{
+		(*Thrt)->lchild = T;
+		pre = *Thrt;							//指向头结点 
+
+		TBTree_postThreading(T);						//开始线索化
+
+		(*Thrt)->rchild = T;					//头结点回指 
+	}
 
 	return OK;
 }
 
-void TBTree_postThreading(TBTree t)
+Status TBTree_postOrder_traverse(TBTree Thrt, void(Visit)(TBData))
 {
-}
+	TBTree p = Thrt->lchild;					//p指向二叉树根结点
 
-Status TBTree_postorder_Threading(TBTree * T, TBTree t)
-{
-	return OK;
-}
+	if (p != Thrt)									//树不为空 
+	{
+		while (1)								//寻找遍历起点 
+		{
+			while (p->lchild)
+				p = p->lchild;
 
-Status TBTree_postOrder_traverse(TBTree T, void(Visit)(TBData))
-{
+			if (p->rchild && p->rtag != Thread)
+				p = p->rchild;
+			else
+				break;
+		}
+
+		while (p)
+		{
+			Visit(p->data);
+			p = TBTree_post_next(Thrt, p);
+		}
+	}
+
 	return OK;
 }
 
@@ -127,7 +223,7 @@ void TBTree_parent(TBTree T)
 {
 }
 
-TBTree TBTree_post_next(TBTree t, TBTree p)
+TBTree TBTree_post_next(TBTree Thrt, TBTree p)
 {
-	return NULL;
+	
 }
