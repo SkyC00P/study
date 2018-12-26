@@ -4,8 +4,8 @@
 static void test();
 void PrintElem(TBData e);
 
-static TBTree T1, T2, T3;
-static TBTree t1, t2, t3;
+static TBTree T1, T2;
+static TBTree t1, t2;
 
 int main() {
 	test();
@@ -19,8 +19,6 @@ static void test() {
 		EXPECT_EQ_INT(OK, TBTree_create(fp, &t1));
 		fseek(fp, 0, SEEK_SET);
 		EXPECT_EQ_INT(OK, TBTree_create(fp, &t2));
-		fseek(fp, 0, SEEK_SET);
-		EXPECT_EQ_INT(OK, TBTree_create(fp, &t3));
 		fclose(fp);
 	}
 	else {
@@ -47,15 +45,6 @@ static void test() {
 		printf("\n");
 	}
 
-	//puts("3. 测试后序遍历");
-	//{
-	//	puts("线索化t3树为T3");
-	//	EXPECT_EQ_INT(OK, TBTree_postorder_Threading(&T3, t3));
-	//	puts("先序遍历T1:G D H I E B J F C A");
-	//	EXPECT_EQ_INT(OK, TBTree_postOrder_traverse(T3, PrintElem));
-	//
-	//	printf("\n");
-	//}
 }
 
 void PrintElem(TBData e) {

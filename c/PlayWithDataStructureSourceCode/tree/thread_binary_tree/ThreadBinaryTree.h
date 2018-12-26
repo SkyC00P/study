@@ -38,19 +38,4 @@ Status TBTree_preorder_Threading(TBTree * T, TBTree t);
 /*先序遍历前序后继线索二叉树（非递归算法）。*/
 Status TBTree_preOrder_traverse(TBTree T, void(Visit)(TBData));
 
-/*后序后继线索化。*/
-void TBTree_postThreading(TBTree t);
-
-/*后序遍历二叉树T，并将其后继线索化。*/
-Status TBTree_postorder_Threading(TBTree * T, TBTree t);
-
-/*后序遍历后序后继线索二叉树（非递归算法）*/
-Status TBTree_postOrder_traverse(TBTree T, void(Visit)(TBData));
-
-/*层序遍历二叉树建立各结点的双亲结点指针。*/
-void TBTree_parent(TBTree T);
-
-/*在后序遍历后序后继线索二叉树时，寻找结点p的后继。*/
-TBTree TBTree_post_next(TBTree t, TBTree p);
-
 #endif // !HAVE_THREAD_BINARY_TREE_H
