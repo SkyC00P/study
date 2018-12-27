@@ -4,7 +4,7 @@ ctree := child_tree/ChildTree.c child_tree/ChildTree-test.c child_tree/double_li
 bctree := child_brother_tree/*.c  child_brother_tree/help/*.c
 btree := binary_tree/*.c binary_tree/help/*.c
 tbtree:= thread_binary_tree/*.c
-htree := huffman_tree/*.c
+htree := huffman_tree/*.c huffman_tree/help/*.c
 
 all: ptree ctree bctree btree tbtree htree
 
@@ -44,8 +44,8 @@ tbtree:
 	@echo "\n--------------------------------------------------\n"
 
 htree:
-	gcc -g -Wall $(htree) -o $@ $(inc) 
+	gcc -g -Wall $(htree) -lm -o $@ $(inc) 
 	@echo "\n------------------ Test $@ ------------------\n"
 	@./$@
-	@rm $@
+	#@rm $@
 	@echo "\n--------------------------------------------------\n"

@@ -5,7 +5,7 @@
 typedef struct _order_link_list_node_st {
 	void * data;
 	struct _order_link_list_node_st * next;
-}OrderLinkListNode;
+}OrderLinkListNode, * OrderLinkListNodePtr;
 
 typedef int(*OrderLinkList_FucPtr_compare)(void* v1, void * v2);
 
