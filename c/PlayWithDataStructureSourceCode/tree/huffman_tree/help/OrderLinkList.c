@@ -32,7 +32,8 @@ Status OrderLinkList_add(OrderLinkList list, void * val)
 	}
 
 	if (list->compare) {
-		OrderLinkListNodePtr tmp, node = list->head;
+		OrderLinkListNodePtr tmp = NULL;
+		OrderLinkListNodePtr node = list->head;
 
 		for (int i = 0; i < list->len; i++) {
 			if (list->compare(node->data, ptr->data) < 0) {
@@ -44,8 +45,16 @@ Status OrderLinkList_add(OrderLinkList list, void * val)
 			}
 		}
 
-		tmp->next = ptr;
-		ptr->next = node;
+		if (tmp) {
+			tmp->next = ptr;
+			ptr->next = node;
+		}
+		else
+		{
+			ptr->next = list->head;
+			list->head = ptr;
+		}
+
 	}
 	else {
 		ptr->next = list->head;
@@ -84,7 +93,9 @@ void * OrderLinkList_remove_frist(OrderLinkList list)
 	if (ptr) {
 		list->head = ptr->next;
 		list->len--;
-		return ptr;
+		void * val = ptr->data;
+		free(ptr);
+		return val;
 	}
 	return NULL;
 }

@@ -13,6 +13,8 @@ typedef HTNode * HuffmanTree;
 
 HuffmanTree HuffmanTree_create(FILE * fp);
 
+HuffmanTree HuffmanTree_create_inarray(int * arr, int size);
+
 void HuffmanTree_show(HuffmanTree ht);
 
 #endif // !HAVE_HUFFMAN_TREE_H
