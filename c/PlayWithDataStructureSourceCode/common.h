@@ -28,4 +28,13 @@ static inline void CheckPtr(const void * ptr) {
 		exit(-1);
 	}
 }
+
+static inline void Exit_with_msg(const char * msg) {
+	fprintf(stderr, "%s", msg);
+	exit(INFEASIBLE);
+}
+
+static inline void Exit_without_msg() {
+	exit(INFEASIBLE);
+}
 #endif // !HAVE_COMMON_H
