@@ -52,7 +52,7 @@ Status MGraph_add_vertex(MGraph G, MG_VertexType v);
 Status MGraph_del_vertex(MGraph G, MG_VertexType v);
 
 /* ²åÈë»¡<v,w>µ½Í¼ */
-Status MGraph_add_arc(MGraph G, MG_VertexType v, MG_VertexType w);
+Status MGraph_add_arc(MGraph G, MG_VertexType v, MG_VertexType w, MG_Weight weight);
 
 /* É¾³ý»¡<v,w>µ½Í¼ */
 Status MGraph_del_arc(MGraph G, MG_VertexType v, MG_VertexType w);
