@@ -73,7 +73,7 @@ static MGraph _create_dg(FILE * fp) {
 		_read_edge_g(fp, &v1, &v2);
 		int e1 = MGraph_locate(mg, v1);
 		int e2 = MGraph_locate(mg, v2);
-		if (!e1 || !e2) {
+		if (e1 < 0 || e2 < 0) {
 			return NULL;
 		}
 		mg->arcs[e1][e2] = 1;
@@ -96,7 +96,6 @@ static MGraph _create_dn(FILE * fp) {
 		for (int j = 0; j < mg->vexs; j++) {
 			mg->arcs[i][j] = INFINITY;
 		}
-		mg->arcs[i][i] = 0;
 	}
 
 	for (int i = 0; i < mg->numEdges; i++) {
@@ -105,7 +104,7 @@ static MGraph _create_dn(FILE * fp) {
 		_read_edge_n(fp, &v1, &v2, &weight);
 		int e1 = MGraph_locate(mg, v1);
 		int e2 = MGraph_locate(mg, v2);
-		if (!e1 || !e2) {
+		if (e1 < 0 || e2 < 0) {
 			return NULL;
 		}
 		mg->arcs[e1][e2] = weight;
@@ -134,7 +133,7 @@ static MGraph _create_udg(FILE * fp) {
 		_read_edge_g(fp, &v1, &v2);
 		int e1 = MGraph_locate(mg, v1);
 		int e2 = MGraph_locate(mg, v2);
-		if (!e1 || !e2) {
+		if (e1 < 0 || e2 < 0) {
 			return NULL;
 		}
 		mg->arcs[e1][e2] = 1;
@@ -157,7 +156,6 @@ static MGraph _create_udn(FILE * fp) {
 		for (int j = 0; j < mg->numVertexes; j++) {
 			mg->numEdges[i][j] = INFINITY;
 		}
-		mg->numEdges[i][i] = 0;
 	}
 
 	for (int i = 0; i < mg->numEdges; i++) {
@@ -166,7 +164,7 @@ static MGraph _create_udn(FILE * fp) {
 		_read_edge_n(fp, &v1, &v2, &weight);
 		int e1 = MGraph_locate(mg, v1);
 		int e2 = MGraph_locate(mg, v2);
-		if (!e1 || !e2) {
+		if (e1 < 0 || e2 < 0) {
 			return NULL;
 		}
 		mg->arcs[e1][e2] = weight;
@@ -219,27 +217,28 @@ int MGraph_locate(MGraph G, MG_VertexType v) {
 			return i;
 		}
 	}
-	return 0;
+	return -1;
 }
 
 /* 返回第v个结点的值 */
 MG_VertexType MGraph_get(MGraph G, int order) {
 	CheckPtr(G);
-	return G->vexs[order];
+	return order >= 0 ? G->vexs[order] : '\0';
 }
 
 /* 对顶点v赋值value。 */
 void MGraph_set(MGraph G, MG_VertexType old, MG_VertexType new) {
 	CheckPtr(G);
 	int index = MGraph_locate(G, old);
-	G->vexs[index] = new;
+	if (index >= 0)
+		G->vexs[index] = new;
 }
 
 /* 返回v的第一个邻接顶点序号 */
 int MGraph_frist_vertex(MGraph G, MG_VertexType v) {
 	CheckPtr(G);
 	int index = MGraph_locate(G, v);
-	if (index) {
+	if (index >= 0) {
 		int flag;
 		switch (G->kind)
 		{
@@ -258,7 +257,7 @@ int MGraph_frist_vertex(MGraph G, MG_VertexType v) {
 			}
 		}
 	}
-	return 0;
+	return -1;
 }
 
 /* 返回v相对于w的下一个邻接顶点序号 */
@@ -266,7 +265,7 @@ int MGraph_next_vertex(MGraph G, MG_VertexType v, MG_VertexType w) {
 	CheckPtr(G);
 	int i1 = MGraph_locate(G, v);
 	int i2 = MGraph_locate(G, w);
-	if (i1 && i2) {
+	if (i1 >= 0 && i2 >= 0) {
 		int flag;
 		switch (G->kind)
 		{
@@ -285,26 +284,88 @@ int MGraph_next_vertex(MGraph G, MG_VertexType v, MG_VertexType w) {
 			}
 		}
 	}
-	return 0;
+	return -1;
 }
 
 /* 插入顶点v到图 */
 Status MGraph_add_vertex(MGraph G, MG_VertexType v) {
 	CheckPtr(G);
+	if (G->numVertexes == MAX_VERTEX_NUM) {
+		return ERROR;
+	}
 	int index = MGraph_locate(G, v);
-	if (index) {
+	if (index >= 0) {
 		return ERROR;
 	}
 	G->numVertexes++;
 	G->vexs[G->numVertexes] = v;
+	int weight = G->kind % 2 ? INFINITY : 0;
+	for (int i = 0; i < G->numVertexes; i++) {
+		G->arcs[i][G->numVertexes] = weight;
+		G->arcs[G->numVertexes][i] = weight;
+	}
 	return OK;
 }
 
 /* 从图中删除顶点v以及相关的弧 */
-Status MGraph_del_vertex(MGraph G, MG_VertexType v) {}
+Status MGraph_del_vertex(MGraph G, MG_VertexType v) {
+	CheckPtr(G);
+	int index = MGraph_locate(G, v);
+	if (index < 0) {
+		return ERROR;
+	}
+	for (int i = index; i < G->numVertexes; i++) {
+		G->vexs[i] = G->vexs[i + 1];
+	}
+	int flag = G->kind % 2 ? INFINITY : 0;
+	int delCount = 0;
+	for (int i = 0; i < G->numVertexes; i++) {
+		// 有向图对称点看边是否存在
+		if (flag && G->arcs[i][index] != flag) {
+			delCount++;
+		}
+		if (G->arcs[index][i] != flag) {
+			delCount++;
+		}
+	}
+
+	for (int i = index; i < G->numVertexes; i++) {
+		G->arcs[i] = G->arcs[i + 1];
+		for (int j = index; j < G->numVertexes; j++) {
+			G->arcs[i][j] = G->arcs[i][j + 1];
+		}
+	}
+	G->numEdges -= delCount;
+	G->numVertexes--;
+	return OK;
+}
 
 /* 插入弧<v,w>到图 */
-Status MGraph_add_arc(MGraph G, MG_VertexType v, MG_VertexType w) {}
+Status MGraph_add_arc(MGraph G, MG_VertexType v, MG_VertexType w, MG_Weight weight) {
+	CheckPtr(G);
+	int index_1 = MGraph_locate(G, v);
+	if (index_1 < 0) {
+		if (!MGraph_add_vertex(G, v)) {
+			return ERROR;
+		}
+		index_1 = MGraph_locate(G, v);
+	}
+
+	int index_2 = MGraph_locate(G, w);
+	if (index_2 < 0) {
+		if (!MGraph_add_vertex(G, w)) {
+			return ERROR;
+		}
+		index_2 = MGraph_locate(G, w);
+	}
+	G->arcs[index_1][index_2] = weight;
+	if (G->kind == UDN || G->kind == UDG) {
+		G->arcs[index_2][index_1] = weight;
+		G->numEdges++;
+	}
+	G->numEdges++;
+	return OK;
+}
 
 /* 删除弧<v,w>到图 */
 Status MGraph_del_arc(MGraph G, MG_VertexType v, MG_VertexType w) {}
