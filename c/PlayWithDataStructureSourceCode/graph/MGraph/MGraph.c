@@ -340,12 +340,19 @@ Status MGraph_del_vertex(MGraph G, MG_VertexType v) {
 	return OK;
 }
 
+static void _MGraph_add_arc_error_handle(MGraph G, MG_VertexType v, MG_VertexType w) {
+	CheckPtr(G);
+	MGraph_del_vertex(G, v);
+	MGraph_del_vertex(G, w);
+}
+
 /* 插入弧<v,w>到图 */
 Status MGraph_add_arc(MGraph G, MG_VertexType v, MG_VertexType w, MG_Weight weight) {
 	CheckPtr(G);
 	int index_1 = MGraph_locate(G, v);
 	if (index_1 < 0) {
 		if (!MGraph_add_vertex(G, v)) {
+			_MGraph_add_arc_error_handle(G, v, w);
 			return ERROR;
 		}
 		index_1 = MGraph_locate(G, v);
@@ -354,6 +361,7 @@ Status MGraph_add_arc(MGraph G, MG_VertexType v, MG_VertexType w, MG_Weight weig
 	int index_2 = MGraph_locate(G, w);
 	if (index_2 < 0) {
 		if (!MGraph_add_vertex(G, w)) {
+			_MGraph_add_arc_error_handle(G, v, w);
 			return ERROR;
 		}
 		index_2 = MGraph_locate(G, w);
@@ -361,14 +369,34 @@ Status MGraph_add_arc(MGraph G, MG_VertexType v, MG_VertexType w, MG_Weight weig
 	G->arcs[index_1][index_2] = weight;
 	if (G->kind == UDN || G->kind == UDG) {
 		G->arcs[index_2][index_1] = weight;
-		G->numEdges++;
 	}
 	G->numEdges++;
 	return OK;
 }
 
 /* 删除弧<v,w>到图 */
-Status MGraph_del_arc(MGraph G, MG_VertexType v, MG_VertexType w) {}
+Status MGraph_del_arc(MGraph G, MG_VertexType v, MG_VertexType w) {
+	CheckPtr(G);
+	int index_1 = MGraph_locate(G, v);
+	int index_2 = MGraph_locate(G, w);
+	if (index_1 < 0 || index_2 < 0) {
+		return ERROR;
+	}
+
+	if (G->kind == UDN || G->kind == UDG) {
+		G->arcs[index_2][index_1] = 0;
+	}
+
+	if (G->kind == DN || G->kind == UDN) {
+		G->arcs[index_1][index_2] = INFINITY;
+	}
+	else
+	{
+		G->arcs[index_1][index_2] = 0;
+	}
+	G->numEdges--;
+	return OK;
+}
 
 /* 深度优先遍历 */
 void MGraph_DFS(MGraph G) {}
@@ -377,4 +405,40 @@ void MGraph_DFS(MGraph G) {}
 void MGraph_HFS(MGraph G) {}
 
 /* 打印图 */
-void MGraph_print(MGraph G) {}
+void MGraph_print(MGraph G) {
+	if (G) {
+		char * kindMsg;
+		switch (G->kind)
+		{
+		case DG:kindMsg = "/0-有向图"; break;
+		case DN:kindMsg = "1-有向网（带权值）"; break;
+		case UDG:kindMsg = "2-无向图"; break;
+		case UDN:kindMsg = "3-无向网（带权值）"; break;
+		default:
+			kindMsg = "unkonwn kind";
+			break;
+		}
+		printf("顶点数:%d, 边集数:%d, 类型:%s\n", G->numVertexes, G->numEdges, kindMsg);
+		printf("%3c ", ' ');
+		for (int i = 0; i < G->numVertexes; i++) {
+			printf("%3c ", G->vexs[i]);
+		}
+		printf("\n");
+		for (int i = 0; i < G->numVertexes; i++) {
+			printf("%3c ", G->vexs[i]);
+			for (int j = 0; j < G->numVertexes; j++) {
+				if (G->arcs[i][j] == INFINITY) {
+					printf("%3s ", "∞");
+				}
+				else
+				{
+					printf("%3d ", G->arcs[i][j]);
+				}
+			}
+			printf("\n");
+		}
+	}
+	else {
+		printf("空图");
+	}
+}
