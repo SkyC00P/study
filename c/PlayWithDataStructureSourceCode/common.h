@@ -30,7 +30,7 @@ static inline void CheckPtr(const void * ptr) {
 }
 
 static inline void Exit_with_msg(const char * msg) {
-	fprintf(stderr, "%s", msg);
+	fprintf(stderr, "%s:%d:%s", __FILE__, __LINE__, msg);
 	exit(INFEASIBLE);
 }
 

@@ -6,13 +6,13 @@
 #include "common.h"
 #include <limits.h>
 
-#define MAX_VERTEX_NUM 100							//  顶点最大的值
+#define MAX_VERTEX_NUM 20							//  顶点最大的值
 #define INFINITY INT_MAX							//  无穷大
 typedef char MG_VertexType;							//  顶点类型
 typedef int MG_Weight;								//  权值类型
-typedef enum { DG, DN, UDG, UDN }MGraphKind;		//0-有向图，1-有向网（带权值），2-无向图，3-无向网（带权值）
+typedef enum _MGraphKind { DG, DN, UDG, UDN }MGraphKind;		//0-有向图，1-有向网（带权值），2-无向图，3-无向网（带权值）
 
-struct _MGraph {
+typedef struct _MGraph {
 	MG_VertexType vexs[MAX_VERTEX_NUM];
 	MG_Weight arcs[MAX_VERTEX_NUM][MAX_VERTEX_NUM];
 	int numVertexes, numEdges;
