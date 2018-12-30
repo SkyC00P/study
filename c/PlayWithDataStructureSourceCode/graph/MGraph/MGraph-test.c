@@ -53,7 +53,7 @@ static void test() {
 		EXPECT_TRUE(0);
 	}
 
-	puts("(4) 测试无向图");
+	puts("(4) 测试无向网");
 	FILE * udn_fg = fopen("MGraph/test_data/UDN.txt", "r");
 	if (udn_fg) {
 		udnMGraph = MGraph_create(udn_fg);
