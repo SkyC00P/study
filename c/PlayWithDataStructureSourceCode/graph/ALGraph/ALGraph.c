@@ -230,12 +230,19 @@ void ALGraph_set(ALGraph G, AL_VertexType old, AL_VertexType new)
 int ALGraph_frist_vertex(ALGraph G, AL_VertexType v)
 {
 	CheckPtr(G);
-	return 0;
+	int index = ALGraph_locate(G, v);
+	if (index < 0 || !(G->adlist[index].firstEdge)) {
+		return -1;
+	}
+	else {
+		return G->adlist[index].firstEdge->adjvex;
+	}
 }
 
 int ALGraph_next_vertex(ALGraph G, AL_VertexType v, AL_VertexType w)
 {
-	return 0;
+	CheckPtr(G);
+
 }
 
 Status ALGraph_add_vertex(ALGraph G, AL_VertexType v)
