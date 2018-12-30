@@ -376,11 +376,20 @@ Status MGraph_add_arc(MGraph G, MG_VertexType v, MG_VertexType w, MG_Weight weig
 		}
 		index_2 = MGraph_locate(G, w);
 	}
-	G->arcs[index_1][index_2] = weight;
+
 	if (G->kind == UDN || G->kind == UDG) {
+		MG_Weight flag = G->kind % 2 ? INFINITY : 0;
+		if (G->arcs[index_1][index_2] == flag) {
+			G->numEdges++;
+		}
+		G->arcs[index_1][index_2] = weight;
 		G->arcs[index_2][index_1] = weight;
 	}
-	G->numEdges++;
+	else
+	{
+		G->arcs[index_1][index_2] = weight;
+		G->numEdges++;
+	}
 	return OK;
 }
 
