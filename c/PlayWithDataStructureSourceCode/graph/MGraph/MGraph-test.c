@@ -23,7 +23,7 @@ int main() {
 
 static void test() {
 	puts("(1) 测试有向图");
-	FILE * dg_fp = fopen("MGraph/test_data/DG.txt", "r");
+	FILE * dg_fp = fopen("test_data/DG.txt", "r");
 	if (dg_fp) {
 		dgMGraph = MGraph_create(dg_fp);
 		EXPECT_TRUE(dgMGraph != NULL);
@@ -48,7 +48,7 @@ static void test() {
 	}
 
 	puts("(2) 测试有向网");
-	FILE * dn_fp = fopen("MGraph/test_data/DN.txt", "r");
+	FILE * dn_fp = fopen("test_data/DN.txt", "r");
 	if (dn_fp) {
 		dnMGraph = MGraph_create(dn_fp);
 		EXPECT_TRUE(dnMGraph != NULL);
@@ -73,7 +73,7 @@ static void test() {
 	}
 
 	puts("(3) 测试无向图");
-	FILE * udg_fp = fopen("MGraph/test_data/UDG.txt", "r");
+	FILE * udg_fp = fopen("test_data/UDG.txt", "r");
 	if (udg_fp) {
 		udgMGraph = MGraph_create(udg_fp);
 		EXPECT_TRUE(udgMGraph != NULL);
@@ -98,7 +98,7 @@ static void test() {
 	}
 
 	puts("(4) 测试无向网");
-	FILE * udn_fg = fopen("MGraph/test_data/UDN.txt", "r");
+	FILE * udn_fg = fopen("test_data/UDN.txt", "r");
 	if (udn_fg) {
 		udnMGraph = MGraph_create(udn_fg);
 		EXPECT_TRUE(udnMGraph != NULL);
@@ -198,49 +198,49 @@ void test_udg_mgraph_add_and_del()
 	EXPECT_EQ_INT(6, udgMGraph->numEdges);
 	EXPECT_EQ_INT(5, MGraph_locate(udgMGraph, 'H'));
 	EXPECT_TRUE(MGraph_get(udgMGraph, 5) == 'H');
-	//MGraph_print(udnMGraph);
+	MGraph_print(udgMGraph);
 
 	puts("依次插入边H-X-1,H-C-1,D-H-1,H-D-1");
-	EXPECT_EQ_INT(OK, MGraph_add_arc(udnMGraph, 'H', 'X', 1));
-	EXPECT_EQ_INT(OK, MGraph_add_arc(udnMGraph, 'H', 'C', 1));
-	EXPECT_EQ_INT(OK, MGraph_add_arc(udnMGraph, 'D', 'H', 1));
-	EXPECT_EQ_INT(OK, MGraph_add_arc(udnMGraph, 'H', 'D', 1));
+	EXPECT_EQ_INT(OK, MGraph_add_arc(udgMGraph, 'H', 'X', 1));
+	EXPECT_EQ_INT(OK, MGraph_add_arc(udgMGraph, 'H', 'C', 1));
+	EXPECT_EQ_INT(OK, MGraph_add_arc(udgMGraph, 'D', 'H', 1));
+	EXPECT_EQ_INT(OK, MGraph_add_arc(udgMGraph, 'H', 'D', 1));
 
-	EXPECT_TRUE(MGraph_arc_exist(udnMGraph, 'H', 'X'));
-	EXPECT_TRUE(MGraph_arc_exist(udnMGraph, 'H', 'C'));
-	EXPECT_TRUE(MGraph_arc_exist(udnMGraph, 'D', 'H'));
-	EXPECT_TRUE(MGraph_arc_exist(udnMGraph, 'H', 'D'));
+	EXPECT_TRUE(MGraph_arc_exist(udgMGraph, 'H', 'X'));
+	EXPECT_TRUE(MGraph_arc_exist(udgMGraph, 'H', 'C'));
+	EXPECT_TRUE(MGraph_arc_exist(udgMGraph, 'D', 'H'));
+	EXPECT_TRUE(MGraph_arc_exist(udgMGraph, 'H', 'D'));
 
-	EXPECT_EQ_INT(1, MGraph_arc_weight(udnMGraph, 'H', 'X'));
-	EXPECT_EQ_INT(1, MGraph_arc_weight(udnMGraph, 'H', 'C'));
-	EXPECT_EQ_INT(1, MGraph_arc_weight(udnMGraph, 'D', 'H'));
-	EXPECT_EQ_INT(1, MGraph_arc_weight(udnMGraph, 'H', 'D'));
+	EXPECT_EQ_INT(1, MGraph_arc_weight(udgMGraph, 'H', 'X'));
+	EXPECT_EQ_INT(1, MGraph_arc_weight(udgMGraph, 'H', 'C'));
+	EXPECT_EQ_INT(1, MGraph_arc_weight(udgMGraph, 'D', 'H'));
+	EXPECT_EQ_INT(1, MGraph_arc_weight(udgMGraph, 'H', 'D'));
 
-	EXPECT_EQ_INT(6, udnMGraph->numVertexes);
-	EXPECT_EQ_INT(9, udnMGraph->numEdges);
-	//MGraph_print(udnMGraph);
+	EXPECT_EQ_INT(6, udgMGraph->numVertexes);
+	EXPECT_EQ_INT(9, udgMGraph->numEdges);
+	//MGraph_print(udgMGraph);
 
 	puts("删除边 H-X");
-	EXPECT_EQ_INT(OK, MGraph_del_arc(udnMGraph, 'H', 'X'));
-	EXPECT_EQ_INT(8, udnMGraph->numEdges);
-	EXPECT_FALSE(MGraph_arc_exist(udnMGraph, 'H', 'X'));
-	//MGraph_print(udnMGraph);
+	EXPECT_EQ_INT(OK, MGraph_del_arc(udgMGraph, 'H', 'X'));
+	EXPECT_EQ_INT(8, udgMGraph->numEdges);
+	EXPECT_FALSE(MGraph_arc_exist(udgMGraph, 'H', 'X'));
+	//MGraph_print(udgMGraph);
 
 	puts("删除顶点 B");
-	EXPECT_EQ_INT(OK, MGraph_del_vertex(udnMGraph, 'B'));
-	EXPECT_EQ_INT(6, udnMGraph->numEdges);
-	EXPECT_EQ_INT(5, udnMGraph->numVertexes);
-	EXPECT_TRUE(MGraph_locate(udnMGraph, 'B') < 0);
-	//MGraph_print(udnMGraph);
+	EXPECT_EQ_INT(OK, MGraph_del_vertex(udgMGraph, 'B'));
+	EXPECT_EQ_INT(6, udgMGraph->numEdges);
+	EXPECT_EQ_INT(5, udgMGraph->numVertexes);
+	EXPECT_TRUE(MGraph_locate(udgMGraph, 'B') < 0);
+	//MGraph_print(udgMGraph);
 
 	puts("清除图");
-	MGraph_clear(udnMGraph);
-	EXPECT_EQ_INT(0, udnMGraph->numEdges);
-	EXPECT_EQ_INT(0, udnMGraph->numVertexes);
+	MGraph_clear(udgMGraph);
+	EXPECT_EQ_INT(0, udgMGraph->numEdges);
+	EXPECT_EQ_INT(0, udgMGraph->numVertexes);
 
 	puts("销毁图");
-	MGraph_destroy(&udnMGraph);
-	EXPECT_TRUE(udnMGraph == NULL);
+	MGraph_destroy(&udgMGraph);
+	EXPECT_TRUE(udgMGraph == NULL);
 }
 
 void test_dn_mgraph_add_and_del()
@@ -255,7 +255,7 @@ void test_dg_mgraph_add_and_del()
 	MGraph_set(dgMGraph, 'A', 'X');
 	EXPECT_EQ_INT(0, MGraph_locate(dgMGraph, 'X'));
 	EXPECT_TRUE(MGraph_get(dgMGraph, 0) == 'X');
-	MGraph_print(dgMGraph);
+	//MGraph_print(dgMGraph);
 
 	puts("插入顶点 H 后， DG图=");
 	EXPECT_EQ_INT(OK, MGraph_add_vertex(dgMGraph, 'H'));
@@ -263,7 +263,7 @@ void test_dg_mgraph_add_and_del()
 	EXPECT_EQ_INT(4, dgMGraph->numEdges);
 	EXPECT_EQ_INT(4, MGraph_locate(dgMGraph, 'H'));
 	EXPECT_TRUE(MGraph_get(dgMGraph, 4) == 'H');
-	MGraph_print(dgMGraph);
+	//MGraph_print(dgMGraph);
 
 	puts("依次插入边H-X-1,H-C-1,D-H-1");
 	EXPECT_EQ_INT(OK, MGraph_add_arc(dgMGraph, 'H', 'X', 1));
@@ -280,20 +280,20 @@ void test_dg_mgraph_add_and_del()
 
 	EXPECT_EQ_INT(5, dgMGraph->numVertexes);
 	EXPECT_EQ_INT(7, dgMGraph->numEdges);
-	MGraph_print(dgMGraph);
+	//MGraph_print(dgMGraph);
 
 	puts("删除边 H-X");
 	EXPECT_EQ_INT(OK, MGraph_del_arc(dgMGraph, 'H', 'X'));
 	EXPECT_EQ_INT(6, dgMGraph->numEdges);
 	EXPECT_FALSE(MGraph_arc_exist(dgMGraph, 'H', 'X'));
-	MGraph_print(dgMGraph);
+	//MGraph_print(dgMGraph);
 
 	puts("删除顶点 B");
 	EXPECT_EQ_INT(OK, MGraph_del_vertex(dgMGraph, 'B'));
 	EXPECT_EQ_INT(4, dgMGraph->numEdges);
 	EXPECT_EQ_INT(4, dgMGraph->numVertexes);
 	EXPECT_TRUE(MGraph_locate(dgMGraph, 'B') < 0);
-	MGraph_print(dgMGraph);
+	//MGraph_print(dgMGraph);
 
 	puts("清除图");
 	MGraph_clear(dgMGraph);
