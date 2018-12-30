@@ -208,10 +208,10 @@ void MGraph_clear(MGraph G) {
 }
 
 /* 销毁图 */
-void MGraph_destroy(MGraph G) {
-	if (G) {
-		free(G);
-		G = NULL;
+void MGraph_destroy(MGraph * G) {
+	if (*G) {
+		free(*G);
+		*G = NULL;
 	}
 }
 
@@ -219,7 +219,7 @@ void MGraph_destroy(MGraph G) {
 int MGraph_locate(MGraph G, MG_VertexType v) {
 	CheckPtr(G);
 
-	for (int i = 0; i < G->numEdges; i++) {
+	for (int i = 0; i < G->numVertexes; i++) {
 		if (G->vexs[i] == v) {
 			return i;
 		}
@@ -305,11 +305,11 @@ Status MGraph_add_vertex(MGraph G, MG_VertexType v) {
 		return ERROR;
 	}
 	G->numVertexes++;
-	G->vexs[G->numVertexes] = v;
+	G->vexs[G->numVertexes - 1] = v;
 	int weight = G->kind % 2 ? INFINITY : 0;
 	for (int i = 0; i < G->numVertexes; i++) {
-		G->arcs[i][G->numVertexes] = weight;
-		G->arcs[G->numVertexes][i] = weight;
+		G->arcs[i][G->numVertexes - 1] = weight;
+		G->arcs[G->numVertexes - 1][i] = weight;
 	}
 	return OK;
 }
@@ -325,10 +325,11 @@ Status MGraph_del_vertex(MGraph G, MG_VertexType v) {
 		G->vexs[i] = G->vexs[i + 1];
 	}
 	int flag = G->kind % 2 ? INFINITY : 0;
+	Bool direction = G->kind == DG || G->kind == DN;
 	int delCount = 0;
 	for (int i = 0; i < G->numVertexes; i++) {
 		// 有向图对称点看边是否存在
-		if (flag && G->arcs[i][index] != flag) {
+		if (direction && G->arcs[i][index] != flag) {
 			delCount++;
 		}
 		if (G->arcs[index][i] != flag) {
@@ -405,6 +406,30 @@ Status MGraph_del_arc(MGraph G, MG_VertexType v, MG_VertexType w) {
 	}
 	G->numEdges--;
 	return OK;
+}
+
+Bool MGraph_arc_exist(MGraph G, MG_VertexType v, MG_VertexType w)
+{
+	CheckPtr(G);
+	MG_Weight flag = G->kind % 2 ? INFINITY : 0;
+	int index_1 = MGraph_locate(G, v);
+	int index_2 = MGraph_locate(G, w);
+	if (index_1 < 0 || index_2 < 0) {
+		return FALSE;
+	}
+
+	return G->arcs[index_1][index_2] != flag;
+}
+
+MG_Weight MGraph_arc_weight(MGraph G, MG_VertexType v, MG_VertexType w)
+{
+	CheckPtr(G);
+	int index_1 = MGraph_locate(G, v);
+	int index_2 = MGraph_locate(G, w);
+	if (index_1 < 0 || index_2 < 0) {
+		Exit_with_msg("[MG_VertexType] can't not be null.");
+	}
+	return G->arcs[index_1][index_2];
 }
 
 /* 深度优先遍历 */

@@ -22,12 +22,13 @@ typedef int Bool;
 #endif
 
 #define DG(x) printf("%d\n",x);
-static inline void CheckPtr(const void * ptr) {
-	if (!ptr) {
-		fprintf(stderr, "%s:%d: 空指针异常\n", __FILE__, __LINE__);
-		exit(-1);
-	}
-}
+#define CheckPtr(ptr) \
+    do {\
+		if (!ptr) {\
+			fprintf(stderr, "%s:%d: 空指针异常\n", __FILE__, __LINE__);\
+			exit(INFEASIBLE);\
+		}\
+    } while(0)
 
 #define Exit_with_msg(msg) \
     do {\

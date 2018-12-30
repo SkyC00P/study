@@ -1,16 +1,16 @@
 /*
- ÁÚ½Ó¾ØÕóÓÃÁ½¸öÊı×éÀ´±£´æÍ¼µÄĞÅÏ¢¡£Ò»¸öÒ»Î¬Êı×éÀ´±£´æ¶¥µãĞÅÏ¢£¬Ò»¸ö¶şÎ¬Êı×éÀ´±£´æ±ß¼¯ĞÅÏ¢
+ é‚»æ¥çŸ©é˜µç”¨ä¸¤ä¸ªæ•°ç»„æ¥ä¿å­˜å›¾çš„ä¿¡æ¯ã€‚ä¸€ä¸ªä¸€ç»´æ•°ç»„æ¥ä¿å­˜é¡¶ç‚¹ä¿¡æ¯ï¼Œä¸€ä¸ªäºŒç»´æ•°ç»„æ¥ä¿å­˜è¾¹é›†ä¿¡æ¯
 */
 #ifndef  HAVE_MGRAPH_H
 #define HAVE_MGRAPH_H
 #include "common.h"
 #include <limits.h>
 
-#define MAX_VERTEX_NUM 20							//  ¶¥µã×î´óµÄÖµ
-#define INFINITY INT_MAX							//  ÎŞÇî´ó
-typedef char MG_VertexType;							//  ¶¥µãÀàĞÍ
-typedef int MG_Weight;								//  È¨ÖµÀàĞÍ
-typedef enum _MGraphKind { DG, DN, UDG, UDN }MGraphKind;		//0-ÓĞÏòÍ¼£¬1-ÓĞÏòÍø£¨´øÈ¨Öµ£©£¬2-ÎŞÏòÍ¼£¬3-ÎŞÏòÍø£¨´øÈ¨Öµ£©
+#define MAX_VERTEX_NUM 20							//  é¡¶ç‚¹æœ€å¤§çš„å€¼
+#define INFINITY INT_MAX							//  æ— ç©·å¤§
+typedef char MG_VertexType;							//  é¡¶ç‚¹ç±»å‹
+typedef int MG_Weight;								//  æƒå€¼ç±»å‹
+typedef enum _MGraphKind { DG, DN, UDG, UDN }MGraphKind;		//0-æœ‰å‘å›¾ï¼Œ1-æœ‰å‘ç½‘ï¼ˆå¸¦æƒå€¼ï¼‰ï¼Œ2-æ— å‘å›¾ï¼Œ3-æ— å‘ç½‘ï¼ˆå¸¦æƒå€¼ï¼‰
 
 typedef struct _MGraph {
 	MG_VertexType vexs[MAX_VERTEX_NUM];
@@ -21,49 +21,55 @@ typedef struct _MGraph {
 
 typedef _MGraph * MGraph;
 
-/* ´´½¨Í¼ */
+/* åˆ›å»ºå›¾ */
 MGraph MGraph_create(FILE * fp);
 
-/* Çå¿ÕÍ¼ */
+/* æ¸…ç©ºå›¾ */
 void MGraph_clear(MGraph G);
 
-/* Ïú»ÙÍ¼ */
-void MGraph_destroy(MGraph G);
+/* é”€æ¯å›¾ */
+void MGraph_destroy(MGraph * G);
 
-/* Ñ°ÕÒ¶¥µãvµÄÎ»ÖÃ¡£ */
+/* å¯»æ‰¾é¡¶ç‚¹vçš„ä½ç½®ã€‚ */
 int MGraph_locate(MGraph G, MG_VertexType v);
 
-/* ·µ»ØµÚv¸ö½áµãµÄÖµ */
+/* è¿”å›ç¬¬vä¸ªç»“ç‚¹çš„å€¼ */
 MG_VertexType MGraph_get(MGraph G, int order);
 
-/* ¶Ô¶¥µãv¸³Öµvalue¡£ */
+/* å¯¹é¡¶ç‚¹vèµ‹å€¼valueã€‚ */
 void MGraph_set(MGraph G, MG_VertexType old, MG_VertexType new);
 
-/* ·µ»ØvµÄµÚÒ»¸öÁÚ½Ó¶¥µãĞòºÅ */
+/* è¿”å›vçš„ç¬¬ä¸€ä¸ªé‚»æ¥é¡¶ç‚¹åºå· */
 int MGraph_frist_vertex(MGraph G, MG_VertexType v);
 
-/* ·µ»ØvÏà¶ÔÓÚwµÄÏÂÒ»¸öÁÚ½Ó¶¥µãĞòºÅ */
+/* è¿”å›vç›¸å¯¹äºwçš„ä¸‹ä¸€ä¸ªé‚»æ¥é¡¶ç‚¹åºå· */
 int MGraph_next_vertex(MGraph G, MG_VertexType v, MG_VertexType w);
 
-/* ²åÈë¶¥µãvµ½Í¼ */
+/* æ’å…¥é¡¶ç‚¹våˆ°å›¾ */
 Status MGraph_add_vertex(MGraph G, MG_VertexType v);
 
-/* ´ÓÍ¼ÖĞÉ¾³ı¶¥µãvÒÔ¼°Ïà¹ØµÄ»¡ */
+/* ä»å›¾ä¸­åˆ é™¤é¡¶ç‚¹vä»¥åŠç›¸å…³çš„å¼§ */
 Status MGraph_del_vertex(MGraph G, MG_VertexType v);
 
-/* ²åÈë»¡<v,w>µ½Í¼ */
+/* æ’å…¥å¼§<v,w>åˆ°å›¾ */
 Status MGraph_add_arc(MGraph G, MG_VertexType v, MG_VertexType w, MG_Weight weight);
 
-/* É¾³ı»¡<v,w>µ½Í¼ */
+/* åˆ é™¤å¼§<v,w>åˆ°å›¾ */
 Status MGraph_del_arc(MGraph G, MG_VertexType v, MG_VertexType w);
 
-/* Éî¶ÈÓÅÏÈ±éÀú */
+/* åˆ¤æ–­è¾¹æ˜¯å¦å­˜åœ¨ */
+Bool MGraph_arc_exist(MGraph G, MG_VertexType v, MG_VertexType w);
+
+/* è¿”å›è¾¹çš„æƒå€¼ */
+MG_Weight MGraph_arc_weight(MGraph G, MG_VertexType v, MG_VertexType w);
+
+/* æ·±åº¦ä¼˜å…ˆéå† */
 void MGraph_DFS(MGraph G);
 
-/* ¹ã¶ÈÓÅÏÈ±éÀú */
+/* å¹¿åº¦ä¼˜å…ˆéå† */
 void MGraph_HFS(MGraph G);
 
-/* ´òÓ¡Í¼ */
+/* æ‰“å°å›¾ */
 void MGraph_print(MGraph G);
 
 #endif // ! HAVE_MGRAPH_H
