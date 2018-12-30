@@ -4,7 +4,7 @@
 #ifndef HAVE_ALGRAPH_H
 #define HAVE_ALGRAPH_H
 #include "common.h"
-#define MAX_ALG_VERTEX_NUM 10						//  顶点最大的值
+#define MAX_ALG_VERTEX_NUM 20						//  顶点最大的值
 
 typedef char AL_VertexType;							//  顶点类型
 typedef int AL_Weight;								//  权值类型
@@ -18,12 +18,12 @@ typedef struct EdgeNode {
 typedef struct VertexNode {
 	AL_VertexType data;
 	EdgeNodePtr firstEdge;
-}VertexNode, AdjList[MAX_ALG_VERTEX_NUM];
+}VertexNode, AdjArray[MAX_ALG_VERTEX_NUM];
 
 typedef enum ALGraphKind { DG_0, DN_1, UDG_2, UDN_3 }ALGraphKind;					//0-有向图，1-有向网（带权值），2-无向图，3-无向网（带权值）
 
 typedef struct ALGraph {
-	AdjList adlist;
+	AdjArray adlist;
 	int numVertexes, numEdges;
 	ALGraphKind kind;
 }*ALGraph;
