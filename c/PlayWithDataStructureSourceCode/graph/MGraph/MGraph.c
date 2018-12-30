@@ -1,16 +1,23 @@
 #include "MGraph.h"
+#include <ctype.h>
 
 static void _skip_note(FILE * fp) {
 	CheckPtr(fp);
 	char ch = fgetc(fp);
-	if (ch == '#') {
-		while (ch != '\n' || ch != EOF) {
+	while (ch != EOF && isspace(ch)) {
+		ch = fgetc(fp);
+	}
+
+	while (ch == '#') {
+		while (ch != '\n' && ch != EOF && ch != '\r') {
+			ch = fgetc(fp);
+		}
+		while (ch != EOF && isspace(ch)) {
 			ch = fgetc(fp);
 		}
 	}
-	else {
-		ungetc(ch, fp);
-	}
+
+	ungetc(ch, fp);
 }
 
 static int _read_int(FILE * fp) {
@@ -18,7 +25,7 @@ static int _read_int(FILE * fp) {
 	_skip_note(fp);
 	int num;
 	if (fscanf(fp, "%d", &num) != 1) {
-		Exit_with_msg("read err");
+		Exit_with_msg("read int err");
 	}
 	return num;
 }
@@ -33,7 +40,7 @@ static char _read_ve(FILE * fp) {
 	return ch;
 }
 
-static char _read_edge_g(FILE * fp, char * v1, char * v2) {
+static void _read_edge_g(FILE * fp, char * v1, char * v2) {
 	CheckPtr(fp);
 	_skip_note(fp);
 	if (fscanf(fp, "%c-%c", v1, v2) != 2) {
@@ -41,7 +48,7 @@ static char _read_edge_g(FILE * fp, char * v1, char * v2) {
 	}
 }
 
-static char _read_edge_n(FILE * fp, char * v1, char * v2, int * weight) {
+static void _read_edge_n(FILE * fp, char * v1, char * v2, int * weight) {
 	CheckPtr(fp);
 	_skip_note(fp);
 	if (fscanf(fp, "%c-%c-%d", v1, v2, weight) != 3) {
@@ -64,7 +71,7 @@ static MGraph _create_dg(FILE * fp) {
 		MG_VertexType data = _read_ve(fp);
 		mg->vexs[i] = data;
 		for (int j = 0; j < mg->numVertexes; j++) {
-			mg->numEdges[i][j] = 0;
+			mg->arcs[i][j] = 0;
 		}
 	}
 
@@ -91,9 +98,9 @@ static MGraph _create_dn(FILE * fp) {
 	mg->numVertexes = _read_int(fp);
 	mg->numEdges = _read_int(fp);
 
-	for (int i = 0; i < mg->vexs; i++) {
+	for (int i = 0; i < mg->numVertexes; i++) {
 		mg->vexs[i] = _read_ve(fp);
-		for (int j = 0; j < mg->vexs; j++) {
+		for (int j = 0; j < mg->numVertexes; j++) {
 			mg->arcs[i][j] = INFINITY;
 		}
 	}
@@ -124,7 +131,7 @@ static MGraph _create_udg(FILE * fp) {
 	for (int i = 0; i < mg->numVertexes; i++) {
 		mg->vexs[i] = _read_ve(fp);
 		for (int j = 0; j < mg->numVertexes; j++) {
-			mg->numEdges[i][j] = 0;
+			mg->arcs[i][j] = 0;
 		}
 	}
 
@@ -154,7 +161,7 @@ static MGraph _create_udn(FILE * fp) {
 	for (int i = 0; i < mg->numVertexes; i++) {
 		mg->vexs[i] = _read_ve(fp);
 		for (int j = 0; j < mg->numVertexes; j++) {
-			mg->numEdges[i][j] = INFINITY;
+			mg->arcs[i][j] = INFINITY;
 		}
 	}
 
@@ -192,7 +199,7 @@ MGraph MGraph_create(FILE * fp)
 	}
 
 }
-/* «Âø’Õº */
+/* Ê∏ÖÁ©∫Âõæ */
 void MGraph_clear(MGraph G) {
 	if (G) {
 		G->numEdges = 0;
@@ -200,7 +207,7 @@ void MGraph_clear(MGraph G) {
 	}
 }
 
-/* œ˙ªŸÕº */
+/* ÈîÄÊØÅÂõæ */
 void MGraph_destroy(MGraph G) {
 	if (G) {
 		free(G);
@@ -208,7 +215,7 @@ void MGraph_destroy(MGraph G) {
 	}
 }
 
-/* —∞’“∂•µ„vµƒŒª÷√°£ */
+/* ÂØªÊâæÈ°∂ÁÇπvÁöÑ‰ΩçÁΩÆ„ÄÇ */
 int MGraph_locate(MGraph G, MG_VertexType v) {
 	CheckPtr(G);
 
@@ -220,13 +227,13 @@ int MGraph_locate(MGraph G, MG_VertexType v) {
 	return -1;
 }
 
-/* ∑µªÿµ⁄v∏ˆΩ·µ„µƒ÷µ */
+/* ËøîÂõûÁ¨¨v‰∏™ÁªìÁÇπÁöÑÂÄº */
 MG_VertexType MGraph_get(MGraph G, int order) {
 	CheckPtr(G);
 	return order >= 0 ? G->vexs[order] : '\0';
 }
 
-/* ∂‘∂•µ„v∏≥÷µvalue°£ */
+/* ÂØπÈ°∂ÁÇπvËµãÂÄºvalue„ÄÇ */
 void MGraph_set(MGraph G, MG_VertexType old, MG_VertexType new) {
 	CheckPtr(G);
 	int index = MGraph_locate(G, old);
@@ -234,7 +241,7 @@ void MGraph_set(MGraph G, MG_VertexType old, MG_VertexType new) {
 		G->vexs[index] = new;
 }
 
-/* ∑µªÿvµƒµ⁄“ª∏ˆ¡⁄Ω”∂•µ„–Ú∫≈ */
+/* ËøîÂõûvÁöÑÁ¨¨‰∏Ä‰∏™ÈÇªÊé•È°∂ÁÇπÂ∫èÂè∑ */
 int MGraph_frist_vertex(MGraph G, MG_VertexType v) {
 	CheckPtr(G);
 	int index = MGraph_locate(G, v);
@@ -260,7 +267,7 @@ int MGraph_frist_vertex(MGraph G, MG_VertexType v) {
 	return -1;
 }
 
-/* ∑µªÿvœ‡∂‘”⁄wµƒœ¬“ª∏ˆ¡⁄Ω”∂•µ„–Ú∫≈ */
+/* ËøîÂõûvÁõ∏ÂØπ‰∫éwÁöÑ‰∏ã‰∏Ä‰∏™ÈÇªÊé•È°∂ÁÇπÂ∫èÂè∑ */
 int MGraph_next_vertex(MGraph G, MG_VertexType v, MG_VertexType w) {
 	CheckPtr(G);
 	int i1 = MGraph_locate(G, v);
@@ -287,7 +294,7 @@ int MGraph_next_vertex(MGraph G, MG_VertexType v, MG_VertexType w) {
 	return -1;
 }
 
-/* ≤Â»Î∂•µ„vµΩÕº */
+/* ÊèíÂÖ•È°∂ÁÇπvÂà∞Âõæ */
 Status MGraph_add_vertex(MGraph G, MG_VertexType v) {
 	CheckPtr(G);
 	if (G->numVertexes == MAX_VERTEX_NUM) {
@@ -307,7 +314,7 @@ Status MGraph_add_vertex(MGraph G, MG_VertexType v) {
 	return OK;
 }
 
-/* ¥”Õº÷–…æ≥˝∂•µ„v“‘º∞œ‡πÿµƒª° */
+/* ‰ªéÂõæ‰∏≠Âà†Èô§È°∂ÁÇπv‰ª•ÂèäÁõ∏ÂÖ≥ÁöÑÂºß */
 Status MGraph_del_vertex(MGraph G, MG_VertexType v) {
 	CheckPtr(G);
 	int index = MGraph_locate(G, v);
@@ -320,7 +327,7 @@ Status MGraph_del_vertex(MGraph G, MG_VertexType v) {
 	int flag = G->kind % 2 ? INFINITY : 0;
 	int delCount = 0;
 	for (int i = 0; i < G->numVertexes; i++) {
-		// ”–œÚÕº∂‘≥∆µ„ø¥±ﬂ «∑Ò¥Ê‘⁄
+		// ÊúâÂêëÂõæÂØπÁß∞ÁÇπÁúãËæπÊòØÂê¶Â≠òÂú®
 		if (flag && G->arcs[i][index] != flag) {
 			delCount++;
 		}
@@ -329,10 +336,12 @@ Status MGraph_del_vertex(MGraph G, MG_VertexType v) {
 		}
 	}
 
-	for (int i = index; i < G->numVertexes; i++) {
-		G->arcs[i] = G->arcs[i + 1];
-		for (int j = index; j < G->numVertexes; j++) {
-			G->arcs[i][j] = G->arcs[i][j + 1];
+	for (int i = index; i < G->numVertexes - 1; i++) {
+		for (int j = 0; j < index; j++) {
+			G->arcs[i][j] = G->arcs[i + 1][j];
+		}
+		for (int j = index; j < G->numVertexes - 1; j++) {
+			G->arcs[i][j] = G->arcs[i + 1][j + 1];
 		}
 	}
 	G->numEdges -= delCount;
@@ -346,7 +355,7 @@ static void _MGraph_add_arc_error_handle(MGraph G, MG_VertexType v, MG_VertexTyp
 	MGraph_del_vertex(G, w);
 }
 
-/* ≤Â»Îª°<v,w>µΩÕº */
+/* ÊèíÂÖ•Âºß<v,w>Âà∞Âõæ */
 Status MGraph_add_arc(MGraph G, MG_VertexType v, MG_VertexType w, MG_Weight weight) {
 	CheckPtr(G);
 	int index_1 = MGraph_locate(G, v);
@@ -374,7 +383,7 @@ Status MGraph_add_arc(MGraph G, MG_VertexType v, MG_VertexType w, MG_Weight weig
 	return OK;
 }
 
-/* …æ≥˝ª°<v,w>µΩÕº */
+/* Âà†Èô§Âºß<v,w>Âà∞Âõæ */
 Status MGraph_del_arc(MGraph G, MG_VertexType v, MG_VertexType w) {
 	CheckPtr(G);
 	int index_1 = MGraph_locate(G, v);
@@ -398,27 +407,27 @@ Status MGraph_del_arc(MGraph G, MG_VertexType v, MG_VertexType w) {
 	return OK;
 }
 
-/* …Ó∂»”≈œ»±È¿˙ */
+/* Ê∑±Â∫¶‰ºòÂÖàÈÅçÂéÜ */
 void MGraph_DFS(MGraph G) {}
 
-/* π„∂»”≈œ»±È¿˙ */
+/* ÂπøÂ∫¶‰ºòÂÖàÈÅçÂéÜ */
 void MGraph_HFS(MGraph G) {}
 
-/* ¥Ú”°Õº */
+/* ÊâìÂç∞Âõæ */
 void MGraph_print(MGraph G) {
 	if (G) {
 		char * kindMsg;
 		switch (G->kind)
 		{
-		case DG:kindMsg = "/0-”–œÚÕº"; break;
-		case DN:kindMsg = "1-”–œÚÕ¯£®¥¯»®÷µ£©"; break;
-		case UDG:kindMsg = "2-ŒﬁœÚÕº"; break;
-		case UDN:kindMsg = "3-ŒﬁœÚÕ¯£®¥¯»®÷µ£©"; break;
+		case DG:kindMsg = "DG-0-ÊúâÂêëÂõæ"; break;
+		case DN:kindMsg = "DN-1-ÊúâÂêëÁΩëÔºàÂ∏¶ÊùÉÂÄºÔºâ"; break;
+		case UDG:kindMsg = "UDG-2-Êó†ÂêëÂõæ"; break;
+		case UDN:kindMsg = "UDN-3-Êó†ÂêëÁΩëÔºàÂ∏¶ÊùÉÂÄºÔºâ"; break;
 		default:
 			kindMsg = "unkonwn kind";
 			break;
 		}
-		printf("∂•µ„ ˝:%d, ±ﬂºØ ˝:%d, ¿‡–Õ:%s\n", G->numVertexes, G->numEdges, kindMsg);
+		printf("È°∂ÁÇπÊï∞:%d, ËæπÈõÜÊï∞:%d, Á±ªÂûã:%s\n", G->numVertexes, G->numEdges, kindMsg);
 		printf("%3c ", ' ');
 		for (int i = 0; i < G->numVertexes; i++) {
 			printf("%3c ", G->vexs[i]);
@@ -428,7 +437,7 @@ void MGraph_print(MGraph G) {
 			printf("%3c ", G->vexs[i]);
 			for (int j = 0; j < G->numVertexes; j++) {
 				if (G->arcs[i][j] == INFINITY) {
-					printf("%3s ", "°ﬁ");
+					printf("%3s ", "inf");
 				}
 				else
 				{
@@ -439,6 +448,6 @@ void MGraph_print(MGraph G) {
 		}
 	}
 	else {
-		printf("ø’Õº");
+		printf("Á©∫Âõæ");
 	}
 }

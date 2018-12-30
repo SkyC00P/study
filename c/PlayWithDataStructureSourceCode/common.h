@@ -29,10 +29,11 @@ static inline void CheckPtr(const void * ptr) {
 	}
 }
 
-static inline void Exit_with_msg(const char * msg) {
-	fprintf(stderr, "%s:%d:%s", __FILE__, __LINE__, msg);
-	exit(INFEASIBLE);
-}
+#define Exit_with_msg(msg) \
+    do {\
+		fprintf(stderr, "%s:%d:%s\n", __FILE__, __LINE__, msg);\
+		exit(INFEASIBLE);\
+    } while(0)
 
 static inline void Exit_without_msg() {
 	exit(INFEASIBLE);

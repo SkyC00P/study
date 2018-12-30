@@ -14,48 +14,52 @@ int main() {
 }
 
 static void test() {
-	puts("(1) ²âÊÔÓĞÏòÍ¼");
+	puts("(1) æµ‹è¯•æœ‰å‘å›¾");
 	FILE * dg_fp = fopen("MGraph/test_data/DG.txt", "r");
 	if (dg_fp) {
 		dgMGraph = MGraph_create(dg_fp);
 		EXPECT_TRUE(dgMGraph != NULL);
 		fclose(dg_fp);
+		MGraph_print(dgMGraph);
 	}
 	else {
 		LOG("IO ERR");
 		EXPECT_TRUE(0);
 	}
 
-	puts("(2) ²âÊÔÓĞÏòÍø");
+	puts("(2) æµ‹è¯•æœ‰å‘ç½‘");
 	FILE * dn_fp = fopen("MGraph/test_data/DN.txt", "r");
 	if (dn_fp) {
 		dnMGraph = MGraph_create(dn_fp);
 		EXPECT_TRUE(dnMGraph != NULL);
 		fclose(dn_fp);
+		MGraph_print(dnMGraph);
 	}
 	else {
 		LOG("IO ERR");
 		EXPECT_TRUE(0);
 	}
 
-	puts("(3) ²âÊÔÎŞÏòÍ¼");
+	puts("(3) æµ‹è¯•æ— å‘å›¾");
 	FILE * udg_fp = fopen("MGraph/test_data/UDG.txt", "r");
 	if (udg_fp) {
 		udgMGraph = MGraph_create(udg_fp);
 		EXPECT_TRUE(udgMGraph != NULL);
 		fclose(udg_fp);
+		MGraph_print(udgMGraph);
 	}
 	else {
 		LOG("IO ERR");
 		EXPECT_TRUE(0);
 	}
 
-	puts("(4) ²âÊÔÎŞÏòÍ¼");
+	puts("(4) æµ‹è¯•æ— å‘å›¾");
 	FILE * udn_fg = fopen("MGraph/test_data/UDN.txt", "r");
 	if (udn_fg) {
-		udn_fg = MGraph_create(udn_fg);
+		udnMGraph = MGraph_create(udn_fg);
 		EXPECT_TRUE(udnMGraph != NULL);
 		fclose(udn_fg);
+		MGraph_print(udnMGraph);
 	}
 	else {
 		LOG("IO ERR");
