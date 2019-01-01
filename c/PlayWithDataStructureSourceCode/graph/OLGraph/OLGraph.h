@@ -74,6 +74,9 @@ Bool OLGraph_arc_exist(OLGraph G, OL_VertexType v, OL_VertexType w);
 /* 返回边的权值 */
 OL_Weight OLGraph_arc_weight(OLGraph G, OL_VertexType v, OL_VertexType w);
 
+/* 顶点是否存在 */
+Bool * OLGraph_vertex_exist(OLGraph G, OL_VertexType v);
+
 /* 深度优先遍历 */
 void OLGraph_DFS(OLGraph G);
 
