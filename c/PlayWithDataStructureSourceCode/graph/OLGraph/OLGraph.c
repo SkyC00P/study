@@ -218,26 +218,139 @@ Status OLGraph_add_vertex(OLGraph G, OL_VertexType v) {
 }
 
 /* 从图中删除顶点v以及相关的弧 */
+// 解法:1. 删除该顶点的所有弧 2. 释放顶点 3. 顶点数减一
 Status OLGraph_del_vertex(OLGraph G, OL_VertexType v) {
 	CheckPtr(G);
 	if (!OLGraph_vertex_exist(G, v)) {
 		return  ERROR;
 	}
 	int index = OLGraph_locate(G, v);
+	OL_EdgeNodePtr in_ptr = G->vers[index].firstIn;
+	OL_EdgeNodePtr out_ptr = G->vers[index].firstOut;
+	OL_EdgeNodePtr tmp;
+	while (in_ptr) {
+		tmp = in_ptr->headlink
+			OLGraph_del_arc(G, in_ptr->tailvex, in_ptr->headvex);
+		in_ptr = tmp;
+	}
+	while (out_ptr) {
+		tmp = out_ptr->taillink;
+		OLGraph_del_arc(G, out_ptr->tailvex, out_ptr->headvex);
+		out_ptr = tmp;
+	}
 
+	for (int i = index; i < G->numVertexes; i++) {
+		G->vers[i].data = G->vers[i + 1].data;
+		G->vers[i].firstIn = G->vers[i + 1].firstIn;
+		G->vers[i].firstOut = G->vers[i + 1].firstOut;
+	}
+
+	G->numVertexes--;
+	return OK;
 }
 
 /* 插入弧<v,w>到图 */
-Status OLGraph_add_arc(OLGraph G, OL_VertexType v, OL_VertexType w, AL_Weight weight) {}
+Status OLGraph_add_arc(OLGraph G, OL_VertexType v, OL_VertexType w, OL_Weight weight) {
+	CheckPtr(G);
+	if (OLGraph_arc_exist(G, v, w)) {
+		return ERROR;
+	}
+	if (!OLGraph_vertex_exist(G, v) || !OLGraph_vertex_exist(G, w)) {
+		return ERROR;
+	}
+	int vex_tail = OLGraph_locate(G, v);
+	int vex_head = OLGraph_locate(G, w);
+	OL_EdgeNodePtr ptr = malloc(sizeof(OL_EdgeNode));
+	if (!ptr) {
+		Exit_with_msg("Out of memory");
+	}
+	ptr->tailvex = vex_tail;
+	ptr->headvex = vex_head;
+	ptr->headlink = G->vers[vex_head].firstIn;
+	ptr->taillink = G->vers[vex_tail].firstOut;
+
+	ol->vers[vex_head].firstIn = ptr;
+	ol->vers[vex_tail].firstOut = ptr;
+	G->numEdges++;
+	return OK;
+}
 
 /* 删除弧<v,w>到图 */
-Status OLGraph_del_arc(OLGraph G, OL_VertexType v, OL_VertexType w) {}
+Status OLGraph_del_arc(OLGraph G, OL_VertexType v, OL_VertexType w) {
+	CheckPtr(G);
+	OL_EdgeNodePtr delPtr = OLGraph_get_arc(G, v, w);
+	if (!delPtr) {
+		return ERROR;
+	}
+	OL_EdgeNodePtr del_ptr_bef;
+	OL_EdgeNodePtr ptr = G->vers[delPtr->tailvex].firstOut;
+	if (ptr == delPtr) {
+		G->vers[delPtr->tailvex].firstOut = ptr->taillink;
+	}
+	else {
+		while (ptr != delPtr) {
+			del_ptr_bef = ptr;
+			ptr = ptr->taillink;
+		}
+		del_ptr_bef = delPtr->taillink;
+		delPtr->taillink = NULL;
+	}
+
+	ptr = G->vers[delPtr->headvex].firstIn;
+	if (ptr == delPtr) {
+		G->vers[delPtr->headvex].firstIn = ptr->headlink;
+	}
+	else
+	{
+		while (ptr != delPtr) {
+			del_ptr_bef = ptr;
+			ptr = ptr->headlink;
+		}
+		del_ptr_bef->headlink = delPtr->headlink;
+		delPtr->headlink = NULL;
+	}
+	free(delPtr);
+	G->numEdges--;
+	return OK;
+}
 
 /* 判断边是否存在 */
-Bool OLGraph_arc_exist(OLGraph G, OL_VertexType v, OL_VertexType w) {}
+Bool OLGraph_arc_exist(OLGraph G, OL_VertexType v, OL_VertexType w) {
+	CheckPtr(G);
+	return OLGraph_get_arc(G, v, w);
+}
+
+OL_EdgeNodePtr OLGraph_get_arc(OLGraph G, OL_VertexType v, OL_VertexType w) {
+	CheckPtr(G);
+	if (G->numEdges == 0) {
+		return NULL;
+	}
+	int index = OLGraph_locate(G, v);
+	if (index < 0) {
+		return NULL;
+	}
+
+	OL_EdgeNodePtr ptr = G->vers[index].firstOut;
+	OL_EdgeNodePtr tmp;
+	while (ptr) {
+		tmp = ptr->taillink;
+		if (G->vers[ptr->headvex].data == w) {
+			return ptr;
+		}
+		ptr = tmp;
+	}
+	return NULL;
+}
 
 /* 返回边的权值 */
-OL_Weight OLGraph_arc_weight(OLGraph G, OL_VertexType v, OL_VertexType w) {}
+OL_Weight OLGraph_arc_weight(OLGraph G, OL_VertexType v, OL_VertexType w) {
+	CheckPtr(G);
+	OL_EdgeNodePtr ptr = OLGraph_get_arc(G, v, w);
+	if (!ptr) {
+		Exit_with_msg("no exist arc.");
+	}
+	return ptr->weight;
+}
 
 Bool OLGraph_vertex_exist(OLGraph G, OL_VertexType v)
 {
@@ -261,4 +374,39 @@ void OLGraph_DFS(OLGraph G) {}
 void OLGraph_HFS(OLGraph G) {}
 
 /* 打印图 */
-void OLGraph_print(OLGraph G) {}
+void OLGraph_print(OLGraph G) {
+	if (G) {
+		char * kindMsg;
+		switch (G->kind)
+		{
+		case DG_0:kindMsg = "DG-0-有向图"; break;
+		case DN_1:kindMsg = "DN-1-有向网（带权值）"; break;
+		default:
+			kindMsg = "unkonwn kind";
+			break;
+		}
+		printf("顶点数:%d, 边集数:%d, 类型:%s\n", G->numVertexes, G->numEdges, kindMsg);
+		for (int i = 0; i < G->numVertexes; i++) {
+			printf("[%d]顶点: %c \n\tfirstIn:", i, G->vers[i].data);
+			OL_EdgeNodePtr ptr = G->vers[i].firstIn;
+			while (ptr)
+			{
+				printf("%c<-%c=%d ", G->vers[ptr->headvex].data, G->vers[ptr->tailvex].data, ptr->weight);
+				ptr = ptr->headlink;
+			}
+			printf("\n\tfirstOut:");
+			ptr = G->vers[i].firstOut;
+			while (ptr) {
+				printf("%c->%c=%d ", G->vers[ptr->tailvex].data, G->vers[ptr->headvex].data, ptr->weight);
+				ptr = ptr->taillink;
+			}
+			printf("\n");
+		}
+		printf("\n");
+	}
+	else
+	{
+		printf("空图\n");
+	}
+
+}

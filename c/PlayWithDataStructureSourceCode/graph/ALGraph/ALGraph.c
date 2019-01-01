@@ -300,19 +300,10 @@ Status ALGraph_add_arc(ALGraph G, AL_VertexType v, AL_VertexType w, AL_Weight we
 	}
 	int index_1 = ALGraph_locate(G, v);
 	int index_2 = ALGraph_locate(G, w);
-	if (index_1 < 0) {
-		if (!ALGraph_add_vertex(G, v)) {
-			return ERROR;
-		}
-		index_1 = ALGraph_locate(G, v);
+	if (index_1 < 0 || index_2 < 0) {
+		return ERROR;
 	}
-	if (index_2 < 0) {
-		if (!ALGraph_add_vertex(G, w)) {
-			ALGraph_del_vertex(G, v);
-			return ERROR;
-		}
-		index_2 = ALGraph_locate(G, w);
-	}
+	
 	Bool direction = G->kind == DG_0 || G->kind == DN_1 ? TRUE : FALSE;
 	SingleLinkList list_1 = G->adlist[index_1].firstEdge;
 	SingleLinkList list_2 = G->adlist[index_2].firstEdge;

@@ -70,6 +70,7 @@ Status OLGraph_del_arc(OLGraph G, OL_VertexType v, OL_VertexType w);
 
 /* 判断边是否存在 */
 Bool OLGraph_arc_exist(OLGraph G, OL_VertexType v, OL_VertexType w);
+OL_EdgeNodePtr OLGraph_get_arc(OLGraph G, OL_VertexType v, OL_VertexType w);
 
 /* 返回边的权值 */
 OL_Weight OLGraph_arc_weight(OLGraph G, OL_VertexType v, OL_VertexType w);
