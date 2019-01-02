@@ -32,9 +32,51 @@ static ALMGraph _create_udg(FILE * fp){
 		}
 		ptr->ivex = ivex;
 		ptr->jvex = jvex;
+		ptr->ilink = alm->vers[ivex].firstEdgeNode;
+		ptr->jlink = alm->vers[jvex].firstEdgeNode;
+		alm->vers[ivex].firstEdgeNode = ptr;
+		alm->vers[jvex].firstEdgeNode = ptr;
 	}
 }
-static ALMGraph _create_udn(FILE * fp) {}
+static ALMGraph _create_udn(FILE * fp) {
+	CheckPtr(fp);
+	ALMGraph alm = malloc(sizeof(struct ALM_Graph));
+	if (!alm) {
+		Exit_with_msg("Out of memory");
+	}
+
+	alm->kind = UDN_3;
+	alm->numVertexes = _read_int(fp);
+	alm->numEdges = _read_int(fp);
+
+	for (int i = 0; i < alm->numVertexes; i++) {
+		alm->vers[i].data = _read_ve(fp);
+		alm->vers[i].firstEdgeNode = NULL;
+	}
+
+	for (int i = 0; i < alm->numEdges; i++) {
+		char v1, v1;
+		int weight;
+		_read_edge_n(fp, &v1, &v2, &weight);
+		int ivex = ALMGraph_locate(G, v1);
+		int jvex = ALMGraph_locate(G, v2);
+		if (ivex < 0 || jvex < 0) {
+			ALMGraph_destroy(&alm);
+			return NULL;
+		}
+		ALM_EdgeNodePtr ptr = malloc(sizeof(ALM_EdgeNode));
+		if (!ptr) {
+			Exit_with_msg("Out of memory");
+		}
+		ptr->ivex = ivex;
+		ptr->jvex = jvex;
+		ptr->weight = weight;
+		ptr->ilink = alm->vers[ivex].firstEdgeNode;
+		ptr->jlink = alm->vers[jvex].firstEdgeNode;
+		alm->vers[ivex].firstEdgeNode = ptr;
+		alm->vers[jvex].firstEdgeNode = ptr;
+	}
+}
 /* 创建图 */
 ALMGraph ALMGraph_create(FILE * fp){
 	CheckPtr(fp);
@@ -52,7 +94,9 @@ ALMGraph ALMGraph_create(FILE * fp){
 }
 
 /* 清空图 */
-void ALMGraph_clear(ALMGraph G){}
+void ALMGraph_clear(ALMGraph G){
+
+}
 
 /* 销毁图 */
 void ALMGraph_destroy(ALMGraph * G){}
