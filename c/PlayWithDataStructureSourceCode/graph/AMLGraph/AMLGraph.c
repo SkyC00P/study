@@ -94,6 +94,7 @@ ALMGraph ALMGraph_create(FILE * fp){
 }
 
 /* 清空图 */
+/* 在邻接多重表里清空是需要特别注意的。因为一个边结点有两个引用 */
 void ALMGraph_clear(ALMGraph G){
 
 }
