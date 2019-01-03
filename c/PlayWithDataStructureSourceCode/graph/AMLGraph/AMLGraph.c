@@ -104,7 +104,7 @@ void ALMGraph_clear(ALMGraph G) {
 				tmp = ptr->ilink;
 				p = G->vers[ptr->jvex].firstEdgeNode;
 				if (p == ptr) {
-					G->vers[ptr->jvex].firstEdgeNode = NULL;
+					G->vers[ptr->jvex].firstEdgeNode = p->ilink;
 				}
 				else
 				{
@@ -285,17 +285,126 @@ Status ALMGraph_add_arc(ALMGraph G, ALM_VertexType v, ALM_VertexType w, ALM_Weig
 }
 
 /* 删除弧<v,w>到图 */
-Status ALMGraph_del_arc(ALMGraph G, ALM_VertexType v, ALM_VertexType w) {}
+Status ALMGraph_del_arc(ALMGraph G, ALM_VertexType v, ALM_VertexType w) {
+	CheckPtr(G);
+	ALM_EdgeNodePtr ptr = ALMGraph_get_arc(G, v, w);
+	if (!ptr) {
+		return ERROR;
+	}
+	ALM_EdgeNodePtr ptr_i = G->vers[ptr->ivex].firstEdgeNode;
+	if (ptr_i == ptr) {
+		G->vers[ptr->ivex].firstEdgeNode = ptr->ilink;
+	}
+	else {
+		while (ptr_i) {
+			if (ptr_i->ivex == ptr->ivex) {
+				if (ptr_i->ilink == ptr) {
+					ptr_i->ilink = ptr->jlink;
+					break;
+				}
+				ptr_i = ptr_i->ilink;
+			}
+			else if (ptr_i->jvex == ptr->ivex) {
+				if (ptr_i->jlink == ptr) {
+					ptr_i->jlink = ptr->ilink;
+					break;
+				}
+				ptr_i = ptr_i->jlink;
+			}
+			else {
+				ptr_i = NULL;
+			}
+		}
+	}
+	ALM_EdgeNodePtr ptr_j = G->vers[ptr->jvex].firstEdgeNode;
+	if (ptr_j == ptr) {
+		G->vers[ptr->jvex].firstEdgeNode = ptr->jlink;
+	}
+	else {
+		while (ptr_j) {
+			if (ptr_j->ivex == ptr->jvex) {
+				if (ptr_j->ilink == ptr) {
+					ptr_j->ilink = ptr->jlink;
+					break;
+				}
+				ptr_j = ptr_j->ilink;
+			}
+			else if (ptr_j->jvex == ptr->jvex) {
+				if (ptr_j->jlink == ptr) {
+					ptr_j->jlink = ptr->jlink;
+					break;
+				}
+				ptr_j = ptr_j->jlink;
+			}
+			else {
+				ptr_j = NULL;
+			}
+		}
+	}
+	free(ptr);
+	G->numEdges--;
+	return OK;
+}
 
 /* 判断边是否存在 */
-Bool ALMGraph_arc_exist(ALMGraph G, ALM_VertexType v, ALM_VertexType w) {}
-ALM_EdgeNodePtr ALMGraph_get_arc(ALMGraph G, ALM_VertexType v, ALM_VertexType w) {}
+Bool ALMGraph_arc_exist(ALMGraph G, ALM_VertexType v, ALM_VertexType w) {
+	CheckPtr(G);
+	return ALMGraph_get_arc(G, v, w) ? TRUE : FALSE;
+}
+ALM_EdgeNodePtr ALMGraph_get_arc(ALMGraph G, ALM_VertexType v, ALM_VertexType w) {
+	CheckPtr(G);
+	if (G->numEdges == 0) {
+		return NULL;
+	}
+
+	int index = ALMGraph_locate(G, v);
+	if (index < 0) {
+		return NULL;
+	}
+
+	ALM_EdgeNodePtr ptr = G->vers[index].firstEdgeNode;
+	ALM_EdgeNodePtr tmp;
+	while (ptr) {
+		if (G->vers[ptr->ivex].data == w || G->vers[ptr->jvex].data == w) {
+			return ptr;
+		}
+
+		if (ptr->ivex == index) {
+			ptr = ptr->ilink;
+		}
+		else if (ptr->jvex == index) {
+			ptr = ptr->jlink;
+		}
+		else {
+			break;
+		}
+	}
+	return NULL;
+}
 
 /* 返回边的权值 */
-ALM_Weight ALMGraph_arc_weight(ALMGraph G, ALM_VertexType v, ALM_VertexType w) {}
+ALM_Weight ALMGraph_arc_weight(ALMGraph G, ALM_VertexType v, ALM_VertexType w) {
+	CheckPtr(G);
+	ALM_EdgeNodePtr ptr = ALMGraph_get_arc(G, v, w);
+	if (!ptr) {
+		Exit_with_msg("no exist arc.");
+	}
+	return ptr->weight;
+}
 
 /* 顶点是否存在 */
-Bool * ALMGraph_vertex_exist(ALMGraph G, ALM_VertexType v) {}
+Bool * ALMGraph_vertex_exist(ALMGraph G, ALM_VertexType v) {
+	CheckPtr(G);
+	if (G->numVertexes == 0) {
+		return FALSE;
+	}
+	for (int i = 0; i < G->numVertexes; i++) {
+		if (G->vers[i].data == v) {
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
 
 /* 深度优先遍历 */
 void ALMGraph_DFS(ALMGraph G) {}
@@ -304,4 +413,49 @@ void ALMGraph_DFS(ALMGraph G) {}
 void ALMGraph_HFS(ALMGraph G) {}
 
 /* 打印图 */
-void ALMGraph_print(ALMGraph G) {}
+void ALMGraph_print(ALMGraph G) {
+	if (G) {
+		char * kindMsg;
+		switch (G->kind)
+		{
+		case UDG_2:kindMsg = "UDG-0-无向图"; break;
+		case UDN_3:kindMsg = "UDN-1-无向网（带权值）"; break;
+		default:
+			kindMsg = "unkonwn kind";
+			break;
+		}
+		printf("顶点数:%d, 边集数:%d, 类型:%s\n", G->numVertexes, G->numEdges, kindMsg);
+		for (int i = 0; i < G->numVertexes; i++) {
+			ALM_VertexType d1, d2;
+			ALM_Weight weight;
+			d1 = G->vers[i].data;
+			printf("[%d]顶点: %c \n\t邻接点:", i, d1);
+			ALM_EdgeNodePtr ptr = G->vers[i].firstEdgeNode;
+			while (ptr)
+			{
+				weight = ptr->weight;
+				if (ptr->ivex == i) {
+					d2 = G->vers[ptr->jvex].data;
+					ptr = ptr->ilink;
+				}
+				else if (ptr->jvex == i) {
+					d2 = G->vers[ptr->ivex].data;
+					ptr = ptr->jlink;
+				}
+				if (G->kind == UDG_2) {
+					printf("%c ", d2);
+				}
+				else if (G->kind == UDN_3) {
+					printf("%c=%d ", d2, weight);
+				}
+			}
+			printf("\n");
+		}
+		printf("\n");
+	}
+	else
+	{
+		printf("空图\n");
+	}
+
+}

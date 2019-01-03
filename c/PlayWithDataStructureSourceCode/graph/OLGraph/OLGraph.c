@@ -318,7 +318,7 @@ Status OLGraph_del_arc(OLGraph G, OL_VertexType v, OL_VertexType w) {
 /* ÅÐ¶Ï±ßÊÇ·ñ´æÔÚ */
 Bool OLGraph_arc_exist(OLGraph G, OL_VertexType v, OL_VertexType w) {
 	CheckPtr(G);
-	return OLGraph_get_arc(G, v, w);
+	return OLGraph_get_arc(G, v, w) ? TRUE : FALSE;
 }
 
 OL_EdgeNodePtr OLGraph_get_arc(OLGraph G, OL_VertexType v, OL_VertexType w) {
