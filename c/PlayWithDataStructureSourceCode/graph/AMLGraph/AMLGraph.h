@@ -61,7 +61,7 @@ Status ALMGraph_add_vertex(ALMGraph G, ALM_VertexType v);
 Status ALMGraph_del_vertex(ALMGraph G, ALM_VertexType v);
 
 /* ²åÈë»¡<v,w>µ½Í¼ */
-Status ALMGraph_add_arc(ALMGraph G, ALM_VertexType v, ALM_VertexType w, AL_Weight weight);
+Status ALMGraph_add_arc(ALMGraph G, ALM_VertexType v, ALM_VertexType w, ALM_Weight weight);
 
 /* É¾³ý»¡<v,w>µ½Í¼ */
 Status ALMGraph_del_arc(ALMGraph G, ALM_VertexType v, ALM_VertexType w);

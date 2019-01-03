@@ -215,6 +215,7 @@ Status OLGraph_add_vertex(OLGraph G, OL_VertexType v) {
 	G->vers[G->numVertexes - 1].data = v;
 	G->vers[G->numVertexes - 1].firstIn = NULL;
 	G->vers[G->numVertexes - 1].firstOut = NULL;
+	return OK;
 }
 
 /* 从图中删除顶点v以及相关的弧 */
