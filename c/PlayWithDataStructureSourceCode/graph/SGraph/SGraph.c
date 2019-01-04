@@ -173,12 +173,21 @@ Status SGraph_del_vertex(SGraph G, S_VertexType v) {
 	G->numVertexes--;
 	S_EdgeNode * array = malloc(sizeof(S_EdgeNode) * G->numEdges);
 	memcpy(array, G->edges, sizeof array);
-	for (int i = 0; i < G->numEdges; i++) {
+	int index, i;
+	for (i = 0, index = 0; i < G->numEdges; i++) {
 		if (array[i].begin == index || array[i].end == index) {
 			continue;
 		}
-
+		else {
+			G->edges[index].begin = array[i].begin;
+			G->edges[index].end = array[i].end;
+			G->edges[index].weight = array[i].weight;
+			index++;
+		}
 	}
+	G->numEdges = index;
+	free(array);
+	return OK;
 }
 
 /* ≤Â»Îª°<v,w>µΩÕº */
