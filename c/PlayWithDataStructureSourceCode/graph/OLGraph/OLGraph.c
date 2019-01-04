@@ -38,6 +38,7 @@ static OLGraph _create_dg(FILE * fp) {
 		ol->vers[index_in].firstIn = ptr;
 		ol->vers[index_out].firstOut = ptr;
 	}
+	return ol;
 }
 
 static OLGraph _create_dn(FILE * fp) {
@@ -75,6 +76,7 @@ static OLGraph _create_dn(FILE * fp) {
 		ol->vers[index_in].firstIn = ptr;
 		ol->vers[index_out].firstOut = ptr;
 	}
+	return ol;
 }
 /* ´´½¨Í¼ */
 OLGraph OLGraph_create(FILE * fp) {
