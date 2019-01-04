@@ -78,7 +78,7 @@ static OLGraph _create_dn(FILE * fp) {
 	}
 	return ol;
 }
-/* ´´½¨Í¼ */
+/* åˆ›å»ºå›¾ */
 OLGraph OLGraph_create(FILE * fp) {
 	CheckPtr(fp);
 
@@ -94,7 +94,7 @@ OLGraph OLGraph_create(FILE * fp) {
 	}
 }
 
-/* Çå¿ÕÍ¼ */
+/* æ¸…ç©ºå›¾ */
 void OLGraph_clear(OLGraph G) {
 	if (G)
 	{
@@ -115,7 +115,7 @@ void OLGraph_clear(OLGraph G) {
 	}
 }
 
-/* Ïú»ÙÍ¼ */
+/* é”€æ¯å›¾ */
 void OLGraph_destroy(OLGraph * G) {
 	if (*G) {
 		OLGraph_clear(*G);
@@ -124,7 +124,7 @@ void OLGraph_destroy(OLGraph * G) {
 	}
 }
 
-/* Ñ°ÕÒ¶¥µãvµÄÎ»ÖÃ¡£ */
+/* å¯»æ‰¾é¡¶ç‚¹vçš„ä½ç½®ã€‚ */
 int OLGraph_locate(OLGraph G, OL_VertexType v) {
 	CheckPtr(G);
 	for (int i = 0; i < G->numVertexes; i++) {
@@ -135,7 +135,7 @@ int OLGraph_locate(OLGraph G, OL_VertexType v) {
 	return -1;
 }
 
-/* ·µ»ØµÚv¸ö½áµãµÄÖµ */
+/* è¿”å›ç¬¬vä¸ªç»“ç‚¹çš„å€¼ */
 OL_VertexType OLGraph_get(OLGraph G, int order) {
 	CheckPtr(G);
 	if (order < 0 || order >= G->numVertexes) {
@@ -144,7 +144,7 @@ OL_VertexType OLGraph_get(OLGraph G, int order) {
 	return G->vers[order].data;
 }
 
-/* ¶Ô¶¥µãv¸³Öµvalue¡£ */
+/* å¯¹é¡¶ç‚¹vèµ‹å€¼valueã€‚ */
 void OLGraph_set(OLGraph G, OL_VertexType old, OL_VertexType new) {
 	CheckPtr(G);
 	int index = OLGraph_locate(G, old);
@@ -153,7 +153,7 @@ void OLGraph_set(OLGraph G, OL_VertexType old, OL_VertexType new) {
 	}
 }
 
-/* ·µ»ØvµÄµÚÒ»¸öÁÚ½Ó¶¥µãĞòºÅ */
+/* è¿”å›vçš„ç¬¬ä¸€ä¸ªé‚»æ¥é¡¶ç‚¹åºå· */
 int OLGraph_frist_vertex(OLGraph G, OL_VertexType v) {
 	CheckPtr(G);
 	int index = OLGraph_locate(G, v);
@@ -169,7 +169,7 @@ int OLGraph_frist_vertex(OLGraph G, OL_VertexType v) {
 	}
 }
 
-/* ·µ»ØvÏà¶ÔÓÚwµÄÏÂÒ»¸öÁÚ½Ó¶¥µãĞòºÅ */
+/* è¿”å›vç›¸å¯¹äºwçš„ä¸‹ä¸€ä¸ªé‚»æ¥é¡¶ç‚¹åºå· */
 int OLGraph_next_vertex(OLGraph G, OL_VertexType v, OL_VertexType w) {
 	CheckPtr(G);
 	int index_v = OLGraph_locate(G, v);
@@ -207,7 +207,7 @@ int OLGraph_next_vertex(OLGraph G, OL_VertexType v, OL_VertexType w) {
 	}
 }
 
-/* ²åÈë¶¥µãvµ½Í¼ */
+/* æ’å…¥é¡¶ç‚¹våˆ°å›¾ */
 Status OLGraph_add_vertex(OLGraph G, OL_VertexType v) {
 	CheckPtr(G);
 	if (OLGraph_arc_exist(G, v) || G->numVertexes == MAX_VERTEX_NUM) {
@@ -220,8 +220,8 @@ Status OLGraph_add_vertex(OLGraph G, OL_VertexType v) {
 	return OK;
 }
 
-/* ´ÓÍ¼ÖĞÉ¾³ı¶¥µãvÒÔ¼°Ïà¹ØµÄ»¡ */
-// ½â·¨:1. É¾³ı¸Ã¶¥µãµÄËùÓĞ»¡ 2. ÊÍ·Å¶¥µã 3. ¶¥µãÊı¼õÒ»
+/* ä»å›¾ä¸­åˆ é™¤é¡¶ç‚¹vä»¥åŠç›¸å…³çš„å¼§ */
+// è§£æ³•:1. åˆ é™¤è¯¥é¡¶ç‚¹çš„æ‰€æœ‰å¼§ 2. é‡Šæ”¾é¡¶ç‚¹ 3. é¡¶ç‚¹æ•°å‡ä¸€
 Status OLGraph_del_vertex(OLGraph G, OL_VertexType v) {
 	CheckPtr(G);
 	if (!OLGraph_vertex_exist(G, v)) {
@@ -232,8 +232,8 @@ Status OLGraph_del_vertex(OLGraph G, OL_VertexType v) {
 	OL_EdgeNodePtr out_ptr = G->vers[index].firstOut;
 	OL_EdgeNodePtr tmp;
 	while (in_ptr) {
-		tmp = in_ptr->headlink
-			OLGraph_del_arc(G, in_ptr->tailvex, in_ptr->headvex);
+		tmp = in_ptr->headlink;
+		OLGraph_del_arc(G, in_ptr->tailvex, in_ptr->headvex);
 		in_ptr = tmp;
 	}
 	while (out_ptr) {
@@ -252,7 +252,7 @@ Status OLGraph_del_vertex(OLGraph G, OL_VertexType v) {
 	return OK;
 }
 
-/* ²åÈë»¡<v,w>µ½Í¼ */
+/* æ’å…¥å¼§<v,w>åˆ°å›¾ */
 Status OLGraph_add_arc(OLGraph G, OL_VertexType v, OL_VertexType w, OL_Weight weight) {
 	CheckPtr(G);
 	if (OLGraph_arc_exist(G, v, w)) {
@@ -278,7 +278,7 @@ Status OLGraph_add_arc(OLGraph G, OL_VertexType v, OL_VertexType w, OL_Weight we
 	return OK;
 }
 
-/* É¾³ı»¡<v,w>µ½Í¼ */
+/* åˆ é™¤å¼§<v,w>åˆ°å›¾ */
 Status OLGraph_del_arc(OLGraph G, OL_VertexType v, OL_VertexType w) {
 	CheckPtr(G);
 	OL_EdgeNodePtr delPtr = OLGraph_get_arc(G, v, w);
@@ -317,7 +317,7 @@ Status OLGraph_del_arc(OLGraph G, OL_VertexType v, OL_VertexType w) {
 	return OK;
 }
 
-/* ÅĞ¶Ï±ßÊÇ·ñ´æÔÚ */
+/* åˆ¤æ–­è¾¹æ˜¯å¦å­˜åœ¨ */
 Bool OLGraph_arc_exist(OLGraph G, OL_VertexType v, OL_VertexType w) {
 	CheckPtr(G);
 	return OLGraph_get_arc(G, v, w) ? TRUE : FALSE;
@@ -345,7 +345,7 @@ OL_EdgeNodePtr OLGraph_get_arc(OLGraph G, OL_VertexType v, OL_VertexType w) {
 	return NULL;
 }
 
-/* ·µ»Ø±ßµÄÈ¨Öµ */
+/* è¿”å›è¾¹çš„æƒå€¼ */
 OL_Weight OLGraph_arc_weight(OLGraph G, OL_VertexType v, OL_VertexType w) {
 	CheckPtr(G);
 	OL_EdgeNodePtr ptr = OLGraph_get_arc(G, v, w);
@@ -370,27 +370,27 @@ Bool OLGraph_vertex_exist(OLGraph G, OL_VertexType v)
 	return FALSE;
 }
 
-/* Éî¶ÈÓÅÏÈ±éÀú */
+/* æ·±åº¦ä¼˜å…ˆéå† */
 void OLGraph_DFS(OLGraph G) {}
 
-/* ¹ã¶ÈÓÅÏÈ±éÀú */
+/* å¹¿åº¦ä¼˜å…ˆéå† */
 void OLGraph_HFS(OLGraph G) {}
 
-/* ´òÓ¡Í¼ */
+/* æ‰“å°å›¾ */
 void OLGraph_print(OLGraph G) {
 	if (G) {
 		char * kindMsg;
 		switch (G->kind)
 		{
-		case DG_0:kindMsg = "DG-0-ÓĞÏòÍ¼"; break;
-		case DN_1:kindMsg = "DN-1-ÓĞÏòÍø£¨´øÈ¨Öµ£©"; break;
+		case DG_0:kindMsg = "DG-0-æœ‰å‘å›¾"; break;
+		case DN_1:kindMsg = "DN-1-æœ‰å‘ç½‘ï¼ˆå¸¦æƒå€¼ï¼‰"; break;
 		default:
 			kindMsg = "unkonwn kind";
 			break;
 		}
-		printf("¶¥µãÊı:%d, ±ß¼¯Êı:%d, ÀàĞÍ:%s\n", G->numVertexes, G->numEdges, kindMsg);
+		printf("é¡¶ç‚¹æ•°:%d, è¾¹é›†æ•°:%d, ç±»å‹:%s\n", G->numVertexes, G->numEdges, kindMsg);
 		for (int i = 0; i < G->numVertexes; i++) {
-			printf("[%d]¶¥µã: %c \n\tfirstIn:", i, G->vers[i].data);
+			printf("[%d]é¡¶ç‚¹: %c \n\tfirstIn:", i, G->vers[i].data);
 			OL_EdgeNodePtr ptr = G->vers[i].firstIn;
 			while (ptr)
 			{
@@ -409,7 +409,7 @@ void OLGraph_print(OLGraph G) {
 	}
 	else
 	{
-		printf("¿ÕÍ¼\n");
+		printf("ç©ºå›¾\n");
 	}
 
 }
