@@ -2,7 +2,7 @@
 #include "../file.c"
 #include <string.h>
 
-/* ´´½¨Í¼ */
+/* åˆ›å»ºå›¾ */
 SGraph SGraph_create(FILE * fp) {
 	CheckPtr(fp);
 
@@ -48,7 +48,7 @@ SGraph SGraph_create(FILE * fp) {
 	return sg;
 }
 
-/* Çå¿ÕÍ¼ */
+/* æ¸…ç©ºå›¾ */
 void SGraph_clear(SGraph G) {
 	if (G) {
 		G->numEdges = 0;
@@ -56,7 +56,7 @@ void SGraph_clear(SGraph G) {
 	}
 }
 
-/* Ïú»ÙÍ¼ */
+/* é”€æ¯å›¾ */
 void SGraph_destroy(SGraph * G) {
 	if (*G) {
 		free(*G);
@@ -64,7 +64,7 @@ void SGraph_destroy(SGraph * G) {
 	}
 }
 
-/* Ñ°ÕÒ¶¥µãvµÄÎ»ÖÃ¡£ */
+/* å¯»æ‰¾é¡¶ç‚¹vçš„ä½ç½®ã€‚ */
 int SGraph_locate(SGraph G, S_VertexType v) {
 	CheckPtr(G);
 	for (int i = 0; i < G->numVertexes; i++) {
@@ -75,7 +75,7 @@ int SGraph_locate(SGraph G, S_VertexType v) {
 	return -1;
 }
 
-/* ·µ»ØµÚv¸ö½áµãµÄÖµ */
+/* è¿”å›ç¬¬vä¸ªç»“ç‚¹çš„å€¼ */
 S_VertexType SGraph_get(SGraph G, int order) {
 	CheckPtr(G);
 	if (order < 0 || order >= G->numVertexes) {
@@ -84,7 +84,7 @@ S_VertexType SGraph_get(SGraph G, int order) {
 	return G->ves[order];
 }
 
-/* ¶Ô¶¥µãv¸³Öµvalue¡£ */
+/* å¯¹é¡¶ç‚¹vèµ‹å€¼valueã€‚ */
 void SGraph_set(SGraph G, S_VertexType old, S_VertexType new) {
 	CheckPtr(G);
 	int index = SGraph_locate(G, old);
@@ -93,7 +93,7 @@ void SGraph_set(SGraph G, S_VertexType old, S_VertexType new) {
 	}
 }
 
-/* ·µ»ØvµÄµÚÒ»¸öÁÚ½Ó¶¥µãĞòºÅ */
+/* è¿”å›vçš„ç¬¬ä¸€ä¸ªé‚»æ¥é¡¶ç‚¹åºå· */
 int SGraph_frist_vertex(SGraph G, S_VertexType v) {
 	CheckPtr(G);
 	for (int i = 0; i < G->numEdges; i++) {
@@ -111,7 +111,7 @@ int SGraph_frist_vertex(SGraph G, S_VertexType v) {
 	return -1;
 }
 
-/* ·µ»ØvÏà¶ÔÓÚwµÄÏÂÒ»¸öÁÚ½Ó¶¥µãĞòºÅ */
+/* è¿”å›vç›¸å¯¹äºwçš„ä¸‹ä¸€ä¸ªé‚»æ¥é¡¶ç‚¹åºå· */
 int SGraph_next_vertex(SGraph G, S_VertexType v, S_VertexType w) {
 	CheckPtr(G);
 
@@ -149,7 +149,7 @@ int SGraph_next_vertex(SGraph G, S_VertexType v, S_VertexType w) {
 	return -1;
 }
 
-/* ²åÈë¶¥µãvµ½Í¼ */
+/* æ’å…¥é¡¶ç‚¹våˆ°å›¾ */
 Status SGraph_add_vertex(SGraph G, S_VertexType v) {
 	CheckPtr(G);
 	if (SGraph_vertex_exist(G, v) || G->numVertexes == MAX_VERTEX_NUM) {
@@ -160,7 +160,7 @@ Status SGraph_add_vertex(SGraph G, S_VertexType v) {
 	return OK;
 }
 
-/* ´ÓÍ¼ÖĞÉ¾³ı¶¥µãvÒÔ¼°Ïà¹ØµÄ»¡ */
+/* ä»å›¾ä¸­åˆ é™¤é¡¶ç‚¹vä»¥åŠç›¸å…³çš„å¼§ */
 Status SGraph_del_vertex(SGraph G, S_VertexType v) {
 	CheckPtr(G);
 	int index = SGraph_locate(G, v);
@@ -190,28 +190,155 @@ Status SGraph_del_vertex(SGraph G, S_VertexType v) {
 	return OK;
 }
 
-/* ²åÈë»¡<v,w>µ½Í¼ */
-Status SGraph_add_arc(SGraph G, S_VertexType v, S_VertexType w, S_weight weight) {}
+/* æ’å…¥å¼§<v,w>åˆ°å›¾ */
+Status SGraph_add_arc(SGraph G, S_VertexType v, S_VertexType w, S_weight weight) {
+	CheckPtr(G);
+	if (SGraph_arc_exist(G, v, w)) {
+		return ERROR;
+	}
 
-/* É¾³ı»¡<v,w>µ½Í¼ */
-Status SGraph_del_arc(SGraph G, S_VertexType v, S_VertexType w) {}
+	int vex_v = SGraph_locate(G, v);
+	int vex_w = SGraph_locate(G, w);
+	if (vex_v < 0 || vex_w < 0) {
+		return ERROR;
+	}
 
-/* ÅĞ¶Ï±ßÊÇ·ñ´æÔÚ */
-Bool SGraph_arc_exist(SGraph G, S_VertexType v, S_VertexType w) {}
+	G->edges[G->numEdges].begin = vex_v;
+	G->edges[G->numEdges].end = vex_w;
+	G->edges[G->numEdges].weight = weight;
+	G->numEdges++;
+	return OK;
+}
 
-S_EdgeNodePtr SGraph_get_arc(SGraph G, S_VertexType v, S_VertexType w) {}
+/* åˆ é™¤å¼§<v,w>åˆ°å›¾ */
+Status SGraph_del_arc(SGraph G, S_VertexType v, S_VertexType w) {
+	CheckPtr(G);
+	int vex_v = SGraph_locate(G, v);
+	int vex_w = SGraph_locate(G, w);
+	if (vex_v < 0 || vex_v < 0) {
+		return ERROR;
+	}
+	int index = -1;
+	Bool hasDirection = G->kind == DG_0 || G->kind == DN_1;
+	for (int i = 0; i < G->numEdges; i++) {
+		int begin = G->edges[i].begin;
+		int end = G->edges[i].end;
+		if (begin == vex_v && end == vex_w) {
+			index = i;
+			break;
+		}
+		if (!hasDirection && begin == vex_w && end == vex_v) {
+			index = i;
+			break;
+		}
+	}
+	if (index >= 0) {
+		for (int i = index; i < G->numEdges; i++) {
+			G->edges[i].begin = G->edges[i + 1].begin;
+			G->edges[i].end = G->edges[i + 1].end;
+			G->edges[i].weight = G->edges[i + 1].weight;
+		}
+		G->numEdges--;
+		return OK;
+	}
+	return ERROR;
+}
 
-/* ·µ»Ø±ßµÄÈ¨Öµ */
-S_weight SGraph_arc_weight(SGraph G, S_VertexType v, S_VertexType w) {}
+/* åˆ¤æ–­è¾¹æ˜¯å¦å­˜åœ¨ */
+Bool SGraph_arc_exist(SGraph G, S_VertexType v, S_VertexType w) {
+	CheckPtr(G);
+	if (G->numEdges == 0) {
+		return FALSE;
+	}
+	Bool hasDirection = G->kind == DG_0 || G->kind == DN_1;
+	for (int i = 0; i < G->numEdges; i++) {
+		int begin = G->edges[i].begin;
+		int end = G->edges[i].end;
+		if (G->ves[begin] == v && G->ves[end] == w) {
+			return TRUE;
+		}
+		if (!hasDirection && G->ves[begin] == w && G->ves[end] == v) {
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
 
-/* ¶¥µãÊÇ·ñ´æÔÚ */
-Bool * SGraph_vertex_exist(SGraph G, S_VertexType v) {}
+S_EdgeNodePtr SGraph_get_arc(SGraph G, S_VertexType v, S_VertexType w) {
+	CheckPtr(G);
+	if (G->numEdges == 0) {
+		return NULL;
+	}
+	Bool hasDirection = G->kind == DG_0 || G->kind == DN_1;
+	for (int i = 0; i < G->numEdges; i++) {
+		int begin = G->edges[i].begin;
+		int end = G->edges[i].end;
+		if (G->ves[begin] == v && G->ves[end] == w) {
+			return G->edges[i];
+		}
+		if (!hasDirection && G->ves[begin] == w && G->ves[end] == v) {
+			return G->edges[i];
+		}
+	}
+	return NULL;
+}
 
-/* Éî¶ÈÓÅÏÈ±éÀú */
+/* è¿”å›è¾¹çš„æƒå€¼ */
+S_weight SGraph_arc_weight(SGraph G, S_VertexType v, S_VertexType w) {
+	CheckPtr(G);
+	S_EdgeNodePtr ptr = SGraph_get_arc(G, v, w);
+	if (!ptr) {
+		Exit_with_msg("no exist arc.");
+	}
+	return ptr->weight:
+}
+
+/* é¡¶ç‚¹æ˜¯å¦å­˜åœ¨ */
+Bool SGraph_vertex_exist(SGraph G, S_VertexType v) {
+	CheckPtr(G);
+	for (int i = 0; i < G->numVertexes; i++) {
+		if (G->ves[i] == v) {
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+/* æ·±åº¦ä¼˜å…ˆéå† */
 void SGraph_DFS(SGraph G) {}
 
-/* ¹ã¶ÈÓÅÏÈ±éÀú */
+/* å¹¿åº¦ä¼˜å…ˆéå† */
 void SGraph_HFS(SGraph G) {}
 
-/* ´òÓ¡Í¼ */
-void SGraph_print(SGraph G) {}
+/* æ‰“å°å›¾ */
+void SGraph_print(SGraph G) {
+	if (G) {
+		char * kindMsg;
+		switch (G->kind)
+		{
+		case DG_0:kindMsg = "DG-0-æœ‰å‘å›¾"; break;
+		case DN_1:kindMsg = "DN-1-æœ‰å‘ç½‘ï¼ˆå¸¦æƒå€¼ï¼‰"; break;
+		case UDG_2:kindMsg = "UDG-2-æ— å‘å›¾"; break;
+		case UDN_3:kindMsg = "UDN-3-æ— å‘ç½‘ï¼ˆå¸¦æƒå€¼ï¼‰"; break;
+		default:
+			kindMsg = "unkonwn kind";
+			break;
+		}
+		printf("é¡¶ç‚¹æ•°:%d, è¾¹é›†æ•°:%d, ç±»å‹:%s\n", G->numVertexes, G->numEdges, kindMsg);
+		printf("é¡¶ç‚¹æ•°ç»„:");
+		for (int i = 0; i < G->numVertexes; i++) {
+			printf("%c ", G->ves[i]);
+		}
+		printf("\nè¾¹æ•°ç»„");
+		printf("%9c  begin  end  weight");
+		for (int i = 0; i < G->numEdges; i++) {
+			S_EdgeNodePtr p = G->edges[i];
+			printf("edges[%2d]  %2d  %2d  %2d\n", i, p->begin, p->end, p->weight);
+		}
+		printf("\n");
+	}
+	else
+	{
+		printf("ç©ºå›¾\n");
+	}
+}

@@ -12,7 +12,7 @@ typedef struct S_EdgeNode {
 	S_weight weight;
 }S_EdgeNode, *S_EdgeNodePtr, S_EdgeArray[MAX_EDGE_NUM];
 
-typedef enum _SGraphKind { DG_0, DN_1, UDG_2, UDN_3 }SGraphKind;		//0-ÓĞÏòÍ¼£¬1-ÓĞÏòÍø£¨´øÈ¨Öµ£©£¬2-ÎŞÏòÍ¼£¬3-ÎŞÏòÍø£¨´øÈ¨Öµ£©
+typedef enum _SGraphKind { DG_0, DN_1, UDG_2, UDN_3 }SGraphKind;		//0-æœ‰å‘å›¾ï¼Œ1-æœ‰å‘ç½‘ï¼ˆå¸¦æƒå€¼ï¼‰ï¼Œ2-æ— å‘å›¾ï¼Œ3-æ— å‘ç½‘ï¼ˆå¸¦æƒå€¼ï¼‰
 
 typedef struct SGraph {
 	S_EdgeArray edges;
@@ -21,60 +21,60 @@ typedef struct SGraph {
 	SGraphKind kind;
 }*SGraph;
 
-/* ´´½¨Í¼ */
+/* åˆ›å»ºå›¾ */
 SGraph SGraph_create(FILE * fp);
 
-/* Çå¿ÕÍ¼ */
+/* æ¸…ç©ºå›¾ */
 void SGraph_clear(SGraph G);
 
-/* Ïú»ÙÍ¼ */
+/* é”€æ¯å›¾ */
 void SGraph_destroy(SGraph * G);
 
-/* Ñ°ÕÒ¶¥µãvµÄÎ»ÖÃ¡£ */
+/* å¯»æ‰¾é¡¶ç‚¹vçš„ä½ç½®ã€‚ */
 int SGraph_locate(SGraph G, S_VertexType v);
 
-/* ·µ»ØµÚv¸ö½áµãµÄÖµ */
+/* è¿”å›ç¬¬vä¸ªç»“ç‚¹çš„å€¼ */
 S_VertexType SGraph_get(SGraph G, int order);
 
-/* ¶Ô¶¥µãv¸³Öµvalue¡£ */
+/* å¯¹é¡¶ç‚¹vèµ‹å€¼valueã€‚ */
 void SGraph_set(SGraph G, S_VertexType old, S_VertexType new);
 
-/* ·µ»ØvµÄµÚÒ»¸öÁÚ½Ó¶¥µãĞòºÅ */
+/* è¿”å›vçš„ç¬¬ä¸€ä¸ªé‚»æ¥é¡¶ç‚¹åºå· */
 int SGraph_frist_vertex(SGraph G, S_VertexType v);
 
-/* ·µ»ØvÏà¶ÔÓÚwµÄÏÂÒ»¸öÁÚ½Ó¶¥µãĞòºÅ */
+/* è¿”å›vç›¸å¯¹äºwçš„ä¸‹ä¸€ä¸ªé‚»æ¥é¡¶ç‚¹åºå· */
 int SGraph_next_vertex(SGraph G, S_VertexType v, S_VertexType w);
 
-/* ²åÈë¶¥µãvµ½Í¼ */
+/* æ’å…¥é¡¶ç‚¹våˆ°å›¾ */
 Status SGraph_add_vertex(SGraph G, S_VertexType v);
 
-/* ´ÓÍ¼ÖĞÉ¾³ı¶¥µãvÒÔ¼°Ïà¹ØµÄ»¡ */
+/* ä»å›¾ä¸­åˆ é™¤é¡¶ç‚¹vä»¥åŠç›¸å…³çš„å¼§ */
 Status SGraph_del_vertex(SGraph G, S_VertexType v);
 
-/* ²åÈë»¡<v,w>µ½Í¼ */
+/* æ’å…¥å¼§<v,w>åˆ°å›¾ */
 Status SGraph_add_arc(SGraph G, S_VertexType v, S_VertexType w, S_weight weight);
 
-/* É¾³ı»¡<v,w>µ½Í¼ */
+/* åˆ é™¤å¼§<v,w>åˆ°å›¾ */
 Status SGraph_del_arc(SGraph G, S_VertexType v, S_VertexType w);
 
-/* ÅĞ¶Ï±ßÊÇ·ñ´æÔÚ */
+/* åˆ¤æ–­è¾¹æ˜¯å¦å­˜åœ¨ */
 Bool SGraph_arc_exist(SGraph G, S_VertexType v, S_VertexType w);
 
 S_EdgeNodePtr SGraph_get_arc(SGraph G, S_VertexType v, S_VertexType w);
 
-/* ·µ»Ø±ßµÄÈ¨Öµ */
+/* è¿”å›è¾¹çš„æƒå€¼ */
 S_weight SGraph_arc_weight(SGraph G, S_VertexType v, S_VertexType w);
 
-/* ¶¥µãÊÇ·ñ´æÔÚ */
-Bool * SGraph_vertex_exist(SGraph G, S_VertexType v);
+/* é¡¶ç‚¹æ˜¯å¦å­˜åœ¨ */
+Bool SGraph_vertex_exist(SGraph G, S_VertexType v);
 
-/* Éî¶ÈÓÅÏÈ±éÀú */
+/* æ·±åº¦ä¼˜å…ˆéå† */
 void SGraph_DFS(SGraph G);
 
-/* ¹ã¶ÈÓÅÏÈ±éÀú */
+/* å¹¿åº¦ä¼˜å…ˆéå† */
 void SGraph_HFS(SGraph G);
 
-/* ´òÓ¡Í¼ */
+/* æ‰“å°å›¾ */
 void SGraph_print(SGraph G);
 
 #endif // !HAVE_SGRAPH_H

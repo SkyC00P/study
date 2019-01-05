@@ -1,7 +1,7 @@
 /*
- Ê®×ÖÁ´±íÊÇÎªÁË½â¾öÁÚ½Ó±íÔÚÓĞÏòÍ¼ÖĞÒ»¸ö¶¥µãÖ»ÄÜÖªÏşµ¥·½ÏòµÄ»¡£¬¼´Èë¶ÈºÍ³ö¶ÈÖ»ÄÜ´æÆäÒ»¡£
- Ê®×ÖÁ´±íĞŞ¸ÄÁË¶¥µã±í½á¹¹Îª [data, firstIn, firstOut],±ß±í½áµãÎª [tailvex, headvex, headlink, taillink]
- ¿ÉÒÔ¿´×öÊ®×ÖÁ´±íÊÇ¶ÔÓĞÏòÍ¼µÄÁÚ½Ó±íµÄÓÅ»¯¡£
+ åå­—é“¾è¡¨æ˜¯ä¸ºäº†è§£å†³é‚»æ¥è¡¨åœ¨æœ‰å‘å›¾ä¸­ä¸€ä¸ªé¡¶ç‚¹åªèƒ½çŸ¥æ™“å•æ–¹å‘çš„å¼§ï¼Œå³å…¥åº¦å’Œå‡ºåº¦åªèƒ½å­˜å…¶ä¸€ã€‚
+ åå­—é“¾è¡¨ä¿®æ”¹äº†é¡¶ç‚¹è¡¨ç»“æ„ä¸º [data, firstIn, firstOut],è¾¹è¡¨ç»“ç‚¹ä¸º [tailvex, headvex, headlink, taillink]
+ å¯ä»¥çœ‹åšåå­—é“¾è¡¨æ˜¯å¯¹æœ‰å‘å›¾çš„é‚»æ¥è¡¨çš„ä¼˜åŒ–ã€‚
 */
 #ifndef HAVE_OLGRAPH_H
 #define HAVE_OLGRAPH_H
@@ -32,59 +32,59 @@ typedef struct OL_Graph {
 	OLGraphKind kind;
 }*OLGraph;
 
-/* ´´½¨Í¼ */
+/* åˆ›å»ºå›¾ */
 OLGraph OLGraph_create(FILE * fp);
 
-/* Çå¿ÕÍ¼ */
+/* æ¸…ç©ºå›¾ */
 void OLGraph_clear(OLGraph G);
 
-/* Ïú»ÙÍ¼ */
+/* é”€æ¯å›¾ */
 void OLGraph_destroy(OLGraph * G);
 
-/* Ñ°ÕÒ¶¥µãvµÄÎ»ÖÃ¡£ */
+/* å¯»æ‰¾é¡¶ç‚¹vçš„ä½ç½®ã€‚ */
 int OLGraph_locate(OLGraph G, OL_VertexType v);
 
-/* ·µ»ØµÚv¸ö½áµãµÄÖµ */
+/* è¿”å›ç¬¬vä¸ªç»“ç‚¹çš„å€¼ */
 OL_VertexType OLGraph_get(OLGraph G, int order);
 
-/* ¶Ô¶¥µãv¸³Öµvalue¡£ */
+/* å¯¹é¡¶ç‚¹vèµ‹å€¼valueã€‚ */
 void OLGraph_set(OLGraph G, OL_VertexType old, OL_VertexType new);
 
-/* ·µ»ØvµÄµÚÒ»¸öÁÚ½Ó¶¥µãĞòºÅ */
+/* è¿”å›vçš„ç¬¬ä¸€ä¸ªé‚»æ¥é¡¶ç‚¹åºå· */
 int OLGraph_frist_vertex(OLGraph G, OL_VertexType v);
 
-/* ·µ»ØvÏà¶ÔÓÚwµÄÏÂÒ»¸öÁÚ½Ó¶¥µãĞòºÅ */
+/* è¿”å›vç›¸å¯¹äºwçš„ä¸‹ä¸€ä¸ªé‚»æ¥é¡¶ç‚¹åºå· */
 int OLGraph_next_vertex(OLGraph G, OL_VertexType v, OL_VertexType w);
 
-/* ²åÈë¶¥µãvµ½Í¼ */
+/* æ’å…¥é¡¶ç‚¹våˆ°å›¾ */
 Status OLGraph_add_vertex(OLGraph G, OL_VertexType v);
 
-/* ´ÓÍ¼ÖĞÉ¾³ı¶¥µãvÒÔ¼°Ïà¹ØµÄ»¡ */
+/* ä»å›¾ä¸­åˆ é™¤é¡¶ç‚¹vä»¥åŠç›¸å…³çš„å¼§ */
 Status OLGraph_del_vertex(OLGraph G, OL_VertexType v);
 
-/* ²åÈë»¡<v,w>µ½Í¼ */
+/* æ’å…¥å¼§<v,w>åˆ°å›¾ */
 Status OLGraph_add_arc(OLGraph G, OL_VertexType v, OL_VertexType w, AL_Weight weight);
 
-/* É¾³ı»¡<v,w>µ½Í¼ */
+/* åˆ é™¤å¼§<v,w>åˆ°å›¾ */
 Status OLGraph_del_arc(OLGraph G, OL_VertexType v, OL_VertexType w);
 
-/* ÅĞ¶Ï±ßÊÇ·ñ´æÔÚ */
+/* åˆ¤æ–­è¾¹æ˜¯å¦å­˜åœ¨ */
 Bool OLGraph_arc_exist(OLGraph G, OL_VertexType v, OL_VertexType w);
 OL_EdgeNodePtr OLGraph_get_arc(OLGraph G, OL_VertexType v, OL_VertexType w);
 
-/* ·µ»Ø±ßµÄÈ¨Öµ */
+/* è¿”å›è¾¹çš„æƒå€¼ */
 OL_Weight OLGraph_arc_weight(OLGraph G, OL_VertexType v, OL_VertexType w);
 
-/* ¶¥µãÊÇ·ñ´æÔÚ */
-Bool * OLGraph_vertex_exist(OLGraph G, OL_VertexType v);
+/* é¡¶ç‚¹æ˜¯å¦å­˜åœ¨ */
+Bool OLGraph_vertex_exist(OLGraph G, OL_VertexType v);
 
-/* Éî¶ÈÓÅÏÈ±éÀú */
+/* æ·±åº¦ä¼˜å…ˆéå† */
 void OLGraph_DFS(OLGraph G);
 
-/* ¹ã¶ÈÓÅÏÈ±éÀú */
+/* å¹¿åº¦ä¼˜å…ˆéå† */
 void OLGraph_HFS(OLGraph G);
 
-/* ´òÓ¡Í¼ */
+/* æ‰“å°å›¾ */
 void OLGraph_print(OLGraph G);
 
 #endif // !HAVE_OLGRAPH_H
