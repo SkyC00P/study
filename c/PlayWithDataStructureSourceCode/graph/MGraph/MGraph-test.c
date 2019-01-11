@@ -21,6 +21,11 @@ int main() {
 	TEST_REPORT;
 }
 
+/*
+	测试点:
+	1. 图初始化
+
+*/
 static void test() {
 	puts("(1) 测试有向图");
 	FILE * dg_fp = fopen("test_data/DG.txt", "r");
@@ -35,7 +40,7 @@ static void test() {
 		EXPECT_TRUE(MGraph_frist_vertex(dgMGraph, 'B') == 2);
 		EXPECT_TRUE(MGraph_next_vertex(dgMGraph, 'A', 'B') == 3);
 
-		puts("深度遍历图");
+		puts("深度遍历图:预期为ABCD");
 		MGraph_DFS(dgMGraph);
 		puts("广度遍历图");
 		MGraph_HFS(dgMGraph);
@@ -60,7 +65,7 @@ static void test() {
 		EXPECT_TRUE(MGraph_frist_vertex(dnMGraph, 'B') == 2);
 		EXPECT_TRUE(MGraph_next_vertex(dnMGraph, 'A', 'B') == 5);
 
-		puts("深度遍历图");
+		puts("深度遍历图:预期为ABCDFE");
 		MGraph_DFS(dnMGraph);
 		puts("广度遍历图");
 		MGraph_HFS(dnMGraph);
@@ -85,7 +90,7 @@ static void test() {
 		EXPECT_TRUE(MGraph_frist_vertex(udgMGraph, 'B') == 0);
 		EXPECT_TRUE(MGraph_next_vertex(udgMGraph, 'A', 'B') == 3);
 
-		puts("深度遍历图");
+		puts("深度遍历图:预期为ABECD");
 		MGraph_DFS(udgMGraph);
 		puts("广度遍历图");
 		MGraph_HFS(udgMGraph);
@@ -110,7 +115,7 @@ static void test() {
 		EXPECT_TRUE(MGraph_frist_vertex(udnMGraph, 'B') == 0);
 		EXPECT_TRUE(MGraph_next_vertex(udnMGraph, 'A', 'B') == 2);
 
-		puts("深度遍历图");
+		puts("深度遍历图:ABCDE");
 		MGraph_DFS(udnMGraph);
 		puts("广度遍历图");
 		MGraph_HFS(udnMGraph);

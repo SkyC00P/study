@@ -387,11 +387,59 @@ MG_Weight MGraph_arc_weight(MGraph G, MG_VertexType v, MG_VertexType w)
 	return G->arcs[index_1][index_2];
 }
 
-/* 深度优先遍历 */
-void MGraph_DFS(MGraph G) {}
+static Bool visited[MAX_VERTEX_NUM];
+static void _dfs(MGraph G, int i) {
+	visited[i] = TRUE;
+	printf("%c ", G->vexs[i]);
+	MG_Weight flag = G->kind == DN || G->kind == UDN ? INFINITY : 0;
+	for (int j = 0; j < G->numVertexes; j++) {
+		if (G->arcs[i][j] != flag && !visited[j]) {
+			_dfs(G, j);
+		}
+	}
+}
 
+/* 深度优先遍历 */
+void MGraph_DFS(MGraph G) {
+	if (G) {
+		for (int i = 0; i < G->numVertexes; i++) {
+			visited[i] = FALSE;
+		}
+		for (int i = 0; i < G->numVertexes; i++) {
+			if (!visited[i]) {
+				_dfs(G, i);
+			}
+		}
+		printf("\n");
+	}
+}
+#include "help/link_queue.h"
 /* 广度优先遍历 */
-void MGraph_HFS(MGraph G) {}
+void MGraph_HFS(MGraph G) {
+	if (G) {
+		for (int i = 0; i < G->numVertexes; i++) {
+			visited[i] = FALSE;
+		}
+		LinkQueue queue = LinkQueue_init();
+		int index = 0;
+		LinkQueue_add(queue, index);
+		MG_Weight flag = G->kind == DN || G->kind == UDN ? INFINITY : 0;
+		while (!LinkQueue_isEmpty(queue)) {
+			index = LinkQueue_remove(queue);
+			if (!visited[index]) {
+				printf("%c ", G->vexs[index]);
+				visited[index] = TRUE;
+			}
+			for (int j = 0; j < G->numVertexes; j++) {
+				if (G->arcs[index][j] != flag && !visited[j]) {
+					LinkQueue_add(queue, j);
+				}
+			}
+		}
+		LinkQueue_destory(queue);
+		printf("\n");
+	}
+}
 
 /* 打印图 */
 void MGraph_print(MGraph G) {

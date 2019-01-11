@@ -1,5 +1,5 @@
 inc := -I../
-mgraph := MGraph/*.c
+mgraph := MGraph/*.c MGraph/help/*.c
 algraph := ALGraph/*/*.c
 
 mgraph.bin:
