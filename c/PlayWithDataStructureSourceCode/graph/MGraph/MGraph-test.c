@@ -42,7 +42,7 @@ static void test() {
 
 		puts("深度遍历图:预期为ABCD");
 		MGraph_DFS(dgMGraph);
-		puts("广度遍历图");
+		puts("广度遍历图:预期为ABDC");
 		MGraph_HFS(dgMGraph);
 
 		test_dg_mgraph_add_and_del();
@@ -67,7 +67,7 @@ static void test() {
 
 		puts("深度遍历图:预期为ABCDFE");
 		MGraph_DFS(dnMGraph);
-		puts("广度遍历图");
+		puts("广度遍历图:预期为ABFCED");
 		MGraph_HFS(dnMGraph);
 
 		test_dn_mgraph_add_and_del();
@@ -92,7 +92,7 @@ static void test() {
 
 		puts("深度遍历图:预期为ABECD");
 		MGraph_DFS(udgMGraph);
-		puts("广度遍历图");
+		puts("广度遍历图:预期为ABDEC");
 		MGraph_HFS(udgMGraph);
 
 		test_udg_mgraph_add_and_del();
@@ -115,9 +115,9 @@ static void test() {
 		EXPECT_TRUE(MGraph_frist_vertex(udnMGraph, 'B') == 0);
 		EXPECT_TRUE(MGraph_next_vertex(udnMGraph, 'A', 'B') == 2);
 
-		puts("深度遍历图:ABCDE");
+		puts("深度遍历图:预期为ABCDE");
 		MGraph_DFS(udnMGraph);
-		puts("广度遍历图");
+		puts("广度遍历图:预期为ABCED");
 		MGraph_HFS(udnMGraph);
 
 		test_udn_mgraph_add_and_del();
