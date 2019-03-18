@@ -1,3 +1,5 @@
+import java.util.HashSet;
+
 /**
  * Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
  * <p>
@@ -28,6 +30,7 @@ public class LongestPalindrome {
         String str = s.charAt(0) + "";
         for (int i = 0; i < s.length(); i++) {
             for (int j = i + 1; j < s.length(); j++) {
+                t1++;
                 String sub = s.substring(i, j + 1);
                 if (CheckIsPalindrome(sub) && sub.length() > max) {
                     max = sub.length();
@@ -35,7 +38,38 @@ public class LongestPalindrome {
                 }
             }
         }
+        System.out.println(s+" -->f1:size="+s.length()+",times="+t1);
+        t1=0;
         return str;
+    }
+
+    static int t1 = 0;
+    static int t2 = 0;
+
+    /**
+     * 动态规划解法
+     */
+    public String longestPalindrome_1(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        int n = s.length();
+        String res = null;
+
+        boolean[][] dp = new boolean[n][n];
+
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = i; j < n; j++) {
+                dp[i][j] = s.charAt(i) == s.charAt(j) && (j - i < 3 || dp[i + 1][j - 1]);
+
+                if (dp[i][j] && (res == null || j - i + 1 > res.length())) {
+                    res = s.substring(i, j + 1);
+                }
+            }
+        }
+        System.out.println(s+" --> f2:size="+s.length()+",times="+t1);
+        t1=0;
+        return res;
     }
 
     private boolean CheckIsPalindrome(String s) {
@@ -52,10 +86,12 @@ public class LongestPalindrome {
         String s2 = "cbbd";
         String s3 = "esbtzjaaijqkgmtaajpsdfiqtvxsgfvijpxrvxgfumsuprzlyvhclgkhccmcnquukivlpnjlfteljvykbddtrpmxzcrdqinsnlsteonhcegtkoszzonkwjevlasgjlcquzuhdmmkhfniozhuphcfkeobturbuoefhmtgcvhlsezvkpgfebbdbhiuwdcftenihseorykdguoqotqyscwymtjejpdzqepjkadtftzwebxwyuqwyeegwxhroaaymusddwnjkvsvrwwsmolmidoybsotaqufhepinkkxicvzrgbgsarmizugbvtzfxghkhthzpuetufqvigmyhmlsgfaaqmmlblxbqxpluhaawqkdluwfirfngbhdkjjyfsxglsnakskcbsyafqpwmwmoxjwlhjduayqyzmpkmrjhbqyhongfdxmuwaqgjkcpatgbrqdllbzodnrifvhcfvgbixbwywanivsdjnbrgskyifgvksadvgzzzuogzcukskjxbohofdimkmyqypyuexypwnjlrfpbtkqyngvxjcwvngmilgwbpcsseoywetatfjijsbcekaixvqreelnlmdonknmxerjjhvmqiztsgjkijjtcyetuygqgsikxctvpxrqtuhxreidhwcklkkjayvqdzqqapgdqaapefzjfngdvjsiiivnkfimqkkucltgavwlakcfyhnpgmqxgfyjziliyqhugphhjtlllgtlcsibfdktzhcfuallqlonbsgyyvvyarvaxmchtyrtkgekkmhejwvsuumhcfcyncgeqtltfmhtlsfswaqpmwpjwgvksvazhwyrzwhyjjdbphhjcmurdcgtbvpkhbkpirhysrpcrntetacyfvgjivhaxgpqhbjahruuejdmaghoaquhiafjqaionbrjbjksxaezosxqmncejjptcksnoq";
         System.out.println(solution.longestPalindrome(s1));
-        System.out.println(solution.longestPalindrome(s2));long t = System.currentTimeMillis();
+        System.out.println(solution.longestPalindrome(s2));
+        long t = System.currentTimeMillis();
         System.out.println(t);
         System.out.println(solution.longestPalindrome(s3));
         System.out.println(System.currentTimeMillis() + " " + (System.currentTimeMillis() - t));
 
+        System.out.println(solution.longestPalindrome_1(s1));
     }
 }
