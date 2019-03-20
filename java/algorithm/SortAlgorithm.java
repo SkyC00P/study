@@ -6,6 +6,7 @@ public final class SortAlgorithm {
     private static final int[] soredData = new int[]{1, 3, 5, 6, 7, 10, 22, 44, 48, 50, 50, 60, 66, 151};
 
     /* 冒泡排序 */
+    /* 每个位置逐个跟剩下所有的位置进行比较并替换，从而将正确排序的该位置的值冒上来 */
     private static int[] BubbleSort(final int[] data) {
         int[] d = Arrays.copyOf(data, data.length);
 
@@ -22,6 +23,7 @@ public final class SortAlgorithm {
     }
 
     /* 简单选择排序 */
+    /* 遍历数组，先确定当前剩下的所有位置中最小的下标，并跟当前位置交换数据 */
     private static int[] SelectSort(final int[] data) {
         int[] d = Arrays.copyOf(data, data.length);
         for (int i = 0; i < d.length; i++) {
@@ -31,16 +33,15 @@ public final class SortAlgorithm {
                     min = j;
                 }
             }
-            if (min != i) {
-                int tmp = d[i];
-                d[i] = d[min];
-                d[min] = tmp;
-            }
+            int tmp = d[i];
+            d[i] = d[min];
+            d[min] = tmp;
         }
         return d;
     }
 
     /* 直接插入排序 */
+    /* 从左到右开始，记录当前位置值，跟左边已排好序的值逐个对比，将不符合顺序的向右移动腾出位置，最后确定位置插入 */
     private static int[] InsertSort(final int[] data) {
         int[] d = Arrays.copyOf(data, data.length);
         for (int i = 1; i < d.length; i++) {
@@ -57,7 +58,24 @@ public final class SortAlgorithm {
         return d;
     }
 
+    private static int[] InsertSort_1(final int[] data) {
+        int[] d = Arrays.copyOf(data, data.length);
+        for (int i = 1; i < d.length; i++) {
+            int l = i - 1;
+            int k = d[i];
+            do {
+                if (d[l] > k) {
+                    d[l + 1] = d[l];
+                    l--;
+                } else break;
+            } while (l >= 0);
+            d[l + 1] = k;
+        }
+        return d;
+    }
+
     /* 希尔排序 - 直接插入排序算法的改进版本*/
+    /* 对数组进行分组，进行组内插入排序，使得组内基本有序，让基本小的到前面，基本大的到后面，直到最后剩一组时结束 */
     private static int[] ShellSort(final int[] data) {
         int[] d = Arrays.copyOf(data, data.length);
         for (int step = d.length / 2; step > 0; step = step / 2) {
@@ -107,7 +125,6 @@ public final class SortAlgorithm {
     private static int[] QuickSort(final int[] data) {
         int[] d = Arrays.copyOf(data, data.length);
         quicksort(d, 0, d.length - 1);
-        //System.out.println(Arrays.toString(d));
         return d;
     }
 
@@ -118,7 +135,8 @@ public final class SortAlgorithm {
         boolean select_result = Arrays.equals(soredData, SelectSort(data));
         System.out.println("[SeclectSort]测试结果:" + select_result);
 
-        boolean insert_result = Arrays.equals(soredData, InsertSort(data));
+        boolean insert_result = Arrays.equals(soredData, InsertSort(data)) &&
+                Arrays.equals(soredData, InsertSort_1(data));
         System.out.println("[InsertSort]测试结果:" + insert_result);
 
         boolean shell_result = Arrays.equals(soredData, ShellSort(data));
@@ -132,6 +150,18 @@ public final class SortAlgorithm {
 
         boolean q_result = Arrays.equals(soredData, QuickSort(data));
         System.out.println("[QuickSort]测试结果:" + q_result);
+
+        System.out.println(Arrays.equals(soredData, tmpFuc(data)));
+    }
+
+    private static int[] tmpFuc(int[] data) {
+        int[] d = Arrays.copyOf(data, data.length);
+        sort(d);
+        return d;
+    }
+
+    private static void sort(int[] d) {
+
     }
 
 

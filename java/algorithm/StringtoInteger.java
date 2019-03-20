@@ -74,7 +74,6 @@ public class StringtoInteger {
 
         double num = 0;
         for (int i = 0; i < sb.length(); i++) {
-
             num += getNum(sb.charAt(i)) * Math.pow(10, sb.length() - i - 1);
             if (num > Integer.MAX_VALUE) {
                 return s.charAt(0) == '-' ? Integer.MIN_VALUE : Integer.MAX_VALUE;
@@ -116,5 +115,6 @@ public class StringtoInteger {
         System.out.println(4193 == solution.myAtoi("4193 with words"));
         System.out.println(0 == solution.myAtoi("words and 987"));
         System.out.println(-2147483648 == solution.myAtoi("-91283472332"));
+        System.out.println(-2147483648 == solution.myAtoi("-2147483648"));
     }
 }
