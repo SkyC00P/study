@@ -29,7 +29,8 @@ import java.util.List;
  * Example 3:
  * Input:
  * s = "ab"
- * p = ".*"
+ * p = ".*
+ * "
  * Output: true
  * Explanation: ".*" means "zero or more (*) of any character (.)".
  * <p>
@@ -49,7 +50,7 @@ import java.util.List;
 public class RegularExpressionMatching {
 
     class Node {
-        List<Character> list = new ArrayList<>();
+        StringBuilder list = new StringBuilder();
         int type = TYPE_FIX;
         Node next;
     }
@@ -67,20 +68,25 @@ public class RegularExpressionMatching {
             return s.isEmpty();
         }
 
+        if (p.startsWith(".*")) {
+            return true;
+        }
+
         Node head = new Node();
         Node cur = head;
         for (int i = 0; i < p.length(); i++) {
             char ch = p.charAt(i);
             if (ch == '.') {
                 cur.next = new Node();
-                cur.list.add('.');
+                cur.next.list.append('.');
                 cur = cur.next;
                 cur.type = TYPE_COMMA;
             } else if (ch == '*') {
                 cur.next = new Node();
                 cur.next.type = TYPE_ASTERISK;
-                char lastCh = cur.list.remove(cur.list.size() - 1);
-                cur.next.list.add(lastCh);
+                char lastCh = cur.list.charAt(cur.list.length() - 1);
+                cur.list.deleteCharAt(cur.list.length() - 1);
+                cur.next.list.append(lastCh);
                 cur = cur.next;
             } else {
                 if (cur.type != TYPE_FIX) {
@@ -88,13 +94,53 @@ public class RegularExpressionMatching {
                     cur.next.type = TYPE_FIX;
                     cur = cur.next;
                 }
-                cur.list.add(ch);
+                cur.list.append(ch);
             }
         }
 
+        Node node = head;
+        int index = 0;
+        final int len = s.length();
+        while (node != null) {
+            if (node.type == TYPE_FIX) {
+                if (index + node.list.length() > len) {
+                    return false;
+                }
+                String str = s.substring(index, index + node.list.length());
+                if (!node.list.toString().equals(str)) {
+                    return false;
+                }
+                index += node.list.length();
+            } else if (node.type == TYPE_COMMA) {
+                if (index + 1 > len) {
+                    return false;
+                }
+                index += 1;
+            } else if (node.type == TYPE_ASTERISK) {
+                char ch = node.list.charAt(0);
+                if (ch == '*') {
+                    return false;
+                }
+                if (ch == '.') {
+                    return true;
+                }
+                while (index < len && ch == s.charAt(index)) {
+                    index++;
+                }
+            }
+
+            node = node.next;
+        }
+
+        return index >= len;
     }
 
     public static void main(String[] args) {
-
+        RegularExpressionMatching solution = new RegularExpressionMatching();
+        System.out.println("false = " + solution.isMatch("aa", "a"));
+        System.out.println("true = " + solution.isMatch("aa", "a*"));
+        System.out.println("true = " + solution.isMatch("ab", ".*"));
+        System.out.println("true = " + solution.isMatch("aab", "c*a*b"));
+        System.out.println("false = " + solution.isMatch("mississippi", "mis*is*p*."));
     }
 }
