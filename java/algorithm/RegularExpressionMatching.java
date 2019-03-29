@@ -49,16 +49,10 @@ import java.util.List;
  */
 public class RegularExpressionMatching {
 
-    class Node {
-        StringBuilder list = new StringBuilder();
-        int type = TYPE_FIX;
-        Node next;
-    }
-
-    private static final int TYPE_FIX = 1;
-    private static final int TYPE_ASTERISK = 2;
-    private static final int TYPE_COMMA = 3;
-
+    /**
+     * Runtime: 57 ms, faster than 27.85% of Java online submissions for Regular Expression Matching.
+     * Memory Usage: 42 MB, less than 19.31% of Java online submissions for Regular Expression Matching
+     */
     public boolean isMatch(String s, String p) {
         if (p == null || s == null) {
             return false;
@@ -68,75 +62,20 @@ public class RegularExpressionMatching {
             return s.isEmpty();
         }
 
-        if (p.startsWith(".*")) {
-            return true;
+        boolean first_match = !s.isEmpty() && (s.charAt(0) == p.charAt(0) ||
+                p.charAt(0) == '.');
+
+        if (p.length() >= 2 && p.charAt(1) == '*') {
+            return (isMatch(s, p.substring(2)) ||
+                    (first_match && isMatch(s.substring(1), p)));
+        } else {
+            return first_match && isMatch(s.substring(1), p.substring(1));
         }
-
-        Node head = new Node();
-        Node cur = head;
-        for (int i = 0; i < p.length(); i++) {
-            char ch = p.charAt(i);
-            if (ch == '.') {
-                cur.next = new Node();
-                cur.next.list.append('.');
-                cur = cur.next;
-                cur.type = TYPE_COMMA;
-            } else if (ch == '*') {
-                cur.next = new Node();
-                cur.next.type = TYPE_ASTERISK;
-                char lastCh = cur.list.charAt(cur.list.length() - 1);
-                cur.list.deleteCharAt(cur.list.length() - 1);
-                cur.next.list.append(lastCh);
-                cur = cur.next;
-            } else {
-                if (cur.type != TYPE_FIX) {
-                    cur.next = new Node();
-                    cur.next.type = TYPE_FIX;
-                    cur = cur.next;
-                }
-                cur.list.append(ch);
-            }
-        }
-
-        Node node = head;
-        int index = 0;
-        final int len = s.length();
-        while (node != null) {
-            if (node.type == TYPE_FIX) {
-                if (index + node.list.length() > len) {
-                    return false;
-                }
-                String str = s.substring(index, index + node.list.length());
-                if (!node.list.toString().equals(str)) {
-                    return false;
-                }
-                index += node.list.length();
-            } else if (node.type == TYPE_COMMA) {
-                if (index + 1 > len) {
-                    return false;
-                }
-                index += 1;
-            } else if (node.type == TYPE_ASTERISK) {
-                char ch = node.list.charAt(0);
-                if (ch == '*') {
-                    return false;
-                }
-                if (ch == '.') {
-                    return true;
-                }
-                while (index < len && ch == s.charAt(index)) {
-                    index++;
-                }
-            }
-
-            node = node.next;
-        }
-
-        return index >= len;
     }
 
     public static void main(String[] args) {
         RegularExpressionMatching solution = new RegularExpressionMatching();
+        System.out.println("" + solution.isMatch("ab", ".*c"));
         System.out.println("false = " + solution.isMatch("aa", "a"));
         System.out.println("true = " + solution.isMatch("aa", "a*"));
         System.out.println("true = " + solution.isMatch("ab", ".*"));
