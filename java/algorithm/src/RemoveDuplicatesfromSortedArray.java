@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class RemoveDuplicatesfromSortedArray {
     /**
      * Runtime: 1 ms, faster than 100.00% of Java online submissions for Remove Duplicates from Sorted Array.
