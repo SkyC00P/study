@@ -64,28 +64,49 @@ class SameTreeTest {
         return solution.new TreeNode(Integer.parseInt(s));
     }
 
-    /**
-     * 按层序遍历
-     */
     private String treeToStr(SameTree.TreeNode tree) {
+        if (tree == null) return "[]";
+
         StringBuilder sb = new StringBuilder("[");
         LinkedList<SameTree.TreeNode> queue = new LinkedList<>();
         sb.append(tree.val).append(",");
-        queue.offer(tree.left);
-        queue.offer(tree.right);
-        SameTree.TreeNode node = null;
-        while ((node = queue.poll()) != null) {
-            sb.append(node.val).append(",");
-            queue.offer(node.left);
-            queue.offer(node.right);
+        SameTree.TreeNode node = tree;
+        while (node != null) {
+            SameTree.TreeNode left = node.left;
+            SameTree.TreeNode right = node.right;
+
+            if (left == null && right == null) {
+                node = queue.poll();
+                continue;
+            }
+
+            if (left == null) {
+                sb.append("null,");
+                sb.append(right.val).append(",");
+                queue.offer(right);
+            } else if (right == null) {
+                sb.append(left.val).append(",");
+                sb.append("null,");
+                queue.offer(left);
+            } else {
+                sb.append(left.val).append(",");
+                sb.append(right.val).append(",");
+                queue.offer(left);
+                queue.offer(right);
+            }
+            node = queue.poll();
         }
+
         sb.deleteCharAt(sb.length() - 1);
         return sb.append("]").toString();
     }
 
     @Test
     void test() {
-        SameTree.TreeNode root = createTree("1,1,2");
-        System.out.println(treeToStr(root));
+        SameTree.TreeNode root = createTree("1,2,2,3,4,4,3");
+        assertEquals("[1,2,2,3,4,4,3]", treeToStr(root));
+
+        root = createTree("1,2,2,null,3,null,3");
+        assertEquals("[1,2,2,null,3,null,3]", treeToStr(root));
     }
 }
