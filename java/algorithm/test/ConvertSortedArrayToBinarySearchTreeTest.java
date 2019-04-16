@@ -14,6 +14,17 @@ class ConvertSortedArrayToBinarySearchTreeTest {
         assertTrue(isTheSame(node, realNode));
     }
 
+    @Test
+    void test(){
+
+    }
+
+    private void init(ConvertSortedArrayToBinarySearchTree.TreeNode node){
+        if(node == null){
+            node = solution.new TreeNode(1);
+        }
+    }
+
     private boolean isTheSame(ConvertSortedArrayToBinarySearchTree.TreeNode node, ConvertSortedArrayToBinarySearchTree.TreeNode realNode) {
         return false;
     }
