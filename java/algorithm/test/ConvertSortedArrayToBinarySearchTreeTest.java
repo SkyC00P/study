@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Test;
 
+import java.util.LinkedList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ConvertSortedArrayToBinarySearchTreeTest {
@@ -10,35 +12,33 @@ class ConvertSortedArrayToBinarySearchTreeTest {
     void sortedArrayToBST() {
         int[] arr = new int[]{-10, -3, 0, 5, 9};
         ConvertSortedArrayToBinarySearchTree.TreeNode node = solution.sortedArrayToBST(arr);
-        ConvertSortedArrayToBinarySearchTree.TreeNode realNode = createTree();
-        assertTrue(isTheSame(node, realNode));
+        assertTrue(checkNode(node));
+    }
+
+    private boolean checkNode(ConvertSortedArrayToBinarySearchTree.TreeNode node) {
+        if (node == null) return true;
+        if (node.left == null && node.right == null) return true;
+
+        if (node.left != null) {
+            if (node.left.val > node.val) return false;
+        }
+        if (node.right != null) {
+            if (node.right.val < node.val) return false;
+        }
+        if (Math.abs(height(node.left) - height(node.right)) > 1) {
+            return false;
+        }
+        return checkNode(node.left) && checkNode(node.right);
     }
 
     @Test
-    void test(){
+    void test() {
 
     }
 
-    private void init(ConvertSortedArrayToBinarySearchTree.TreeNode node){
-        if(node == null){
-            node = solution.new TreeNode(1);
-        }
-    }
-
-    private boolean isTheSame(ConvertSortedArrayToBinarySearchTree.TreeNode node, ConvertSortedArrayToBinarySearchTree.TreeNode realNode) {
-        return false;
-    }
-
-    /**
-     *      0
-     *   /    |
-     * -3   9
-     * /   /
-     * -10  5
-     *
-     * @return
-     */
-    private ConvertSortedArrayToBinarySearchTree.TreeNode createTree() {
-        return null;
+    private int height(ConvertSortedArrayToBinarySearchTree.TreeNode node) {
+        if (node == null) return 0;
+        if (node.left == null && node.right == null) return 1;
+        return Math.max(height(node.left), height(node.right)) + 1;
     }
 }
