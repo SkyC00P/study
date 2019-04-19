@@ -1,5 +1,6 @@
 import datastruct.TreeNode;
 import org.junit.jupiter.api.Test;
+import utils.TreeUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,16 +10,17 @@ class MinimumDepthofBinaryTreeTest {
 
     @Test
     void minDepth() {
-        TreeNode node = new TreeNode(3);
-        node.left = new TreeNode(9);
-        node.right = new TreeNode(20);
-        node.right.left = new TreeNode(15);
-        node.right.right = new TreeNode(7);
-
+        TreeNode node;
+        node = TreeUtils.createTree("3,9,20,null,null,15,7");
         assertEquals(2, solution.minDepth(node));
 
-        node = new TreeNode(1);
-        node.left = new TreeNode(2);
+        node = TreeUtils.createTree("1,2");
+        assertEquals(2, solution.minDepth(node));
+
+        node = TreeUtils.createTree("1,2,3,4,null,null,5");
+        assertEquals(3, solution.minDepth(node));
+
+        node = TreeUtils.createTree("1,null,2");
         assertEquals(2, solution.minDepth(node));
     }
 }
