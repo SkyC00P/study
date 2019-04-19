@@ -13,23 +13,30 @@ import java.util.List;
  * ]
  */
 public class PascalsTriangle {
+    /**
+     * Runtime: 0 ms, faster than 100.00% of Java online submissions for Pascal's Triangle.
+     * Memory Usage: 32.7 MB, less than 100.00% of Java online submissions for Pascal's Triangle
+     */
     public List<List<Integer>> generate(int numRows) {
-        if (numRows == 0) return null;
         List<List<Integer>> list = new ArrayList<>();
         for (int i = 0; i < numRows; i++) {
-            list.add(createList(i,list));
+            list.add(createList(i, list));
         }
         return list;
     }
 
     private List<Integer> createList(int i, List<List<Integer>> lists) {
         List<Integer> list = new ArrayList<>();
-        if(i == 0){
-            list.add(1);
-        }else{
-            
+        list.add(1);
+        if (i == 0) return list;
+        if (i > 1) {
+            List<Integer> gList = lists.get(i - 1);
+            for (int j = 1; j < i; j++) {
+                int num = gList.get(j-1) + gList.get(j);
+                list.add(num);
+            }
         }
-
+        list.add(1);
         return list;
     }
 }
