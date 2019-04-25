@@ -1,5 +1,7 @@
 package utils;
 
+import datastruct.ListNode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,5 +31,45 @@ public class ListUtils {
             }
             System.out.println();
         }
+    }
+
+    /**
+     * 创建尾指针特意指向的链表
+     * head = [3,2,0,-4], pos = 1
+     *
+     * @param nodes 链表的数组表示
+     * @param pos   尾指针指向的结点，以0开始计算。-1表示null
+     * @return
+     */
+    public static ListNode createList(int[] nodes, int pos) {
+        if (nodes == null || nodes.length == 0) return null;
+        ListNode node = new ListNode(nodes[0]);
+        ListNode cur = node;
+        for (int i = 1; i < nodes.length; i++) {
+            cur.next = new ListNode(nodes[i]);
+            cur = cur.next;
+        }
+        if (pos == -1 || pos >= nodes.length) cur.next = null;
+        else {
+            ListNode tail = node;
+            for (int i = 0; i < pos; i++) {
+                tail = tail.next;
+            }
+            cur.next = tail;
+        }
+        return node;
+    }
+
+    public static void print(ListNode node, int num) {
+        if (node == null) {
+            System.out.println("Null");
+            return;
+        }
+        ListNode cur = node;
+        for (int i = 0; i < num - 1; i++) {
+            System.out.print(cur.val + "->");
+            cur = cur.next;
+        }
+        System.out.println(cur == null ? "null" : cur.val);
     }
 }

@@ -1,3 +1,5 @@
+import datastruct.ListNode;
+
 /**
  * Definition for singly-linked list.
  * public class ListNode {
@@ -69,11 +71,3 @@ public class MergeTwoSortedLists {
     }
 }
 
-class ListNode {
-    int val;
-    ListNode next;
-
-    ListNode(int x) {
-        val = x;
-    }
-}

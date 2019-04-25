@@ -63,7 +63,7 @@ public class SingleNumber {
 
     /**
      * 链表 - ArrayList
-     * Runtime: 113 ms, faster than 5.02% of Java online submissions for Single Number.
+     * Runtime: 88 ms, faster than 5.02% of Java online submissions for Single Number.
      * Memory Usage: 41 MB, less than 31.83% of Java online submissions for Single Number
      * <p>
      * 链表 - LinkedList
@@ -73,10 +73,9 @@ public class SingleNumber {
     public int singleNumber_2(int[] nums) {
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < nums.length; i++) {
-            if (list.contains(nums[i])) {
-                list.remove(Integer.valueOf(nums[i]));
-            } else
+            if (!list.remove(Integer.valueOf(nums[i]))) {
                 list.add(nums[i]);
+            }
         }
         return list.isEmpty() ? 0 : list.get(0);
     }
