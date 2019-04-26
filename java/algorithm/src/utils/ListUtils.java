@@ -72,4 +72,29 @@ public class ListUtils {
         }
         System.out.println(cur == null ? "null" : cur.val);
     }
+
+    public static void print(ListNode node) {
+        if (node == null) {
+            System.out.println("Null");
+            return;
+        }
+        ListNode cur = node;
+        while(cur != null){
+            System.out.print(cur.val + "->");
+            cur = cur.next;
+        }
+        System.out.println("null");
+    }
+
+    public static ListNode combine(ListNode node, ListNode add_nodes) {
+        if(node == null) return add_nodes;
+        ListNode cur = node;
+        ListNode pre = cur;
+        while(cur != null){
+            pre = cur;
+            cur = cur.next;
+        }
+        pre.next = add_nodes;
+        return node;
+    }
 }

@@ -13,7 +13,7 @@ import java.util.List;
  *
  * Runtime: 48 ms, faster than 80.89% of Java online submissions for Min Stack.
  * Memory Usage: 37.8 MB, less than 96.53% of Java online submissions for Min Stack.
- * 
+ *
  */
 public class MinStack {
 
