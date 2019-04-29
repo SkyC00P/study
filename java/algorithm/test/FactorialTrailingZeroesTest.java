@@ -12,6 +12,7 @@ class FactorialTrailingZeroesTest {
         assertEquals(0, solution.trailingZeroes(3));
         assertEquals(1, solution.trailingZeroes(5));
         assertEquals(2, solution.trailingZeroes(10));
-        assertEquals(1, solution.trailingZeroes(1808548329));
+        assertEquals(2, solution.trailingZeroes(12));
+        assertEquals(452137076, solution.trailingZeroes(1808548329));
     }
 }

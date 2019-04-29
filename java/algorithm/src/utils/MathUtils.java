@@ -47,7 +47,7 @@ public class MathUtils {
         for (int i = 1; i < 10; i++) {
             System.out.println(i + " - " + factorial_tail_recursion(i));
         }
-        for (int i = 1; i < 10; i++) {
+        for (int i = 1; i < 1000; i++) {
             System.out.println(i + " - " + factorial_lambda(i));
         }
         System.out.println(factorial_lambda(1808548329));
