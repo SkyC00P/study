@@ -19,5 +19,9 @@ class RotateArrayTest {
         int[] arr2 = new int[]{-1};
         solution.rotate(arr2, 2);
         assertArrayEquals(new int[]{-1}, arr2);
+
+        int[] arr3 = new int[]{1, 2};
+        solution.rotate(arr3, 3);
+        assertArrayEquals(new int[]{2, 1}, arr3);
     }
 }
