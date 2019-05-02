@@ -97,4 +97,18 @@ public class ListUtils {
         pre.next = add_nodes;
         return node;
     }
+
+    public static String toString(ListNode node) {
+        if (node == null) {
+            return "Null";
+        }
+        StringBuilder sb = new StringBuilder();
+        ListNode cur = node;
+        while(cur != null){
+            sb.append(cur.val).append("->");
+            cur = cur.next;
+        }
+        sb.append("null");
+        return sb.toString();
+    }
 }
