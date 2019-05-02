@@ -1,13 +1,6 @@
+import datastruct.ListNode;
+
 public class RemoveDuplicatesfromSortedList {
-
-    public class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode(int x) {
-            val = x;
-        }
-    }
 
     /**
      * Runtime: 0 ms, faster than 100.00% of Java online submissions for Remove Duplicates from Sorted List.

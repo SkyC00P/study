@@ -1,3 +1,5 @@
+import datastruct.ListNode;
+
 /**
  * You are given two non-empty linked lists representing two non-negative integers.
  * The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
@@ -17,14 +19,6 @@
  * The configuration pane allows to specify the names which should not be used together: the error is reported if the parameter name or assignment target name contains words from one group and the name of the assigned or passed variable contains words from a different group.
  */
 public class AddTwoNumbers {
-    public class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode(int param) {
-            val = param;
-        }
-    }
 
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 

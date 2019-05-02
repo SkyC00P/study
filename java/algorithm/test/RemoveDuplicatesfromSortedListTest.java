@@ -1,3 +1,4 @@
+import datastruct.ListNode;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,14 +9,14 @@ class RemoveDuplicatesfromSortedListTest {
 
     @Test
     void deleteDuplicates() {
-        RemoveDuplicatesfromSortedList.ListNode node = create(new int[]{1, 1, 2});
+        ListNode node = create(new int[]{1, 1, 2});
         solution.deleteDuplicates(node);
         assertEquals("1->2->null", toString(node));
     }
 
-    private String toString(RemoveDuplicatesfromSortedList.ListNode node) {
+    private String toString(ListNode node) {
         StringBuilder sb = new StringBuilder();
-        RemoveDuplicatesfromSortedList.ListNode cur = node;
+        ListNode cur = node;
         while(cur !=null){
             sb.append(cur.val).append("->");
             cur = cur.next;
@@ -24,12 +25,12 @@ class RemoveDuplicatesfromSortedListTest {
         return sb.toString();
     }
 
-    private RemoveDuplicatesfromSortedList.ListNode create(int[] arr) {
-        RemoveDuplicatesfromSortedList.ListNode head = solution.new ListNode(arr[0]);
-        RemoveDuplicatesfromSortedList.ListNode node = head;
+    private ListNode create(int[] arr) {
+        ListNode head = new ListNode(arr[0]);
+        ListNode node = head;
         for (int i = 1; i < arr.length; i++) {
             if (node.next == null) {
-                node.next = solution.new ListNode(arr[i]);
+                node.next = new ListNode(arr[i]);
             }
             node = node.next;
         }
