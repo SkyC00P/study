@@ -79,7 +79,7 @@ public class ListUtils {
             return;
         }
         ListNode cur = node;
-        while(cur != null){
+        while (cur != null) {
             System.out.print(cur.val + "->");
             cur = cur.next;
         }
@@ -87,10 +87,10 @@ public class ListUtils {
     }
 
     public static ListNode combine(ListNode node, ListNode add_nodes) {
-        if(node == null) return add_nodes;
+        if (node == null) return add_nodes;
         ListNode cur = node;
         ListNode pre = cur;
-        while(cur != null){
+        while (cur != null) {
             pre = cur;
             cur = cur.next;
         }
@@ -104,11 +104,21 @@ public class ListUtils {
         }
         StringBuilder sb = new StringBuilder();
         ListNode cur = node;
-        while(cur != null){
+        while (cur != null) {
             sb.append(cur.val).append("->");
             cur = cur.next;
         }
         sb.append("null");
         return sb.toString();
+    }
+
+    public static ListNode findNode(ListNode node, int i) {
+        if (node == null) return null;
+        ListNode cur = node;
+        while (cur != null) {
+            if (cur.val == i) return cur;
+            cur = cur.next;
+        }
+        return null;
     }
 }
