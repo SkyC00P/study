@@ -1,3 +1,4 @@
+import datastruct.TreeNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
@@ -11,7 +12,7 @@ class SymmetricTreeTest {
 
     @Test
     void isSymmetric() {
-        SymmetricTree.TreeNode root = createTree("1,2,2,3,4,4,3");
+        TreeNode root = createTree("1,2,2,3,4,4,3");
         assertTrue(solution.isSymmetric(root));
 
         root = createTree("1,2,2,null,3,null,3");
@@ -20,23 +21,23 @@ class SymmetricTreeTest {
 
     @Test
     void test() {
-        SymmetricTree.TreeNode root = createTree("1,2,2,3,4,4,3");
+        TreeNode root = createTree("1,2,2,3,4,4,3");
         assertEquals("[1,2,2,3,4,4,3]", treeToStr(root));
 
         root = createTree("1,2,2,null,3,null,3");
         assertEquals("[1,2,2,null,3,null,3]", treeToStr(root));
     }
 
-    private SymmetricTree.TreeNode createTree(String str) {
+    private TreeNode createTree(String str) {
         String[] arr = str.split(",");
         if (arr.length == 0 || arr[0].equals("null")) {
             return null;
         }
-        SymmetricTree.TreeNode root = createNode(arr[0]);
-        Queue<SymmetricTree.TreeNode> queue = new LinkedList<>();
+        TreeNode root = createNode(arr[0]);
+        Queue<TreeNode> queue = new LinkedList<>();
         queue.offer(root);
         for (int i = 0; i < arr.length; i += 2) {
-            SymmetricTree.TreeNode node = queue.poll();
+            TreeNode node = queue.poll();
             if (node != null) {
                 node.left = createNode(arr, i + 1);
                 node.right = createNode(arr, i + 2);
@@ -47,23 +48,23 @@ class SymmetricTreeTest {
         return root;
     }
 
-    private SymmetricTree.TreeNode createNode(String[] arr, int i) {
+    private TreeNode createNode(String[] arr, int i) {
         if (i < arr.length) {
             return createNode(arr[i]);
         }
         return null;
     }
 
-    private String treeToStr(SymmetricTree.TreeNode tree) {
+    private String treeToStr(TreeNode tree) {
         if (tree == null) return "[]";
 
         StringBuilder sb = new StringBuilder("[");
-        LinkedList<SymmetricTree.TreeNode> queue = new LinkedList<>();
+        LinkedList<TreeNode> queue = new LinkedList<>();
         sb.append(tree.val).append(",");
-        SymmetricTree.TreeNode node = tree;
+        TreeNode node = tree;
         while (node != null) {
-            SymmetricTree.TreeNode left = node.left;
-            SymmetricTree.TreeNode right = node.right;
+            TreeNode left = node.left;
+            TreeNode right = node.right;
 
             if (left == null && right == null) {
                 node = queue.poll();
@@ -92,10 +93,10 @@ class SymmetricTreeTest {
     }
 
 
-    private SymmetricTree.TreeNode createNode(String s) {
+    private TreeNode createNode(String s) {
         if (s == null || "null".equals(s.trim())) {
             return null;
         }
-        return solution.new TreeNode(Integer.parseInt(s));
+        return new TreeNode(Integer.parseInt(s));
     }
 }

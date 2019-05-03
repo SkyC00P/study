@@ -1,14 +1,6 @@
+import datastruct.TreeNode;
+
 public class BalancedBinaryTree {
-
-    public class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-
-        TreeNode(int x) {
-            val = x;
-        }
-    }
 
     public boolean isBalanced(TreeNode node) {
         if (node == null) return true;

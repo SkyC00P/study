@@ -1,3 +1,4 @@
+import datastruct.TreeNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
@@ -11,11 +12,11 @@ class ConvertSortedArrayToBinarySearchTreeTest {
     @Test
     void sortedArrayToBST() {
         int[] arr = new int[]{-10, -3, 0, 5, 9};
-        ConvertSortedArrayToBinarySearchTree.TreeNode node = solution.sortedArrayToBST(arr);
+        TreeNode node = solution.sortedArrayToBST(arr);
         assertTrue(checkNode(node));
     }
 
-    private boolean checkNode(ConvertSortedArrayToBinarySearchTree.TreeNode node) {
+    private boolean checkNode(TreeNode node) {
         if (node == null) return true;
         if (node.left == null && node.right == null) return true;
 
@@ -36,7 +37,7 @@ class ConvertSortedArrayToBinarySearchTreeTest {
 
     }
 
-    private int height(ConvertSortedArrayToBinarySearchTree.TreeNode node) {
+    private int height(TreeNode node) {
         if (node == null) return 0;
         if (node.left == null && node.right == null) return 1;
         return Math.max(height(node.left), height(node.right)) + 1;

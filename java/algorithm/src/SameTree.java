@@ -1,13 +1,6 @@
-public class SameTree {
-    public class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
+import datastruct.TreeNode;
 
-        TreeNode(int x) {
-            val = x;
-        }
-    }
+public class SameTree {
 
     /**
      * 解这个问题不用几秒

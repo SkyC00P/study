@@ -39,4 +39,41 @@ public class TreeUtils {
         }
         return new TreeNode(Integer.parseInt(s));
     }
+
+    public static String toString(TreeNode tree) {
+        if (tree == null) return "[]";
+
+        StringBuilder sb = new StringBuilder("[");
+        LinkedList<TreeNode> queue = new LinkedList<>();
+        sb.append(tree.val).append(",");
+        TreeNode node = tree;
+        while (node != null) {
+            TreeNode left = node.left;
+            TreeNode right = node.right;
+
+            if (left == null && right == null) {
+                node = queue.poll();
+                continue;
+            }
+
+            if (left == null) {
+                sb.append("null,");
+                sb.append(right.val).append(",");
+                queue.offer(right);
+            } else if (right == null) {
+                sb.append(left.val).append(",");
+                sb.append("null,");
+                queue.offer(left);
+            } else {
+                sb.append(left.val).append(",");
+                sb.append(right.val).append(",");
+                queue.offer(left);
+                queue.offer(right);
+            }
+            node = queue.poll();
+        }
+
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.append("]").toString();
+    }
 }

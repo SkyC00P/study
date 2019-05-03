@@ -1,13 +1,6 @@
-public class MaximumDepthofBinaryTree {
-    public class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
+import datastruct.TreeNode;
 
-        TreeNode(int x) {
-            val = x;
-        }
-    }
+public class MaximumDepthofBinaryTree {
 
     /**
      * Runtime: 0 ms, faster than 100.00% of Java online submissions for Maximum Depth of Binary Tree.

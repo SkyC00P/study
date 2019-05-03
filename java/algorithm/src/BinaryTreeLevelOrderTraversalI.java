@@ -1,17 +1,10 @@
+import datastruct.TreeNode;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 public class BinaryTreeLevelOrderTraversalI {
-    public class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-
-        TreeNode(int x) {
-            val = x;
-        }
-    }
 
     /**
      * Runtime: 1 ms, faster than 88.20% of Java online submissions for Binary Tree Level Order Traversal II.

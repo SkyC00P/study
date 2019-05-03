@@ -1,3 +1,4 @@
+import datastruct.TreeNode;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ class BinaryTreeLevelOrderTraversalITest {
      */
     @Test
     void levelOrderBottom() {
-        BinaryTreeLevelOrderTraversalI.TreeNode root = createTree("3,9,20,null,null,15,7");
+        TreeNode root = createTree("3,9,20,null,null,15,7");
         List<List<Integer>> lists = solution.levelOrderBottom(root);
         List<List<Integer>> expect_list = new ArrayList<>();
 
@@ -47,16 +48,16 @@ class BinaryTreeLevelOrderTraversalITest {
         assertIterableEquals(expect_list, lists);
     }
 
-    private BinaryTreeLevelOrderTraversalI.TreeNode createTree(String str) {
+    private TreeNode createTree(String str) {
         String[] arr = str.split(",");
         if (arr.length == 0 || arr[0].equals("null")) {
             return null;
         }
-        BinaryTreeLevelOrderTraversalI.TreeNode root = createNode(arr[0]);
-        Queue<BinaryTreeLevelOrderTraversalI.TreeNode> queue = new LinkedList<>();
+        TreeNode root = createNode(arr[0]);
+        Queue<TreeNode> queue = new LinkedList<>();
         queue.offer(root);
         for (int i = 0; i < arr.length; i += 2) {
-            BinaryTreeLevelOrderTraversalI.TreeNode node = queue.poll();
+            TreeNode node = queue.poll();
             if (node != null) {
                 node.left = createNode(arr, i + 1);
                 node.right = createNode(arr, i + 2);
@@ -67,30 +68,30 @@ class BinaryTreeLevelOrderTraversalITest {
         return root;
     }
 
-    private BinaryTreeLevelOrderTraversalI.TreeNode createNode(String[] arr, int i) {
+    private TreeNode createNode(String[] arr, int i) {
         if (i < arr.length) {
             return createNode(arr[i]);
         }
         return null;
     }
 
-    private BinaryTreeLevelOrderTraversalI.TreeNode createNode(String s) {
+    private TreeNode createNode(String s) {
         if (s == null || "null".equals(s.trim())) {
             return null;
         }
-        return solution.new TreeNode(Integer.parseInt(s));
+        return new TreeNode(Integer.parseInt(s));
     }
 
-    private String treeToStr(BinaryTreeLevelOrderTraversalI.TreeNode tree) {
+    private String treeToStr(TreeNode tree) {
         if (tree == null) return "[]";
 
         StringBuilder sb = new StringBuilder("[");
-        LinkedList<BinaryTreeLevelOrderTraversalI.TreeNode> queue = new LinkedList<>();
+        LinkedList<TreeNode> queue = new LinkedList<>();
         sb.append(tree.val).append(",");
-        BinaryTreeLevelOrderTraversalI.TreeNode node = tree;
+        TreeNode node = tree;
         while (node != null) {
-            BinaryTreeLevelOrderTraversalI.TreeNode left = node.left;
-            BinaryTreeLevelOrderTraversalI.TreeNode right = node.right;
+            TreeNode left = node.left;
+            TreeNode right = node.right;
 
             if (left == null && right == null) {
                 node = queue.poll();
@@ -120,7 +121,7 @@ class BinaryTreeLevelOrderTraversalITest {
 
     @Test
     void test() {
-        BinaryTreeLevelOrderTraversalI.TreeNode root = createTree("1,2,2,3,4,4,3");
+        TreeNode root = createTree("1,2,2,3,4,4,3");
         assertEquals("[1,2,2,3,4,4,3]", treeToStr(root));
 
         root = createTree("1,2,2,null,3,null,3");

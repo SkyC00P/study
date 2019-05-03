@@ -1,3 +1,5 @@
+import datastruct.TreeNode;
+
 import java.util.Stack;
 
 /**
@@ -7,16 +9,6 @@ import java.util.Stack;
  * 这道题也可以用二分法来做，因为数组已经是有序的了。
  */
 public class ConvertSortedArrayToBinarySearchTree {
-
-    public class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-
-        TreeNode(int x) {
-            val = x;
-        }
-    }
 
     /**
      * 这里是假设数组无序的情况下的通用做法
