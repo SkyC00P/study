@@ -13,4 +13,13 @@ class RansomNoteTest {
         assertTrue(solution.canConstruct("aa", "aab"));
         assertFalse(solution.canConstruct("a", ""));
     }
+
+    @Test
+    void canConstruct1() {
+        assertFalse(solution.canConstruct1("a", "b"));
+        assertFalse(solution.canConstruct1("aa", "ab"));
+        assertTrue(solution.canConstruct1("aa", "aab"));
+        assertTrue(solution.canConstruct1("", ""));
+        assertFalse(solution.canConstruct1("a", ""));
+    }
 }
