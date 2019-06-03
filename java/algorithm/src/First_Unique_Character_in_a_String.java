@@ -1,5 +1,4 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class First_Unique_Character_in_a_String {
     /**
@@ -17,6 +16,10 @@ public class First_Unique_Character_in_a_String {
         for (int i = 0; i < chs.length; i++) {
             if (map.get(chs[i]) == 1) return i;
         }
+        return -1;
+    }
+
+    public int firstUniqChar1(String s) {
         return -1;
     }
 }
