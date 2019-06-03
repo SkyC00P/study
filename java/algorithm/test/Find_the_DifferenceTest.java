@@ -10,4 +10,9 @@ class Find_the_DifferenceTest {
     void findTheDifference() {
         assertEquals('e', solution.findTheDifference("abcd", "abcde"));
     }
+
+    @Test
+    void findTheDifference1() {
+        assertEquals('e', solution.findTheDifference1("abcd", "abcde"));
+    }
 }
