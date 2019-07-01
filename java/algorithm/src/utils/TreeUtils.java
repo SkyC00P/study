@@ -27,14 +27,14 @@ public class TreeUtils {
         return root;
     }
 
-    public static TreeNode createNode(String[] arr, int i) {
+    private static TreeNode createNode(String[] arr, int i) {
         if (i < arr.length) {
             return createNode(arr[i]);
         }
         return null;
     }
 
-    public static TreeNode createNode(String s) {
+    private static TreeNode createNode(String s) {
         if (s == null || "null".equals(s.trim())) {
             return null;
         }
