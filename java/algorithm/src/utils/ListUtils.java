@@ -3,6 +3,7 @@ package utils;
 import datastruct.ListNode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ListUtils {
@@ -120,5 +121,32 @@ public class ListUtils {
             cur = cur.next;
         }
         return null;
+    }
+
+    public static <T> List<T> createList(T[] arr) {
+        if (arr == null || arr.length == 0) {
+            return null;
+        }
+
+        List<T> list = new ArrayList<>();
+        Collections.addAll(list, arr);
+        return list;
+    }
+
+    public static <T> boolean equalIgnoreOrder(List<T> src, List<T> other) {
+        if (src == null && other == null) {
+            return true;
+        }
+        if (other == null || src == null) {
+            return false;
+        }
+        if (src == other || src.equals(other)) return true;
+        if (src.size() != other.size()) return false;
+
+        List<T> copy = new ArrayList<>(other);
+        for (T t : src) {
+            if (!copy.remove(t)) return false;
+        }
+        return true;
     }
 }
