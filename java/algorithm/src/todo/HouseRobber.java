@@ -1,3 +1,5 @@
+package todo;
+
 public class HouseRobber {
     /**
      * 暴力解法
