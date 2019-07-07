@@ -1,5 +1,6 @@
 package utils;
 
+import datastruct.NTreeNode;
 import datastruct.TreeNode;
 
 import java.util.ArrayDeque;
@@ -99,5 +100,26 @@ public class TreeUtils {
         }
 
         return node;
+    }
+
+    /**
+     *         -> 5
+     *     ->3
+     *          -> 6
+     * 1 --->2
+     *
+     *     ->4
+     *
+     * 1-3,2,4|3-5,6|2|4
+     */
+    public static NTreeNode createNTree(String s) {
+        if (s == null || s.isEmpty()) {
+            return null;
+        }
+        String levelStr = s.split("|")
+    }
+
+    public static String toString(NTreeNode tree) {
+
     }
 }
