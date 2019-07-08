@@ -116,10 +116,12 @@ public class TreeUtils {
         if (s == null || s.isEmpty()) {
             return null;
         }
-        String levelStr = s.split("|")
+        String[] levelStr = s.split("|");
+
+        return null;
     }
 
     public static String toString(NTreeNode tree) {
-
+        return null;
     }
 }
