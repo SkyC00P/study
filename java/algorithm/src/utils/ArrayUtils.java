@@ -20,4 +20,24 @@ public class ArrayUtils {
         }
         return list.isEmpty();
     }
+
+    public static <T> boolean equalsFromIndex(T[] arr1, T[] arr2, int len) {
+        if (arr1.length < len || arr2.length < len) {
+            throw new IllegalArgumentException("len is less than one of array");
+        }
+        for (int i = 0; i < len; i++) {
+            if (arr1[i] != arr2[i]) return false;
+        }
+        return true;
+    }
+
+    public static boolean equalsFromIndex(char[] arr1, char[] arr2, int len) {
+        if (arr1.length < len || arr2.length < len) {
+            throw new IllegalArgumentException("len is less than one of array");
+        }
+        for (int i = 0; i < len; i++) {
+            if (arr1[i] != arr2[i]) return false;
+        }
+        return true;
+    }
 }
