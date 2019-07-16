@@ -16,11 +16,28 @@ import java.util.List;
  * Could you solve it using only O(1) extra space?
  */
 public class StringCompression {
+
+    public int compress(char[] chars) {
+        int anchor = 0, write = 0;
+        for (int read = 0; read < chars.length; read++) {
+            if (read + 1 == chars.length || chars[read + 1] != chars[read]) {
+                chars[write++] = chars[anchor];
+                if (read > anchor) {
+                    for (char c: ("" + (read - anchor + 1)).toCharArray()) {
+                        chars[write++] = c;
+                    }
+                }
+                anchor = read + 1;
+            }
+        }
+        return write;
+    }
+
     /**
      * Runtime: 2 ms, faster than 8.73% of Java online submissions for String Compression.
      * Memory Usage: 36.4 MB, less than 100.00% of Java online submissions for String Compression.
      */
-    public int compress(char[] chars) {
+    public int compress1(char[] chars) {
         if (chars.length == 1) return 1;
 
         final int mask = 0xff;

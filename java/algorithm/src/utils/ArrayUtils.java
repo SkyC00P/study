@@ -1,11 +1,10 @@
 package utils;
 
-import datastruct.TreeNode;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class ArrayUtils {
+
     public static boolean equalsIgnoreSore(int[] n1, int[] n2) {
         if (n1 == null && n2 == null) return true;
         if (n1 == null || n2 == null) return false;
