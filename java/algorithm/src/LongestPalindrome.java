@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -38,8 +39,8 @@ public class LongestPalindrome {
                 }
             }
         }
-        System.out.println(s+" -->f1:size="+s.length()+",times="+t1);
-        t1=0;
+        System.out.println(s + " -->f1:size=" + s.length() + ",times=" + t1);
+        t1 = 0;
         return str;
     }
 
@@ -67,8 +68,8 @@ public class LongestPalindrome {
                 }
             }
         }
-        System.out.println(s+" --> f2:size="+s.length()+",times="+t1);
-        t1=0;
+        System.out.println(s + " --> f2:size=" + s.length() + ",times=" + t1);
+        t1 = 0;
         return res;
     }
 
@@ -78,6 +79,26 @@ public class LongestPalindrome {
         }
         String str = new StringBuffer(s).reverse().toString();
         return str.equals(s);
+    }
+
+    /**
+     * Runtime: 6 ms, faster than 29.25% of Java online submissions for Longest Palindrome.
+     * Memory Usage: 35.5 MB, less than 98.79% of Java online submissions for Longest Palindrome
+     */
+    public int _longestPalindrome(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (char ch : s.toCharArray()) {
+            if (map.containsKey(ch)) map.put(ch, map.get(ch) + 1);
+            else map.put(ch, 1);
+        }
+        int len = 0;
+        boolean notOddNumber = true;
+        for (char ch : map.keySet()) {
+            int num = map.get(ch);
+            len = (num & 1) == 0 ? len + num : len + num - 1;
+            notOddNumber &= (num & 1) == 0;
+        }
+        return notOddNumber ? len : len + 1;
     }
 
     public static void main(String[] args) {
