@@ -8,6 +8,8 @@ public class AssignCookies {
     /**
      * Runtime: 143 ms, faster than 5.01% of Java online submissions for Assign Cookies.
      * Memory Usage: 41.5 MB, less than 5.11% of Java online submissions for Assign Cookies.
+     *
+     * 尝试下贪心算法
      */
     public int findContentChildren(int[] g, int[] s) {
         List<Integer> list = new ArrayList<>();
