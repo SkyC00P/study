@@ -8,7 +8,7 @@ public class HammingDistance {
         int checkSum = x ^ y;
         if (checkSum == 0) return 0;
         for (int i = 0; i < Integer.SIZE; i++) {
-            if ((checkSum >> i & 1) == 1) n++;
+            n += checkSum >> i & 1;
         }
         return n;
     }
