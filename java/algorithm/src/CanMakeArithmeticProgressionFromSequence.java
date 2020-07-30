@@ -19,7 +19,6 @@ public class CanMakeArithmeticProgressionFromSequence {
             if(n1 != n2){
                 return false;
             }
-
         }
         return true;
     }
