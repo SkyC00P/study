@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Stack;
 
 public class Number_of_Segments_in_a_String {

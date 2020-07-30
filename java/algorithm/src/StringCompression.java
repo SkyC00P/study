@@ -1,19 +1,16 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Given an array of characters, compress it in-place.
  * <p>
- * The length after compression must always be smaller than or equal to the original array.
+ * The length after compression must always be smaller than or equal to the
+ * original array.
  * <p>
  * Every element of the array should be a character (not int) of length 1.
  * <p>
- * After you are done modifying the input array in-place, return the new length of the array.
+ * After you are done modifying the input array in-place, return the new length
+ * of the array.
  * <p>
  * <p>
- * Follow up:
- * Could you solve it using only O(1) extra space?
+ * Follow up: Could you solve it using only O(1) extra space?
  */
 public class StringCompression {
 

@@ -10,16 +10,6 @@ package todo;
  */
 public class Number_of_Boomerangs {
     public int numberOfBoomerangs(int[][] points) {
-        int len = 0;
-
-        for (int i = 0; i < points.length; i++) {
-            int[] p1 = points[i];
-            for (int j = i + 1; j < points.length; j++) {
-                int[] p2 = points[j];
-
-            }
-        }
-
         return 2;
     }
 

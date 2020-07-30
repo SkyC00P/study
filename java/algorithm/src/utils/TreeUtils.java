@@ -113,10 +113,6 @@ public class TreeUtils {
      * 1-3,2,4|3-5,6|2|4
      */
     public static NTreeNode createNTree(String s) {
-        if (s == null || s.isEmpty()) {
-            return null;
-        }
-        String[] levelStr = s.split("|");
 
         return null;
     }

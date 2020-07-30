@@ -1,16 +1,11 @@
-import javax.print.DocFlavor;
-
 /**
  * Given a 32-bit signed integer, reverse digits of an integer.
  *
- * Input: 123
- * Output: 321
+ * Input: 123 Output: 321
  *
- * Input: -123
- * Output: -321
+ * Input: -123 Output: -321
  *
- * Input: 120
- * Output: 21
+ * Input: 120 Output: 21
  */
 public class ReverseInteger {
 
