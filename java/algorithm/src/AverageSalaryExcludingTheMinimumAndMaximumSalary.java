@@ -2,6 +2,9 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 public class AverageSalaryExcludingTheMinimumAndMaximumSalary {
+
+/* 	Runtime: 1 ms, faster than 24.70% of Java online submissions for Average Salary Excluding the Minimum and Maximum Salary.
+	Memory Usage: 37.5 MB, less than 13.89% of Java online submissions for Average Salary Excluding the Minimum and Maximum Salary. */
     public double average(int[] salary) {
         Arrays.sort(salary);
         int sum = 0;
