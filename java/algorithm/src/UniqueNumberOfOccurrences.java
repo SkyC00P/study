@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class UniqueNumberOfOccurrences {
+    
     public boolean uniqueOccurrences(int[] arr) {
         Map<Integer, Integer> map = new HashMap<>();
         for (int i : arr) {
@@ -12,6 +13,6 @@ public class UniqueNumberOfOccurrences {
         }
         Set<Integer> set = new HashSet<>();
         set.addAll(map.values());
-        return set.size() == 1;
+        return set.size() == map.size();
     }
 }
