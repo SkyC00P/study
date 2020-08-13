@@ -1,0 +1,11 @@
+VS code 如何调试使用Python
+https://code.visualstudio.com/docs/python/python-tutorial
+
+Python 的异常处理机制是怎么样的？
+Python 的模块导入机制是怎么样的？
+
+Python None 值是否跟 Java 的Null值一样呢？
+Python 变量作用域两个关键字 nonlocal 和 global
+
+Python 字典，列表，元祖里包含中文字符的打印情况
+https://www.cnblogs.com/pyxiaomangshe/p/7864903.html
