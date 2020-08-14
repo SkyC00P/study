@@ -2,6 +2,7 @@
 
 import cx_Oracle
 
+
 connect_info = {
     "username": "msbase",
     "password": "ms123",
@@ -279,7 +280,7 @@ class CURD(BaseDb):
         pass
 
 
-class Transaction(BaseDb):
+class Transaction(BaseDb, object):
 
     """
     在执行插入，更新，删除时，默认是自动提交到数据库的，所以需要手动调用 Connection.commit() 方法
@@ -289,10 +290,44 @@ class Transaction(BaseDb):
     也可以显式申明事务的开始 Connection.begin()
     """
     __conn = None
+    __cursor = None
 
-    def __init__(self,connect_info):
-        super.__init__(connect_info)
+    def __init__(self, connect_info):
+        super(Transaction, self).__init__(connect_info)
+        self.__conn = super(Transaction, self).connect()
+        self.__cursor = self.__conn.cursor()
     pass
+
+    def begin(self):
+        self.__conn.begin()
+        pass
+
+    def insert_teacher(self, name):
+        sql = "insert into mstest.t_teacher(name) values(:name) returning id into :id"
+        id = self.__cursor.var(str)
+        self.__cursor.execute(sql, name=name, id=id)
+        return id.getvalue()[0]
+
+    def insert_student(self, students, teacher_id):
+        sql = "insert into mstest.t_student(name,sex,teacherFk) values (:name,:sex,:id)"
+        if students and teacher_id:
+            for student in students:
+                student['id'] = teacher_id
+            pass
+            self.__cursor.executemany(sql, students)
+
+    def commit(self):
+        self.__conn.commit()
+
+    def rollback(self):
+        self.__conn.rollback()
+
+    def close(self):
+        if self.__cursor:
+            self.__cursor.close()
+        if self.__conn:
+            self.__conn.close()
+        pass
 
 
 def conn_test():
@@ -364,6 +399,48 @@ def curd_test():
 
 
 def transaction_test():
+    """
+    drop table t_teacher;
+    drop table t_student;
+    create table t_teacher(
+    id       VARCHAR2(36) default sys_guid() not null   primary key,  
+    name    varchar2(20) not null 
+    );
+
+    create table t_student(  
+    id       VARCHAR2(36) default sys_guid() not null   primary key,  
+    name    varchar2(20) not null,  
+    sex     varchar2(3) ,
+    teacherFk VARCHAR2(36)
+    ); 
+    测试方法：新增一个老师并且返回老师的id，新增多个学生并指定为新增的老师id，如果都成功则提交，否则回滚
+    """
+    list_student = [{'name': '小马', 'sex': '男'}, {
+        'name': '小红', 'sex': '女'}, {'name': '小明', 'sex': '男'}]
+
+    transaction = None
+    try:
+        transaction = Transaction(connect_info)
+        print '连接建立成功', switch_container(transaction)
+        transaction.begin()
+        print '开启事务'
+        teacher_id = transaction.insert_teacher('skycoop')
+        print '新增老师:', teacher_id
+        transaction.insert_student(list_student, teacher_id)
+        print '新增学生'
+        transaction.commit()
+        print '提交事务'
+    except cx_Oracle.Error as err:
+        print 'SQL 异常:', err
+        if transaction:
+            print '回滚事务'
+            transaction.rollback()
+        pass
+    finally:
+        if transaction:
+            print '回收资源'
+            transaction.close()
+
     pass
 
 
