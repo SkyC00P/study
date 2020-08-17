@@ -2,6 +2,9 @@
 
 import cx_Oracle
 
+"""
+Connections are created by cx_Oracle.connect() or its alias cx_Oracle.Connection().
+"""
 
 connect_info = {
     "username": "msbase",

@@ -6,16 +6,16 @@ Mysql 基本功能
 """
 import MySQLdb
 
-db = MySQLdb.connect(host="loc",  # your host 
+db = MySQLdb.connect(host="localhost",  # your host 
                      user="root",       # username
-                     passwd="root",     # password
-                     db="pythonspot")   # name of the database
+                     passwd="IMCsoft.12345",     # password
+                     db="elsi-terminal")   # name of the database
 
 # Create a Cursor object to execute queries.
 cur = db.cursor()
 
 # Select data from table using SQL query.
-cur.execute("SELECT * FROM examples")
+cur.execute("SELECT * FROM police limit 5")
 
 # print the first and second columns      
 for row in cur.fetchall() :

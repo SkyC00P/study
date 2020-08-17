@@ -9,3 +9,7 @@ Python 变量作用域两个关键字 nonlocal 和 global
 
 Python 字典，列表，元祖里包含中文字符的打印情况
 https://www.cnblogs.com/pyxiaomangshe/p/7864903.html
+
+Python 的依赖包离线安装方式有两种 setup , whl
+
+Python yield 的用法
