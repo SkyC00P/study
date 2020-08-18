@@ -11,10 +11,7 @@ def connect():
     """ Connect to MySQL database """
     conn = None
     try:
-        conn = mysql.connector.connect(host='localhost',
-                                       database='elsi-test',
-                                       user='root',
-                                       password='IMCsoft.12345')
+        conn = mysql.connector.connect(host='localhost', database='elsi-test', user='root', password='IMCsoft.12345')
         if conn.is_connected():
             print('Connected to MySQL database')
 
