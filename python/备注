@@ -29,3 +29,9 @@ pyformat
 Python 查询时如何让返回的结果转化为对象或字典
 
 Python 好用的ORM框架 SQLObject, SQLAlchemy
+
+Python 如何写单元测试
+
+如何开源 https://jeffknupp.com/blog/2013/08/16/open-sourcing-a-python-project-the-right-way/
+
+Python 的最佳项目结构 https://stackoverflow.com/questions/193161/what-is-the-best-project-structure-for-a-python-application
