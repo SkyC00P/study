@@ -35,3 +35,11 @@ Python 如何写单元测试
 如何开源 https://jeffknupp.com/blog/2013/08/16/open-sourcing-a-python-project-the-right-way/
 
 Python 的最佳项目结构 https://stackoverflow.com/questions/193161/what-is-the-best-project-structure-for-a-python-application
+
+Python 是如何打包与分发的 https://github.com/pypa/sampleproject
+
+Python 的虚拟环境venv,virtualenv 
+
+Python 如何管理依赖
+
+Python 如何管理非Python文件，Resources，Config-files，Generated files，二进制扩展模块
