@@ -5,7 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.skycoop</groupId>
-    <artifactId>mq_send</artifactId>
+    <artifactId>mq_recv</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -21,4 +22,5 @@
             <version>5.11.0</version>
         </dependency>
     </dependencies>
+
 </project>
