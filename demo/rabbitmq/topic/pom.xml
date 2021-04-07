@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.skycoop</groupId>
-    <artifactId>helloworld</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>topic</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <name>topic</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -22,5 +22,4 @@
             <version>5.11.0</version>
         </dependency>
     </dependencies>
-
 </project>
