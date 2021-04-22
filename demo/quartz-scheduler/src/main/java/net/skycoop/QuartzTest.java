@@ -1,10 +1,7 @@
 package net.skycoop;
 
 
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
+import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +15,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  * https://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/
- *
+ * <p>
  * 关键的API
  * Scheduler - the main API for interacting with the scheduler.
  * Job - an interface to be implemented by components that you wish to have executed by the scheduler.
@@ -58,10 +55,46 @@ public class QuartzTest {
                 job_dtl();
             } else if (Objects.equals(op, "long task")) {
                 long_task();
+            } else if (Objects.equals(op, "3")) {
+                String id = scanner.nextLine();
+                String time = scanner.nextLine();
+                simpleTrigger(id, time);
             } else {
                 System.exit(0);
             }
         }
+    }
+
+    static Scheduler scheduler = null;
+
+    static {
+        try {
+            scheduler = StdSchedulerFactory.getDefaultScheduler();
+            scheduler.start();
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 每天定时时间执行
+     */
+    private static void simpleTrigger(String id, String time) throws SchedulerException {
+
+        JobDetail job = newJob(ShowTimeJob.class)
+                .withIdentity(id, "getMJXX")
+                .build();
+        String[] ts = time.split(":");
+        Trigger trigger = newTrigger()
+                .withIdentity(id, "getMJXX")
+                .startAt(DateBuilder.dateOf(Integer.parseInt(ts[0]), Integer.parseInt(ts[1]), Integer.parseInt(ts[2])))
+                .withSchedule(simpleSchedule().withIntervalInHours(24).repeatForever())
+                .forJob(job)
+                .build();
+
+        scheduler.scheduleJob(trigger);
+//        scheduler.scheduleJob(job, trigger);
     }
 
     private static void long_task() throws SchedulerException {
@@ -112,16 +145,25 @@ public class QuartzTest {
                     .build();
 
             // Trigger the job to run now, and then repeat every 40 seconds
-            Trigger trigger = newTrigger()
+            Trigger t1 = newTrigger()
                     .withIdentity("trigger1", "group1")
                     .startNow()
                     .withSchedule(simpleSchedule()
                             .withIntervalInSeconds(5)
                             .repeatForever())
                     .build();
+            Trigger t2 = newTrigger()
+                    .withIdentity("trigger2", "group1")
+                    .startNow()
+                    .withSchedule(simpleSchedule()
+                            .withIntervalInSeconds(5)
+                            .repeatForever())
+                    .forJob("job1", "group1")
+                    .build();
 
             // Tell quartz to schedule the job using our trigger
-            scheduler.scheduleJob(job, trigger);
+            scheduler.scheduleJob(job, t1);
+            scheduler.scheduleJob(t2);
 
         } catch (SchedulerException se) {
             se.printStackTrace();
