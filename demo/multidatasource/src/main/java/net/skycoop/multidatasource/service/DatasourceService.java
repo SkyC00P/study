@@ -18,13 +18,13 @@ public class DatasourceService {
     @Autowired
     private YidaoappscDao oracleStudentDao;
 
-    public Object mysql() {
-        log.info("mysql");
-        return mySQLStudentDao.findAll();
+    public Object mysql(String filter) {
+        return mySQLStudentDao.findFilter(filter);
+//        return mySQLStudentDao.findAll();
     }
 
-    public Object oracle() {
-        log.info("oracle");
-        return oracleStudentDao.findAll();
+    public Object oracle(String filter) {
+        return oracleStudentDao.findFilter(filter);
+//        return oracleStudentDao.findAll();
     }
 }

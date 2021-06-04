@@ -1,5 +1,7 @@
 package net.skycoop.multidatasource.config;
 
+import com.slyak.spring.jpa.GenericJpaRepositoryFactoryBean;
+import com.slyak.spring.jpa.GenericJpaRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
@@ -21,21 +23,19 @@ import java.util.Map;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "entityManagerFactoryPrimary",
         transactionManagerRef = "transactionManagerPrimary",
+        repositoryBaseClass = GenericJpaRepositoryImpl.class,
+        repositoryFactoryBeanClass = GenericJpaRepositoryFactoryBean.class,
         basePackages = {"net.skycoop.multidatasource.mysql.dao"})//设置dao（repo）所在位置
 public class PrimaryConfig {
     @Autowired
     @Qualifier("primaryDataSource")
     private DataSource primaryDataSource;
-    @Autowired
-    @Qualifier("vendorProperties")
-    private Map<String, Object> vendorProperties;
 
     @Bean(name = "entityManagerFactoryPrimary")
     @Primary
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryPrimary(EntityManagerFactoryBuilder builder) {
         return builder
                 .dataSource(primaryDataSource)
-                .properties(vendorProperties)
                 .packages("net.skycoop.multidatasource.mysql.domain") //设置实体类所在位置
                 .persistenceUnit("primaryPersistenceUnit")
                 .build();

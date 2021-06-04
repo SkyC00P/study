@@ -1,11 +1,12 @@
 package net.skycoop.multidatasource.config;
 
+import com.slyak.spring.jpa.GenericJpaRepositoryFactoryBean;
+import com.slyak.spring.jpa.GenericJpaRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -19,23 +20,20 @@ import java.util.Map;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef="entityManagerFactorySecondary",
-        transactionManagerRef="transactionManagerSecondary",
-        basePackages= { "net.skycoop.multidatasource.oracle.dao" })
+        entityManagerFactoryRef = "entityManagerFactorySecondary",
+        transactionManagerRef = "transactionManagerSecondary",
+        repositoryBaseClass = GenericJpaRepositoryImpl.class,
+        repositoryFactoryBeanClass = GenericJpaRepositoryFactoryBean.class,
+        basePackages = {"net.skycoop.multidatasource.oracle.dao"})
 public class SecondaryConfig {
     @Autowired
     @Qualifier("secondaryDataSource")
     private DataSource secondaryDataSource;
 
-    @Autowired
-    @Qualifier("vendorProperties")
-    private Map<String, Object> vendorProperties;
-
     @Bean(name = "entityManagerFactorySecondary")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactorySecondary (EntityManagerFactoryBuilder builder) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactorySecondary(EntityManagerFactoryBuilder builder) {
         return builder
                 .dataSource(secondaryDataSource)
-                .properties(vendorProperties)
                 .packages("net.skycoop.multidatasource.oracle.domain")
                 .persistenceUnit("secondaryPersistenceUnit")
                 .build();
