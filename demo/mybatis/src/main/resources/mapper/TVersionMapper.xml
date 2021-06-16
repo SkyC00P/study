@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.skycoop.mybatis.dao.TVersionMapper">
+    <resultMap id="BaseResultMap" type="net.skycoop.mybatis.domain.TVersion">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="version" jdbcType="INTEGER" property="version"/>
+        <result column="notes" jdbcType="VARCHAR" property="notes"/>
+        <result column="cretime" jdbcType="DATE" property="cretime"/>
+    </resultMap>
+
+    <select id="select_filter" resultType="net.skycoop.mybatis.domain.TVersion">
+        select * from `elsi-terminal`.t_version
+        where 1=1
+        <if test="filter != null and filter != ''">
+            AND version like concat('%',#{filter},'%')
+        </if>
+    </select>
+
+    <delete id="deleteByList">
+        delete from `elsi-terminal`.t_version where id
+        in
+        <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">#{item}</foreach>
+    </delete>
+</mapper>

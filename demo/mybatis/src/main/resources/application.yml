@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:mysql://${IP:localhost}:3306/elsi-terminal?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: IMCsoft.12345
+    driver-class-name: com.mysql.jdbc.Driver
+# mybaits
+mybatis:
+  # 这里的mapping为通用dao模块的mapper文件所在
+  mapper-locations: classpath:mapper/*.xml,classpath:mapping/*.xml
+  #非必须配置项，这个主要是为了简写mapper映射文件避免写报名而言
+  # type-aliases-package: com.iotimc.yidaoGeneral.entity,com.iotimc.yimi.entity
+# 分页插件配置
+pagehelper:
+  helper-dialect: mysql
+  support-methods-arguments: true
+  #禁止掉分页合理化，即当传过来的页码大于总页数的时候，回返回空数据，底层不会限制页码
+  reasonable: false
+  params: count=countSql

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <properties resource="generator/generator.properties"/>
+    <!-- 数据库驱动:选择你的本地硬盘上面的数据库驱动包 若采用的mgb maven 插件里面已经引入了驱动依赖
+         则不在需要了，直接在maven插件里面配置驱动依赖 更合理些 避免团队开发 的老是要修改此值
+     -->
+    <!--  <classPathEntry  location="${jdbc.driverLocation}"/>-->
+    <!-- targetRuntime="MyBatis3"  MyBatis3Simple -->
+    <context id="Oracle" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="useMapperCommentGenerator" value="true"/>
+
+        <!--配置实体类实现序列化接口 -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin">
+        </plugin>
+
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+            <property name="caseSensitive" value="false"/>
+            <property name="forceAnnotation" value="false"/>
+            <!--          <property name="beginningDelimiter" value="`"/>
+                      <property name="endingDelimiter" value="`"/>-->
+            <property name="useMapperCommentGenerator" value="true"/>
+        </plugin>
+
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="false"/>
+        </commentGenerator>
+
+
+        <!--数据库链接URL，用户名、密码 -->
+        <jdbcConnection driverClass="${jdbc.driverClass}" connectionURL="${jdbc.connectionURL}"
+                        userId="${jdbc.userId}" password="${jdbc.password}">
+            <!-- 加入这行的设置是因为由于数据库升级，即升级到8.0及8.0以上，当访问的数据库地址，有两个数据库及以上
+              ，碰巧这些数据库里面有的表名相同，【虽然这些情况很少见，但是还是会出现，例如：数据库的备份，会导致表名相同】
+              如果不进行这样的设计，会导致生成一个表出现重复的实体类-->
+            <property name="nullCatalogMeansCurrent" value="true"/>
+            <!-- 配置oracle生成字段注释， tk.mybatis.mapper.generator.MapperPlugin 此类里面已经通过代码去设置此属性
+            可是经过测试，如果不在这里配置，还是获取不到注释，有时间在看看是怎么回事-->
+            <property name="remarksReporting" value="true"/>
+            <!-- 配置mysql生成字段注释，注释掉是因为 tk.mybatis.mapper.generator.MapperPlugin 此类里面已经通过代码去设置此属性
+            经过测试，注释掉也是可以的，这里不保证其它的mysql的数据库版本，若失效，请把下面这个打开即可-->
+            <!--<property name="useInformationSchema" value="true"/>-->
+        </jdbcConnection>
+        <!-- java类型处理器
+             用于处理DB中的类型到Java中的类型，默认使用JavaTypeResolverDefaultImpl；
+             注意一点，默认会先尝试使用Integer，Long，Short等来对应DECIMAL和 NUMERIC数据类型；
+         -->
+        <javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImplExt">
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <!-- 生成模型的包名和位置-->
+        <javaModelGenerator targetPackage="net.skycoop.mybatis.domain" targetProject="src/main/java">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <!-- 生成映射文件的包名和位置-->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+        <!-- 生成DAO的包名和位置-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="net.skycoop.mybatis.dao"
+                             targetProject="src/main/java">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+        <table tableName="t_version"/>
+
+
+    </context>
+</generatorConfiguration>
