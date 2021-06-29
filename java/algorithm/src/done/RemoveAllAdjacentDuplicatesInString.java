@@ -1,22 +1,19 @@
-package todo;
+package done;
 
 import java.util.Stack;
 
 public class RemoveAllAdjacentDuplicatesInString {
+    /**
+     * Runtime: 14 ms
+     * Memory Usage: 39.3 MB
+     */
     public String removeDuplicates(String s) {
         Stack<Character> stack = new Stack<>();
-        char last_ch = 0;
         for (char ch : s.toCharArray()) {
-            if (stack.isEmpty()) {
+            if (stack.isEmpty() || ch != stack.peek()) {
                 stack.push(ch);
-                last_ch = ch;
             } else {
-                if (ch == stack.peek()) {
-                    stack.pop();
-                } else if (ch != last_ch) {
-                    stack.push(ch);
-                    last_ch = ch;
-                }
+                stack.pop();
             }
         }
         char[] arr = new char[stack.size()];
@@ -28,6 +25,8 @@ public class RemoveAllAdjacentDuplicatesInString {
 
     public static void main(String[] args) {
         RemoveAllAdjacentDuplicatesInString main = new RemoveAllAdjacentDuplicatesInString();
+        System.out.println(main.removeDuplicates("abbbabaaa"));
         System.out.println(main.removeDuplicates("abbbabaaa").equals("ababa"));
+        System.out.println(main.removeDuplicates("abbaca")); //ca
     }
 }
