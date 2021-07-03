@@ -1,6 +1,7 @@
+import done.MergeSortedArray;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class MergeSortedArrayTest {
 
@@ -26,4 +27,5 @@ class MergeSortedArrayTest {
         solution.merge(nums_1, 3, nums_2, 3);
         assertArrayEquals(real, nums_1);
     }
+
 }

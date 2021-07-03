@@ -1,3 +1,4 @@
+import done.NumberOf1Bits;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

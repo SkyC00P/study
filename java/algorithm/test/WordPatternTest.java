@@ -1,3 +1,4 @@
+import done.WordPattern;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayDeque;
@@ -13,12 +14,12 @@ class WordPatternTest {
     void wordPattern() {
         assertTrue(solution.wordPattern("abba", "dog cat cat dog"));
         assertTrue(!solution.wordPattern("abba", "dog cat cat fish"));
-        assertTrue(!solution.wordPattern("aaaa","dog cat cat dog" ));
+        assertTrue(!solution.wordPattern("aaaa", "dog cat cat dog"));
         assertTrue(!solution.wordPattern("abba", "dog dog dog dog"));
     }
 
     @Test
-    void test(){
+    void test() {
         Deque<Integer> deque = new ArrayDeque<>();
         deque.push(1);
         deque.push(2);
