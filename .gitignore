@@ -7,3 +7,5 @@
 **/lib
 **/*.iml
 **/target
+/java/algorithm/out
+out
