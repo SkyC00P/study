@@ -1,0 +1,4 @@
+-- findFilter
+select *
+from YIDAOAPPSC where 1 = 1 <#if filter?? && filter != ''>
+                  and title like concat('%', concat(:filter, '%'))</#if>

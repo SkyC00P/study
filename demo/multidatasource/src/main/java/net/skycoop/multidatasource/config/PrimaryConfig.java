@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
-import java.util.Map;
 
 @Configuration
 @EnableTransactionManagement
@@ -25,7 +24,7 @@ import java.util.Map;
         transactionManagerRef = "transactionManagerPrimary",
         repositoryBaseClass = GenericJpaRepositoryImpl.class,
         repositoryFactoryBeanClass = GenericJpaRepositoryFactoryBean.class,
-        basePackages = {"net.skycoop.multidatasource.mysql.dao"})//设置dao（repo）所在位置
+        basePackages = {"net.skycoop.multidatasource.mysql.dao"})
 public class PrimaryConfig {
     @Autowired
     @Qualifier("primaryDataSource")
