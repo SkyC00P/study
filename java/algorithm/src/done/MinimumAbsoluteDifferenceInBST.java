@@ -1,4 +1,4 @@
-package todo;
+package done;
 public class MinimumAbsoluteDifferenceInBST {
     class TreeNode {
         int val;
@@ -22,6 +22,10 @@ public class MinimumAbsoluteDifferenceInBST {
     int res = Integer.MAX_VALUE;
     int prev = -1;
 
+    /**
+     * Runtime: 0 ms, faster than 100.00% of Java online submissions for Minimum Absolute Difference in BST.
+     * Memory Usage: 38.8 MB, less than 62.30% of Java online submissions for Minimum Absolute Difference in BST.
+     */
     public int getMinimumDifference(TreeNode root) {
         traverse(root);
         return res;
