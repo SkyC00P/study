@@ -55,6 +55,7 @@ public class TreeUtils {
 
             if (left == null && right == null) {
                 node = queue.poll();
+                sb.append("null,null,");
                 continue;
             }
 
