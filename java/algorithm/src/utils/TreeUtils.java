@@ -21,8 +21,12 @@ public class TreeUtils {
             if (node != null) {
                 node.left = createNode(arr, i + 1);
                 node.right = createNode(arr, i + 2);
-                queue.offer(node.left);
-                queue.offer(node.right);
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
             } else break;
         }
         return root;
@@ -104,13 +108,13 @@ public class TreeUtils {
     }
 
     /**
-     *         -> 5
-     *     ->3
-     *          -> 6
+     * -> 5
+     * ->3
+     * -> 6
      * 1 --->2
-     *
-     *     ->4
-     *
+     * <p>
+     * ->4
+     * <p>
      * 1-3,2,4|3-5,6|2|4
      */
     public static NTreeNode createNTree(String s) {
