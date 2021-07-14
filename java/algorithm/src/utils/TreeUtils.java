@@ -3,9 +3,7 @@ package utils;
 import datastruct.NTreeNode;
 import datastruct.TreeNode;
 
-import java.util.ArrayDeque;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class TreeUtils {
     public static TreeNode createTree(String str) {
@@ -108,21 +106,64 @@ public class TreeUtils {
     }
 
     /**
-     * -> 5
-     * ->3
-     * -> 6
-     * 1 --->2
-     * <p>
-     * ->4
-     * <p>
-     * 1-3,2,4|3-5,6|2|4
+     * 1|1:3,2,4|3:5,6;5:7,7
      */
     public static NTreeNode createNTree(String s) {
+        String[] lev = s.split("\\|");
+        NTreeNode root = new NTreeNode(Integer.parseInt(lev[0]));
+        Map<String, List<NTreeNode>> map = new HashMap<>();
+        map.put(0 + "-" + root.val, root.children);
 
-        return null;
+        for (int i = 1; i < lev.length; i++) {
+            String[] bros = lev[i].split(";");
+            // 1:3,2,4
+            for (String bro : bros) {
+                String[] a1 = bro.split(":", 2);
+                String p1 = i - 1 + "-" + a1[0];
+                String children = a1[1];
+
+                List<NTreeNode> nTreeNodes = map.get(p1);
+                for (String n : children.split(",")) {
+                    NTreeNode node = new NTreeNode(Integer.parseInt(n));
+                    map.put(i + "-" + node.val, node.children);
+                    nTreeNodes.add(node);
+                }
+
+            }
+        }
+        return root;
     }
 
+    // 1|1:3,2,4|3:5,6;4:7,7
     public static String toString(NTreeNode tree) {
-        return null;
+        if (tree == null) return "null";
+        StringBuilder sb = new StringBuilder(tree.val);
+        Map<Integer, List<NTreeNode>> lastLev = new HashMap<>();
+        lastLev.put(tree.val, tree.children);
+        sb.append(tree.val).append("|");
+        do {
+            Map<Integer, List<NTreeNode>> curLev = new HashMap<>();
+            if (lastLev.isEmpty()) break;
+
+            for (Integer val : lastLev.keySet()) {
+                List<NTreeNode> nTreeNodes = lastLev.get(val);
+                if (nTreeNodes.isEmpty()) continue;
+                sb.append(val).append(":");
+                nTreeNodes.forEach(l -> {
+                    sb.append(l.val).append(",");
+                    curLev.put(l.val, l.children);
+                });
+                sb.deleteCharAt(sb.length() - 1);
+                sb.append(";");
+            }
+            sb.deleteCharAt(sb.length() - 1);
+            sb.append("|");
+            lastLev = curLev;
+        } while (true);
+        return sb.deleteCharAt(sb.length() - 1).toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(toString(TreeUtils.createNTree("1|1:3,2,4|3:5,6;4:7,7")));
     }
 }
