@@ -10,6 +10,6 @@ public class LongestUncommonSubsequence_I {
         if (a == null || a.isEmpty() || b == null || b.isEmpty() || a.equals(b)) {
             return -1;
         }
-        return a.length() > b.length() ? a.length() : b.length();
+        return Math.max(a.length(), b.length());
     }
 }

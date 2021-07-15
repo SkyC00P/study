@@ -16,7 +16,7 @@ public class MaximumDepthofBinaryTree {
         if (node == null) return i;
         int ld = maxDepth(i, node.left);
         int rd = maxDepth(i, node.right);
-        return 1 + (ld >= rd ? ld : rd);
+        return 1 + (Math.max(ld, rd));
     }
 
 }
