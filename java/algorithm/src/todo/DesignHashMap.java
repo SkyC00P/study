@@ -206,6 +206,39 @@ public class DesignHashMap {
             return nums.toString();
         }
 
+        public void printAll() {
+            if (node == null) return;
+            int level = 1;
+            int num = 1;
+            Queue<Node> queue = new ArrayDeque<>();
+            queue.add(node);
+
+            while (!queue.isEmpty()) {
+                System.out.print("Level:" + level + " --> ");
+                int next = 0;
+                while (num != 0) {
+                    Node n = queue.poll();
+                    int k_l = n.left == null ? -1 : n.left.key;
+                    int v_l = n.left == null ? -1 : n.left.value;
+                    int k_r = n.right == null ? -1 : n.right.key;
+                    int v_r = n.right == null ? -1 : n.right.value;
+                    System.out.print(String.format("[%d ~ %d: %d ~ %d, %d ~ %d]", n.key, n.value, k_l, v_l, k_r, v_r));
+                    num--;
+                    if (n.left != null) {
+                        queue.add(n.left);
+                        next++;
+                    }
+                    if (n.right != null) {
+                        queue.add(n.right);
+                        next++;
+                    }
+                }
+                num = next;
+                level += 1;
+                System.out.println();
+            }
+        }
+
         private void insertNode(Node n, Node _node) {
             while (true) {
                 if (n.hash == _node.hash) {
@@ -256,33 +289,47 @@ public class DesignHashMap {
         // return -1 (i.e., not found), The map is now [[1,1]]
         System.out.println(myHashMap.get(2) == -1);
 
+//        String[] ops = new String[]{
+//                "remove", "put", "remove", "remove", "get", "remove", "put", "get", "remove", "put", "put", "put", "put", "put", "put", "put", "put", "put", "put", "put", "remove", "put", "put", "get", "put", "get", "put", "put", "get", "put", "remove", "remove", "put", "put", "get", "remove", "put", "put", "put", "get", "put", "put", "remove", "put", "remove", "remove", "remove", "put", "remove", "get", "put", "put", "put", "put", "remove", "put", "get", "put", "put", "get", "put", "remove", "get", "get", "remove", "put", "put", "put", "put", "put", "put", "get", "get", "remove", "put", "put", "put", "put", "get", "remove", "put", "put", "put", "put", "put", "put", "put", "put", "put", "put", "remove", "remove", "get", "remove", "put", "put", "remove", "get", "put", "put"
+//        };
+//
+//        int[][] ds = ArrayUtils.toArray("[[27],[65,65],[19],[0],[18],[3],[42,0],[19],[42],[17,90],[31,76],[48,71],[5,50],[7,68],[73,74],[85,18],[74,95],[84,82],[59,29],[71,71],[42],[51,40],[33,76],[17],[89,95],[95],[30,31],[37,99],[51],[95,35],[65],[81],[61,46],[50,33],[59],[5],[75,89],[80,17],[35,94],[80],[19,68],[13,17],[70],[28,35],[99],[37],[13],[90,83],[41],[50],[29,98],[54,72],[6,8],[51,88],[13],[8,22],[85],[31,22],[60,9],[96],[6,35],[54],[15],[28],[51],[80,69],[58,92],[13,12],[91,56],[83,52],[8,48],[62],[54],[25],[36,4],[67,68],[83,36],[47,58],[82],[36],[30,85],[33,87],[42,18],[68,83],[50,53],[32,78],[48,90],[97,95],[13,8],[15,7],[5],[42],[20],[65],[57,9],[2,41],[6],[33],[16,44],[95,30]]");
+
         String[] ops = new String[]{
-                "remove", "put", "remove", "remove", "get", "remove", "put", "get", "remove", "put", "put", "put", "put", "put", "put", "put", "put", "put", "put", "put", "remove", "put", "put", "get", "put", "get", "put", "put", "get", "put", "remove", "remove", "put", "put", "get", "remove", "put", "put", "put", "get", "put", "put", "remove", "put", "remove", "remove", "remove", "put", "remove", "get", "put", "put", "put", "put", "remove", "put", "get", "put", "put", "get", "put", "remove", "get", "get", "remove", "put", "put", "put", "put", "put", "put", "get", "get", "remove", "put", "put", "put", "put", "get", "remove", "put", "put", "put", "put", "put", "put", "put", "put", "put", "put", "remove", "remove", "get", "remove", "put", "put", "remove", "get", "put", "put"
+                "put", "put", "put", "put", "put", "put", "put", "put", "put", "put"
         };
 
-        int[][] ds = ArrayUtils.toArray("[[27],[65,65],[19],[0],[18],[3],[42,0],[19],[42],[17,90],[31,76],[48,71],[5,50],[7,68],[73,74],[85,18],[74,95],[84,82],[59,29],[71,71],[42],[51,40],[33,76],[17],[89,95],[95],[30,31],[37,99],[51],[95,35],[65],[81],[61,46],[50,33],[59],[5],[75,89],[80,17],[35,94],[80],[19,68],[13,17],[70],[28,35],[99],[37],[13],[90,83],[41],[50],[29,98],[54,72],[6,8],[51,88],[13],[8,22],[85],[31,22],[60,9],[96],[6,35],[54],[15],[28],[51],[80,69],[58,92],[13,12],[91,56],[83,52],[8,48],[62],[54],[25],[36,4],[67,68],[83,36],[47,58],[82],[36],[30,85],[33,87],[42,18],[68,83],[50,53],[32,78],[48,90],[97,95],[13,8],[15,7],[5],[42],[20],[65],[57,9],[2,41],[6],[33],[16,44],[95,30]]");
+        int[][] ds = ArrayUtils.toArray("[[65,65],[42,0]" +
+                ",[17,90],[31,76],[48,71],[5,50],[7,68],[73,74],[85,18],[74,95]" +
+                "]"
+        );
+
+
         MyHashMap map = new MyHashMap();
         for (int i = 0; i < ds.length; i++) {
             String op = ops[i];
             int[] arr = ds[i];
             switch (op) {
                 case "remove":
-                    System.out.print("Remove：");
-                    for (int n : arr) {
-                        System.out.print(n + " ");
-                        map.remove(n);
-                    }
-                    System.out.println("当前map为:" + map);
+//                    System.out.print("Remove：");
+//                    for (int n : arr) {
+//                        System.out.print(n + " ");
+//                        map.remove(n);
+//                    }
+//                    System.out.println("当前map为:" + map);
                     break;
                 case "put":
                     System.out.print(String.format("Put：%d -> %d", arr[0], arr[1]));
                     map.put(arr[0], arr[1]);
-                    System.out.println("当前map为:" + map);
+                    System.out.println();
+//                    System.out.println("当前map为:" + map);
                     break;
                 case "get":
-                    System.out.println(String.format("Get Num is : %d -> %d", arr[0], map.get(arr[0])));
+//                    System.out.println(String.format("Get Num is : %d -> %d", arr[0], map.get(arr[0])));
                     break;
             }
         }
+        System.out.println("当前map为:" + map);
+        map.printAll();
     }
 }
