@@ -1,20 +1,30 @@
 package net.skycoop;
 
-import java.util.Objects;
+import net.skycoop.command.Task;
+
 import java.util.Scanner;
 
-/**
- * Hello world!
- */
 public class App {
 
     public static void main(String[] args) {
+        System.out.println("支持以下命令:");
+        print();
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNext()) {
             String op = scanner.next().trim();
-            if (Objects.equals(op, "uuid")) {
-                System.out.println(Tool.uuid());
+            Task task = Task.warp(op);
+            if (task == null) {
+                System.out.println("---> 查无此任务。");
+                print();
+            } else {
+                task.run(scanner);
             }
+        }
+    }
+
+    private static void print() {
+        for (Task task : Task.values()) {
+            task.print();
         }
     }
 }
