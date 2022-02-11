@@ -1,6 +1,6 @@
 package net.skycoop.multidatasource.controller;
 
-import com.iotimc.pojo.reqresp.JsonRespond;
+import net.skycoop.multidatasource.pojo.reqresp.JsonRespond;
 import net.skycoop.multidatasource.service.DatasourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

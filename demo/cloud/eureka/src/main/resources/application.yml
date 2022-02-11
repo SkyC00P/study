@@ -1,0 +1,48 @@
+# 指定运行端口
+server:
+  port: 12100
+
+# 指定服务名称
+spring:
+  application:
+    name: eureka
+  profiles:
+    active: dev
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: ${spring.cloud.client.ipaddress}
+  client:
+    # 指定是否从注册中心获取服务(注册中心不需要开启)
+    fetch-registry: false
+    # 指定是否将服务注册到注册中心(注册中心不需要开启)
+    register-with-eureka: false
+    # eureka 地址
+    service-url:
+      defaultZone: ${EUREKA_HOST:http://127.0.0.1:${server.port}/eureka/}
+logging:
+  level:
+    com.netflix.eureka: 'off'
+    com.netflix.discovery: 'off'
+
+---
+# 生产环境
+spring:
+  config:
+    activate:
+      on-profile: prod
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+eureka:
+  instance:
+    # 服务续约间隔,默认30s
+    lease-expiration-duration-in-seconds: 10
+    # 服务失效时间,默认90s
+    lease-renewal-interval-in-seconds: 5
+  # 失效剔除和自我保护
+  server:
+    eviction-interval-timer-in-ms: 1000
+    enable-self-preservation: false

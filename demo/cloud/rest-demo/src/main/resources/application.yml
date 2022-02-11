@@ -1,0 +1,41 @@
+eureka:
+  instance:
+    # 使用IP来注册
+    prefer-ip-address: true
+    # 自定义实例名
+    instanceId: ${spring.application.name}:${spring.cloud.client.ipaddress}:${server.port}
+    hostname: ${spring.cloud.client.ipaddress}
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_HOST:http://127.0.0.1:12100/eureka/}
+spring:
+  application:
+    name: rest-demo
+  profiles:
+    active: dev
+server:
+  port: 12200
+logging:
+  level:
+    com.netflix.eureka: 'off'
+    com.netflix.discovery: 'off'
+---
+# 生产环境
+spring:
+  config:
+    activate:
+      on-profile: prod
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+eureka:
+  instance:
+    # 服务续约间隔,默认30s
+    lease-expiration-duration-in-seconds: 10
+    # 服务失效时间,默认90s
+    lease-renewal-interval-in-seconds: 5
+  client:
+    # 刷新本地只读备份服务列表的时间
+    registry-fetch-interval-seconds: 5

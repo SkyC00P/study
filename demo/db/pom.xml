@@ -33,7 +33,7 @@
         <dependency>
         <groupId>com.slyak</groupId>
         <artifactId>spring-data-jpa-extra</artifactId>
-        <version>3.0.1.RELEASE</version>
+        <version>3.3.0.RELEASE</version>
     </dependency>
         <dependency>
             <groupId>com.oracle</groupId>
@@ -41,12 +41,6 @@
             <version>11.2.0.4.0</version>
             <scope>system</scope>
             <systemPath>${pom.basedir}/lib/ojdbc6.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.iotimc</groupId>
-            <artifactId>cns_common</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
