@@ -80,7 +80,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.25</version>
+            <version>8.0.28</version>
         </dependency>
         <!-- mybatis的扩展插件，提高开发效率 -->
         <dependency>
@@ -119,7 +119,7 @@
                     <dependency>
                         <groupId>mysql</groupId>
                         <artifactId>mysql-connector-java</artifactId>
-                        <version>8.0.25</version>
+                        <version>8.0.28</version>
                     </dependency>
                 </dependencies>
             </plugin>
